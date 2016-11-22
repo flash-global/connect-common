@@ -1,0 +1,24 @@
+<?php
+
+namespace Test\Fei\Service\Connect\Common\Entity;
+
+use Fei\Service\Connect\Common\Entity\Role;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class RoleTest
+ *
+ * @package Test\Fei\Service\Connect\Entity
+ */
+class RoleTest extends TestCase
+{
+    public function testRoleAccessors()
+    {
+        $role = new Role();
+
+        $role->setRole('test');
+
+        $this->assertEquals('test', $role->getRole());
+        $this->assertAttributeEquals($role->getRole(), 'role', $role);
+    }
+}
