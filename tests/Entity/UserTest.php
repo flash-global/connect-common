@@ -36,6 +36,36 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getPassword(), 'password', $user);
     }
 
+    public function testFirstNameAccessors()
+    {
+        $user = new User();
+
+        $user->setFirstName('test');
+
+        $this->assertEquals('test', $user->getFirstName());
+        $this->assertAttributeEquals($user->getFirstName(), 'firstName', $user);
+    }
+
+    public function testLastNameAccessors()
+    {
+        $user = new User();
+
+        $user->setLastName('test');
+
+        $this->assertEquals('test', $user->getLastName());
+        $this->assertAttributeEquals($user->getLastName(), 'lastName', $user);
+    }
+
+    public function testEmailAccessors()
+    {
+        $user = new User();
+
+        $user->setEmail('test');
+
+        $this->assertEquals('test', $user->getEmail());
+        $this->assertAttributeEquals($user->getEmail(), 'email', $user);
+    }
+
     public function testAttributionAccessors()
     {
         $user = new User();
@@ -112,6 +142,9 @@ class UserTest extends TestCase
             [
                 'id' => null,
                 'user_name' => null,
+                'first_name' => null,
+                'last_name' => null,
+                'email' => null,
                 'password' => null,
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
@@ -162,6 +195,9 @@ class UserTest extends TestCase
                 'id' => null,
                 'user_name' => null,
                 'password' => null,
+                'first_name' => null,
+                'last_name' => null,
+                'email' => null,
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,

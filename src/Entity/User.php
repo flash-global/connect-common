@@ -53,6 +53,27 @@ class User extends AbstractEntity
     protected $password;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $firstName;
+
+    /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $lastName;
+
+    /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $email;
+
+    /**
      * @Column(type="integer")
      *
      * @var int
@@ -201,6 +222,78 @@ class User extends AbstractEntity
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get FirstName
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set FirstName
+     *
+     * @param string $firstName
+     *
+     * @return $this
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    /**
+     * Get LastName
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Set LastName
+     *
+     * @param string $lastName
+     *
+     * @return User
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * Get Email
+     *
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * Set Email
+     *
+     * @param string $email
+     *
+     * @return $this
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
 
         return $this;
     }

@@ -2,6 +2,8 @@
 
 namespace Fei\Service\Connect\Common\Validator;
 
+use Egulias\EmailValidator\EmailValidator;
+use Egulias\EmailValidator\Validation\RFCValidation;
 use Fei\Entity\EntityInterface;
 use Fei\Entity\Validator\Exception;
 use Fei\Entity\Validator\AbstractValidator;
@@ -31,32 +33,146 @@ class UserValidator extends AbstractValidator
             );
         }
 
-        /*$this->validateBody($entity->getBody());
+        $this->validateFirstName($entity->getFirstName());
+        $this->validateLastName($entity->getLastName());
+        $this->validateEmail($entity->getEmail());
         $this->validateCreatedAt($entity->getCreatedAt());
-        $this->validateUser($entity->getUser());
-        $this->validateRoom($entity->getRoom());
-        $this->validateContext($entity->getContext());*/
+        $this->validatePassword($entity->getPassword());
         $errors = $this->getErrors();
 
         return empty($errors);
     }
 
     /**
-     * Validate body
+     * Validate password
      *
-     * @param mixed $body
+     *
+     * @param mixed $password
      *
      * @return bool
      */
-    public function validateBody($body)
+    public function validatePassword($password)
     {
-        if (empty($body)) {
-            $this->addError('body', 'Chat message body cannot be empty');
+        if (empty($password)) {
+            $this->addError('password', 'Password cannot be empty');
             return false;
         }
 
-        if (!is_string($body)) {
-            $this->addError('body', 'The chat message body  must be a string');
+        // @TODO: Ask for password specifications
+
+        if (mb_strlen($password, 'UTF-8') > 255) {
+            $this->addError('password', 'Password length has to be less or equal to 255');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate userName
+     *
+     * @param mixed $userName
+     *
+     * @return bool
+     */
+    public function validateUserName($userName)
+    {
+        if (empty($userName)) {
+            $this->addError('userName', 'User name cannot be empty');
+            return false;
+        }
+
+        if (!is_string($userName)) {
+            $this->addError('userName', 'User name must be a string');
+            return false;
+        }
+
+        if (mb_strlen($userName, 'UTF-8') > 255) {
+            $this->addError('userName', 'User name length has to be less or equal to 255');
+            return false;
+        }
+
+
+        return true;
+    }
+
+    /**
+     * Validate firstName
+     *
+     * @param mixed $firstName
+     *
+     * @return bool
+     */
+    public function validateFirstName($firstName)
+    {
+        if (empty($firstName)) {
+            $this->addError('firstName', 'First name cannot be empty');
+            return false;
+        }
+
+        if (!is_string($firstName)) {
+            $this->addError('firstName', 'First name must be a string');
+            return false;
+        }
+
+        if (mb_strlen($firstName, 'UTF-8') > 255) {
+            $this->addError('firstName', 'First name length has to be less or equal to 255');
+            return false;
+        }
+
+
+        return true;
+    }
+
+    /**
+     * Validate lastName
+     *
+     * @param mixed $lastName
+     *
+     * @return bool
+     */
+    public function validateLastName($lastName)
+    {
+        if (empty($lastName)) {
+            $this->addError('lastName', 'Last name cannot be empty');
+            return false;
+        }
+
+        if (!is_string($lastName)) {
+            $this->addError('lastName', 'Last name must be a string');
+            return false;
+        }
+
+        if (mb_strlen($lastName, 'UTF-8') > 255) {
+            $this->addError('lastName', 'Last name length has to be less or equal to 255');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate email
+     *
+     * @param mixed $email
+     *
+     * @return bool
+     */
+    public function validateEmail($email)
+    {
+        if (empty($email)) {
+            $this->addError('email', 'Email cannot be empty');
+            return false;
+        }
+
+        if (mb_strlen($email, 'UTF-8') > 255) {
+            $this->addError('email', 'Email length has to be less or equal to 255');
+            return false;
+        }
+
+        $emailValidator = new EmailValidator();
+        if (!$emailValidator->isValid($email, new RFCValidation())) {
+            $this->addError('email', 'Email must be an email address');
             return false;
         }
 
@@ -79,50 +195,6 @@ class UserValidator extends AbstractValidator
 
         if (!$createdAt instanceof \DateTime) {
             $this->addError('createdAt', 'The creation date has to be and instance of \DateTime');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate name
-     *
-     * @param mixed $user
-     *
-     * @return bool
-     */
-    public function validateUser($user)
-    {
-        if (empty($user)) {
-            $this->addError('user', 'The user cannot be empty');
-            return false;
-        }
-
-        if (!is_string($user)) {
-            $this->addError('user', 'The user must be a string');
-            return false;
-        }
-
-        if (mb_strlen($user, 'UTF-8') > 255) {
-            $this->addError('user', 'The user length has to be less or equal to 255');
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Validate Room
-     *
-     * @param mixed $room
-     *
-     * @return bool
-     */
-    public function validateRoom($room)
-    {
-        if (!$room instanceof Room) {
-            $this->addError('room', 'Message must be attached to a room');
             return false;
         }
 

@@ -80,6 +80,9 @@ class AttributionTest extends TestCase
                     ->setId(1)
                     ->setUserName('user test')
                     ->setPassword('toto')
+                    ->setFirstName('toto')
+                    ->setLastName('toto')
+                    ->setEmail('toto@toto.com')
             )
             ->setApplication(
                 (new Application())
@@ -109,6 +112,9 @@ class AttributionTest extends TestCase
                 'user' => [
                     'id' => 1,
                     'user_name' => 'user test',
+                    'first_name' => 'toto',
+                    'last_name' => 'toto',
+                    'email' => 'toto@toto.com',
                     'password' => 'toto',
                     'created_at' => $attribution->getUser()->getCreatedAt()->format(\DateTime::RFC3339),
                     'status' => User::STATUS_PENDING,
