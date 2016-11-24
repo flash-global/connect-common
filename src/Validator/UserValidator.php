@@ -33,6 +33,7 @@ class UserValidator extends AbstractValidator
             );
         }
 
+        $this->validateUserName($entity->getUserName());
         $this->validateFirstName($entity->getFirstName());
         $this->validateLastName($entity->getLastName());
         $this->validateEmail($entity->getEmail());
