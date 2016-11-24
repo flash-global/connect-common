@@ -53,21 +53,21 @@ class User extends AbstractEntity
     protected $password;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $firstName;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $lastName;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
