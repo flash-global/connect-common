@@ -5,6 +5,7 @@ namespace Test\Fei\Service\Connect\Common\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
 use PHPUnit\Framework\TestCase;
@@ -83,6 +84,13 @@ class AttributionTest extends TestCase
                     ->setFirstName('toto')
                     ->setLastName('toto')
                     ->setEmail('toto@toto.com')
+                    ->setForeignServicesIds(
+                        new ArrayCollection([
+                            (new ForeignServiceId())
+                                ->setName('google')
+                                ->setId('id_google')
+                        ])
+                    )
             )
             ->setApplication(
                 (new Application())
@@ -119,6 +127,12 @@ class AttributionTest extends TestCase
                     'created_at' => $attribution->getUser()->getCreatedAt()->format(\DateTime::RFC3339),
                     'status' => User::STATUS_PENDING,
                     'register_token' => null,
+                    'foreign_services_ids' => [
+                        [
+                            'name' => 'google',
+                            'id'   => 'id_google'
+                        ]
+                    ],
                     'attributions' => [
                         [
                             'id' => 1,

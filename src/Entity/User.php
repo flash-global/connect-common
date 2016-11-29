@@ -95,6 +95,11 @@ class User extends AbstractEntity
     protected $attributions;
 
     /**
+     * @var ArrayCollection
+     */
+    protected $foreignServicesIds;
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -102,6 +107,7 @@ class User extends AbstractEntity
     public function __construct($data = null)
     {
         $this->attributions = new ArrayCollection();
+        $this->foreignServicesIds = new ArrayCollection();
         $this->setCreatedAt(new \DateTime());
 
         parent::__construct($data);
@@ -353,6 +359,65 @@ class User extends AbstractEntity
     }
 
     /**
+     * Add ForeignServiceId
+     * @param ForeignServiceId $foreignServiceId
+     *
+     * @return $this
+     */
+    public function addForeignServiceId(ForeignServiceId $foreignServiceId)
+    {
+        $this->foreignServicesIds->add($foreignServiceId);
+        return $this;
+    }
+
+    /**
+     * Remove ForeignServiceId
+     *
+     * @param string $foreignServiceName
+     *
+     * @return $this
+     */
+    public function  removeForeignServiceId($foreignServiceName)
+    {
+        /** @var ForeignServiceId $foreignServiceId */
+        foreach ($this->foreignServicesIds as $key => $foreignServiceId) {
+            if ($foreignServiceId->getName() === $foreignServiceName) {
+                $this->foreignServicesIds->remove($key);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * get ForeignServicesIds
+     *
+     * @return ArrayCollection
+     */
+    public function getForeignServicesIds()
+    {
+        return $this->foreignServicesIds;
+    }
+
+    /**
+     * Set ForeignServicesIds
+     * 
+     * @param ArrayCollection $foreignServicesIds
+     *
+     * @return User
+     */
+    public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
+    {
+        $this->foreignServicesIds->clear();
+
+        foreach ($foreignServicesIds as $foreignServiceId) {
+            $this->addForeignServiceId($foreignServiceId);
+        }
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($mapped = false)
@@ -360,6 +425,7 @@ class User extends AbstractEntity
         $data = parent::toArray($mapped);
 
         $attributions = [];
+        $foreignServicesIds = [];
 
         /** @var Attribution $attribution */
         foreach ($data['attributions'] as $attribution) {
@@ -370,7 +436,16 @@ class User extends AbstractEntity
             ];
         }
 
+        /** @var ForeignServiceId $foreignServiceId */
+        foreach ($data['foreign_services_ids'] as $foreignServiceId) {
+            $foreignServicesIds[] = [
+                'name' => $foreignServiceId->getName(),
+                'id' => $foreignServiceId->getId()
+            ];
+        }
+
         $data['attributions'] = $attributions;
+        $data['foreign_services_ids'] = $foreignServicesIds;
 
         return $data;
     }
@@ -381,6 +456,7 @@ class User extends AbstractEntity
     public function hydrate($data)
     {
         $attributions = new ArrayCollection();
+        $foreignServicesIds = new ArrayCollection();
 
         if (!empty($data['attributions'])) {
             foreach ($data['attributions'] as $attribution) {
@@ -391,6 +467,17 @@ class User extends AbstractEntity
             }
         }
 
+        if (!empty($data['foreign_services_ids'])) {
+            foreach ($data['foreign_services_ids'] as $foreignServiceId) {
+                $foreignServicesIds->add(
+                    (new ForeignServiceId())
+                        ->setId($foreignServiceId['id'])
+                        ->setName($foreignServiceId['name'])
+                );
+            }
+        }
+
+        $data['foreign_services_ids'] = $foreignServicesIds;
         $data['attributions'] = $attributions;
 
         return parent::hydrate($data);

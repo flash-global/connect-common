@@ -5,6 +5,7 @@ namespace Test\Fei\Service\Connect\Common\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
 use PHPUnit\Framework\TestCase;
@@ -64,6 +65,57 @@ class UserTest extends TestCase
 
         $this->assertEquals('test', $user->getEmail());
         $this->assertAttributeEquals($user->getEmail(), 'email', $user);
+    }
+
+    public function testForeignServicesIdsAccessors()
+    {
+        $user = new User();
+
+        $user->setForeignServicesIds(
+            new ArrayCollection([
+                (new ForeignServiceId())
+                    ->setName('google')
+                    ->setId('id_google')
+            ])
+        );
+
+        $this->assertEquals(
+            new ArrayCollection([
+                    (new ForeignServiceId())
+                        ->setName('google')
+                        ->setId('id_google')
+            ]),
+            $user->getForeignServicesIds()
+        );
+
+        $user->addForeignServiceId(
+            (new ForeignServiceId())
+                ->setName('linkedin')
+                ->setId('id_linkedin')
+        );
+
+        $this->assertEquals(
+            new ArrayCollection([
+                    (new ForeignServiceId())
+                        ->setName('google')
+                        ->setId('id_google'),
+                    (new ForeignServiceId())
+                        ->setName('linkedin')
+                        ->setId('id_linkedin')
+            ]),
+            $user->getForeignServicesIds()
+        );
+
+        $user->removeForeignServiceId('linkedin');
+
+        $this->assertEquals(
+            new ArrayCollection([
+                    (new ForeignServiceId())
+                        ->setName('google')
+                        ->setId('id_google')
+            ]),
+            $user->getForeignServicesIds()
+        );
     }
 
     public function testAttributionAccessors()
@@ -149,7 +201,8 @@ class UserTest extends TestCase
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
-                'attributions' => []
+                'attributions' => [],
+                'foreign_services_ids' => []
             ],
             $user->toArray()
         );
@@ -158,6 +211,17 @@ class UserTest extends TestCase
     public function testToArray()
     {
         $user = new User();
+
+        $user->setForeignServicesIds(
+            new ArrayCollection([
+                (new ForeignServiceId())
+                    ->setName('google')
+                    ->setId('toto123'),
+                (new ForeignServiceId())
+                    ->setName('linkedin')
+                    ->setId('456')
+            ])
+        );
 
         $user->setAttributions(
             new ArrayCollection([
@@ -174,7 +238,8 @@ class UserTest extends TestCase
                             ->setId(1)
                             ->setRole('role test 1')
                     )
-                , (new Attribution())
+                ,
+                (new Attribution())
                     ->setId(2)
                     ->setUser($user)
                     ->setApplication(
@@ -201,6 +266,16 @@ class UserTest extends TestCase
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
+                'foreign_services_ids' => [
+                    [
+                        'name' => 'google',
+                        'id' => 'toto123'
+                    ],
+                    [
+                        'name' => 'linkedin',
+                        'id' => '456'
+                    ]
+                ],
                 'attributions' => [
                     [
                         'id' => 1,
@@ -241,9 +316,28 @@ class UserTest extends TestCase
         $this->assertEmpty($user->getAttributions()->toArray());
     }
 
+    public function testHydrateForeignServicesIdsEmpty()
+    {
+        $user = new User([
+            'foreign_services_ids' => []
+        ]);
+
+        $this->assertEmpty($user->getForeignServicesIds()->toArray());
+    }
+
     public function testHydrate()
     {
         $user = new User([
+            'foreign_services_ids' => [
+                [
+                    'name' => 'google',
+                    'id' => 'toto123'
+                ],
+                [
+                    'name' => 'linkedin',
+                    'id' => 'toto456'
+                ]
+            ],
             'attributions' => [
                 [
                     'id' => 1,
@@ -300,6 +394,18 @@ class UserTest extends TestCase
                     )
             ]),
             $user->getAttributions()
+        );
+
+        $this->assertEquals(
+            new ArrayCollection([
+                    (new ForeignServiceId())
+                        ->setName('google')
+                        ->setId('toto123'),
+                    (new ForeignServiceId())
+                        ->setName('linkedin')
+                        ->setId('toto456')
+            ]),
+            $user->getForeignServicesIds()
         );
     }
 }
