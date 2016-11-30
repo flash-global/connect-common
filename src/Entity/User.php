@@ -81,7 +81,7 @@ class User extends AbstractEntity
     protected $status = self::STATUS_PENDING;
 
     /**
-     * @Column(type="guid", nullable=true)
+     * @Column(type="guid", nullable=true, unique=true)
      *
      * @var string
      */
@@ -401,7 +401,7 @@ class User extends AbstractEntity
 
     /**
      * Set ForeignServicesIds
-     * 
+     *
      * @param ArrayCollection $foreignServicesIds
      *
      * @return User
@@ -437,11 +437,13 @@ class User extends AbstractEntity
         }
 
         /** @var ForeignServiceId $foreignServiceId */
-        foreach ($data['foreign_services_ids'] as $foreignServiceId) {
-            $foreignServicesIds[] = [
-                'name' => $foreignServiceId->getName(),
-                'id' => $foreignServiceId->getId()
-            ];
+        if ($data['foreign_services_ids']) {
+            foreach ($data['foreign_services_ids'] as $foreignServiceId) {
+                $foreignServicesIds[] = [
+                    'name' => $foreignServiceId->getName(),
+                    'id' => $foreignServiceId->getId()
+                ];
+            }
         }
 
         $data['attributions'] = $attributions;
