@@ -13,6 +13,10 @@ test:
         allow_failures: true
     technical_debt:
         allowed_errors: -1
+    php_unit:
+        config:
+            - "phpunit.xml"
+        coverage: "tests/coverage"
 
 success:
     shell:
