@@ -88,6 +88,11 @@ class User extends AbstractEntity
     protected $registerToken;
 
     /**
+     * @var string
+     */
+    protected $currentRole;
+
+    /**
      * @OneToMany(targetEntity="Attribution", mappedBy="user", cascade={"all"})
      *
      * @var ArrayCollection;
@@ -329,6 +334,30 @@ class User extends AbstractEntity
     }
 
     /**
+     * Get CurrentRole
+     *
+     * @return string
+     */
+    public function getCurrentRole()
+    {
+        return $this->currentRole;
+    }
+
+    /**
+     * Set CurrentRole
+     *
+     * @param string $currentRole
+     *
+     * @return $this
+     */
+    public function setCurrentRole($currentRole)
+    {
+        $this->currentRole = $currentRole;
+
+        return $this;
+    }
+
+    /**
      * Get Attributions
      *
      * @return ArrayCollection
@@ -360,13 +389,19 @@ class User extends AbstractEntity
 
     /**
      * Add ForeignServiceId
+     *
      * @param ForeignServiceId $foreignServiceId
      *
      * @return $this
      */
     public function addForeignServiceId(ForeignServiceId $foreignServiceId)
     {
+        if (is_null($this->foreignServicesIds)) {
+            $this->foreignServicesIds = new ArrayCollection();
+        }
+
         $this->foreignServicesIds->add($foreignServiceId);
+
         return $this;
     }
 
@@ -377,7 +412,7 @@ class User extends AbstractEntity
      *
      * @return $this
      */
-    public function  removeForeignServiceId($foreignServiceName)
+    public function removeForeignServiceId($foreignServiceName)
     {
         /** @var ForeignServiceId $foreignServiceId */
         foreach ($this->foreignServicesIds as $key => $foreignServiceId) {
@@ -408,6 +443,10 @@ class User extends AbstractEntity
      */
     public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
     {
+        if (is_null($this->foreignServicesIds)) {
+            $this->foreignServicesIds = new ArrayCollection();
+        }
+
         $this->foreignServicesIds->clear();
 
         foreach ($foreignServicesIds as $foreignServiceId) {
@@ -435,6 +474,10 @@ class User extends AbstractEntity
                 'role' => $attribution->getRole()->toArray()
             ];
         }
+
+        $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
+            ? new ArrayCollection()
+            : $data['foreign_services_ids'];
 
         /** @var ForeignServiceId $foreignServiceId */
         if ($data['foreign_services_ids']) {

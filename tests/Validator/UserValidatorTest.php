@@ -46,10 +46,6 @@ class UserValidatorTest extends TestCase
     public function testValidatePassword()
     {
         $validator = new UserValidator();
-        $this->assertFalse($validator->validatePassword(''));
-        $this->assertEquals('Password cannot be empty', $validator->getErrors()['password'][0]);
-
-        $validator = new UserValidator();
         $this->assertFalse($validator->validatePassword(str_repeat('☃', 256)));
         $this->assertEquals('Password length has to be less or equal to 255', $validator->getErrors()['password'][0]);
 
@@ -151,5 +147,33 @@ class UserValidatorTest extends TestCase
         $validator = new UserValidator();
         $this->assertTrue($validator->validateCreatedAt(new \DateTime()));
         $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateRegisterToken()
+    {
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateRegisterToken(str_repeat('☃', 256)));
+        $this->assertEquals(
+            'Register token length has to be less or equal to 36',
+            $validator->getErrors()['registerToken'][0]
+        );
+    }
+
+    public function testValidateStatus()
+    {
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateStatus(null));
+        $this->assertEquals('Status cannot be null', $validator->getErrors()['status'][0]);
+
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateStatus('dqsd'));
+        $this->assertEquals('Status must be equal to 0, 1, 2 or 3', $validator->getErrors()['status'][0]);
+
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateStatus(10));
+        $this->assertEquals('Status must be equal to 0, 1, 2 or 3', $validator->getErrors()['status'][0]);
+
+        $validator = new UserValidator();
+        $this->assertTrue($validator->validateStatus(User::STATUS_ACTIVE));
     }
 }

@@ -127,6 +127,7 @@ class AttributionTest extends TestCase
                     'created_at' => $attribution->getUser()->getCreatedAt()->format(\DateTime::RFC3339),
                     'status' => User::STATUS_PENDING,
                     'register_token' => null,
+                    'current_role' => null,
                     'foreign_services_ids' => [
                         [
                             'name' => 'google',

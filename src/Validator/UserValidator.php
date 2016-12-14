@@ -39,6 +39,8 @@ class UserValidator extends AbstractValidator
         $this->validateEmail($entity->getEmail());
         $this->validateCreatedAt($entity->getCreatedAt());
         $this->validatePassword($entity->getPassword());
+        $this->validateStatus($entity->getStatus());
+        $this->validateRegisterToken($entity->getStatus());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -54,11 +56,6 @@ class UserValidator extends AbstractValidator
      */
     public function validatePassword($password)
     {
-        if (empty($password)) {
-            $this->addError('password', 'Password cannot be empty');
-            return false;
-        }
-
         // @TODO: Ask for password specifications
 
         if (mb_strlen($password, 'UTF-8') > 255) {
@@ -201,5 +198,45 @@ class UserValidator extends AbstractValidator
 
         return true;
     }
-}
 
+    /**
+     * Validate status
+     *
+     * @param mixed $status
+     *
+     * @return bool
+     */
+    public function validateStatus($status)
+    {
+        if ($status === null) {
+            $this->addError('status', 'Status cannot be null');
+            return false;
+        }
+
+        $valid = [User::STATUS_ACTIVE, User::STATUS_DELETED, User::STATUS_PENDING, User::STATUS_SUSPENDED];
+
+        if (!in_array($status, $valid, true)) {
+            $this->addError('status', 'Status must be equal to 0, 1, 2 or 3');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate registerToken
+     *
+     * @param mixed $registerToken
+     *
+     * @return bool
+     */
+    public function validateRegisterToken($registerToken)
+    {
+        if (mb_strlen($registerToken, 'UTF-8') > 36) {
+            $this->addError('registerToken', 'Register token length has to be less or equal to 36');
+            return false;
+        }
+
+        return true;
+    }
+}

@@ -67,6 +67,26 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getEmail(), 'email', $user);
     }
 
+    public function testRegisterTokenAccessors()
+    {
+        $user = new User();
+
+        $user->setRegisterToken('test');
+
+        $this->assertEquals('test', $user->getRegisterToken());
+        $this->assertAttributeEquals($user->getRegisterToken(), 'registerToken', $user);
+    }
+
+    public function testCurrentRoleAccessors()
+    {
+        $user = new User();
+
+        $user->setCurrentRole('test');
+
+        $this->assertEquals('test', $user->getCurrentRole());
+        $this->assertAttributeEquals($user->getCurrentRole(), 'currentRole', $user);
+    }
+
     public function testForeignServicesIdsAccessors()
     {
         $user = new User();
@@ -201,6 +221,7 @@ class UserTest extends TestCase
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
+                'current_role' => null,
                 'attributions' => [],
                 'foreign_services_ids' => []
             ],
@@ -266,6 +287,7 @@ class UserTest extends TestCase
                 'created_at' => $user->getCreatedAt()->format(\DateTime::RFC3339),
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
+                'current_role' => null,
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',

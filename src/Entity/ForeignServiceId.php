@@ -2,7 +2,6 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
-
 use Fei\Entity\AbstractEntity;
 
 /**
@@ -13,14 +12,38 @@ use Fei\Entity\AbstractEntity;
 class ForeignServiceId extends AbstractEntity
 {
     /**
+     * @var string $id
+     */
+    protected $id;
+
+    /**
      * @var string $name
      */
     protected $name;
 
     /**
-     * @var string $id
+     * Get Id
+     *
+     * @return string
      */
-    protected $id;
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set Id
+     *
+     * @param string $id
+     *
+     * @return ForeignServiceId
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     /**
      * Get Name
@@ -42,29 +65,7 @@ class ForeignServiceId extends AbstractEntity
     public function setName($name)
     {
         $this->name = $name;
-        return $this;
-    }
 
-    /**
-     * Get Id
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set Id
-     * 
-     * @param string $id
-     *
-     * @return ForeignServiceId
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
         return $this;
     }
 }
