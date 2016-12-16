@@ -101,6 +101,7 @@ class AttributionTest extends TestCase
                 (new Role())
                     ->setId(1)
                     ->setRole('role 1')
+                    ->setLabel('role 1')
             );
 
         $attribution->getUser()->getAttributions()->add($attribution);
@@ -115,7 +116,8 @@ class AttributionTest extends TestCase
                 ],
                 'role' => [
                     'id' => 1,
-                    'role' => 'role 1'
+                    'role' => 'role 1',
+                    'label' => 'role 1'
                 ],
                 'user' => [
                     'id' => 1,
@@ -144,7 +146,8 @@ class AttributionTest extends TestCase
                             ],
                             'role' => [
                                 'id' => 1,
-                                'role' => 'role 1'
+                                'role' => 'role 1',
+                                'label' => 'role 1'
                             ]
                         ]
                     ]
@@ -173,7 +176,8 @@ class AttributionTest extends TestCase
             ],
             'role' => [
                 'id' => 1,
-                'role' => 'role 1'
+                'role' => 'role 1',
+                'label' => 'role 1'
             ],
             'user' => [
                 'id' => 1,
@@ -195,7 +199,8 @@ class AttributionTest extends TestCase
         $this->assertEquals(
             (new Role())
                 ->setId(1)
-                ->setRole('role 1'),
+                ->setRole('role 1')
+                ->setLabel('role 1'),
             $attribution->getRole()
         );
 

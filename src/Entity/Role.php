@@ -31,6 +31,13 @@ class Role extends AbstractEntity
     protected $role;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string Role name
+     */
+    protected $label;
+
+    /**
      * Get Id
      *
      * @return int
@@ -74,6 +81,30 @@ class Role extends AbstractEntity
     public function setRole($role)
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    /**
+     * Get Label
+     *
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * Set Label
+     *
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
 
         return $this;
     }

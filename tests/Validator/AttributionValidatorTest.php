@@ -26,24 +26,20 @@ class AttributionValidatorTest extends TestCase
             ->setPassword('toto')
             ->setFirstName('toto')
             ->setLastName('toto')
-            ->setEmail('toto@toto.com')
-        ;
+            ->setEmail('toto@toto.com');
 
         $application = (new Application())
             ->setName('toto')
-            ->setUrl('http://www.toto.com')
-        ;
+            ->setUrl('http://www.toto.com');
 
         $role = (new Role())
-            ->setRole('toto');
-        ;
-
+            ->setRole('toto')
+            ->setLabel('titi');
 
         $attribution = (new Attribution())
             ->setUser($user)
             ->setApplication($application)
-            ->setRole($role)
-        ;
+            ->setRole($role);
 
         $this->assertTrue($validator->validate($attribution));
         $this->assertEmpty($validator->getErrors());
@@ -104,7 +100,7 @@ class AttributionValidatorTest extends TestCase
         $this->assertFalse($validator->validateRole($role));
         $this->assertRegExp('/^(role: Role must be a valid instance of Role class - )/', $validator->getErrorsAsString());
 
-        $role->setRole('toto');
+        $role->setRole('toto')->setLabel('titi');
 
         $validator = new AttributionValidator();
         $this->assertTrue($validator->validateRole($role));

@@ -32,6 +32,7 @@ class RoleValidator extends AbstractValidator
         }
 
         $this->validateRole($entity->getRole());
+        $this->validateLabel($entity->getLabel());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -61,6 +62,32 @@ class RoleValidator extends AbstractValidator
             return false;
         }
 
+        return true;
+    }
+
+    /**
+     * Validate label
+     *
+     * @param mixed $label
+     *
+     * @return bool
+     */
+    public function validateLabel($label)
+    {
+        if (empty($label)) {
+            $this->addError('label', 'Label cannot be empty');
+            return false;
+        }
+
+        if (!is_string($label)) {
+            $this->addError('label', 'Label must be a string');
+            return false;
+        }
+
+        if (mb_strlen($label, 'UTF-8') > 255) {
+            $this->addError('label', 'Label length has to be less or equal to 255');
+            return false;
+        }
 
         return true;
     }

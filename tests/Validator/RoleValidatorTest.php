@@ -20,8 +20,8 @@ class RoleValidatorTest extends TestCase
         $validator = new RoleValidator();
 
         $role = (new Role())
-            ->setRole('toto');
-        ;
+            ->setRole('toto')
+            ->setLabel('titi');
 
         $this->assertTrue($validator->validate($role));
         $this->assertEmpty($validator->getErrors());
@@ -55,6 +55,25 @@ class RoleValidatorTest extends TestCase
 
         $validator = new RoleValidator();
         $this->assertTrue($validator->validateRole('toto'));
+        $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateLabel()
+    {
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateLabel(''));
+        $this->assertEquals('Label cannot be empty', $validator->getErrors()['label'][0]);
+
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateLabel(true));
+        $this->assertEquals('Label must be a string', $validator->getErrors()['label'][0]);
+
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateLabel(str_repeat('☃', 256)));
+        $this->assertEquals('Label length has to be less or equal to 255', $validator->getErrors()['label'][0]);
+
+        $validator = new RoleValidator();
+        $this->assertTrue($validator->validateLabel('toto'));
         $this->assertEmpty($validator->getErrors());
     }
 }

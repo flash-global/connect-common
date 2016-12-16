@@ -258,6 +258,7 @@ class UserTest extends TestCase
                         (new Role())
                             ->setId(1)
                             ->setRole('role test 1')
+                            ->setLabel('role test 1')
                     )
                 ,
                 (new Attribution())
@@ -272,6 +273,7 @@ class UserTest extends TestCase
                         (new Role())
                             ->setId(2)
                             ->setRole('role test 2')
+                            ->setLabel('role test 2')
                     )
             ])
         );
@@ -308,7 +310,8 @@ class UserTest extends TestCase
                         ],
                         'role' => [
                             'id' => 1,
-                            'role' => 'role test 1'
+                            'role' => 'role test 1',
+                            'label' => 'role test 1'
                         ]
                     ],
                     [
@@ -320,7 +323,8 @@ class UserTest extends TestCase
                         ],
                         'role' => [
                             'id' => 2,
-                            'role' => 'role test 2'
+                            'role' => 'role test 2',
+                            'label' => 'role test 2'
                         ]
                     ]
                 ]
