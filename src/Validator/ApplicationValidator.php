@@ -28,6 +28,7 @@ class ApplicationValidator extends AbstractValidator
 
         $this->validateName($entity->getName());
         $this->validateUrl($entity->getUrl());
+        $this->validateStatus($entity->getStatus());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -91,6 +92,30 @@ class ApplicationValidator extends AbstractValidator
             return false;
         }
 
+
+        return true;
+    }
+
+    /**
+     * Validate status
+     *
+     * @param mixed $status
+     *
+     * @return bool
+     */
+    public function validateStatus($status)
+    {
+        if ($status === null) {
+            $this->addError('status', 'Status cannot be null');
+            return false;
+        }
+
+        $valid = [Application::STATUS_ENABLED, Application::STATUS_DISABLED];
+
+        if (!in_array($status, $valid, true)) {
+            $this->addError('status', 'Status must be equal to 1 or 2');
+            return false;
+        }
 
         return true;
     }

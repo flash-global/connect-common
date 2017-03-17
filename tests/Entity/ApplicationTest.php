@@ -31,4 +31,26 @@ class ApplicationTest extends TestCase
         $this->assertEquals('test', $application->getName());
         $this->assertAttributeEquals($application->getName(), 'name', $application);
     }
+
+    public function testStatusAccessors()
+    {
+        $application = new Application();
+
+        $application->setStatus(Application::STATUS_DISABLED);
+
+        $this->assertEquals(Application::STATUS_DISABLED, $application->getStatus());
+        $this->assertAttributeEquals($application->getStatus(), 'status', $application);
+    }
+
+    public function testFetchStatuses()
+    {
+        $expected = [
+            Application::STATUS_ENABLED  => 'Enabled',
+            Application::STATUS_DISABLED => 'Disabled'
+        ];
+
+        $result = Application::fetchStatuses();
+
+        $this->assertEquals($expected, $result);
+    }
 }

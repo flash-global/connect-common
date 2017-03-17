@@ -82,4 +82,22 @@ class ApplicationValidatorTest extends TestCase
         $this->assertTrue($validator->validateUrl('http://www.toto.com'));
         $this->assertEmpty($validator->getErrors());
     }
+
+    public function testValidateStatus()
+    {
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateStatus(null));
+        $this->assertEquals('Status cannot be null', $validator->getErrors()['status'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateStatus('dqsd'));
+        $this->assertEquals('Status must be equal to 1 or 2', $validator->getErrors()['status'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateStatus(10));
+        $this->assertEquals('Status must be equal to 1 or 2', $validator->getErrors()['status'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertTrue($validator->validateStatus(Application::STATUS_ENABLED));
+    }
 }

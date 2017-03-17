@@ -14,6 +14,9 @@ use Fei\Entity\AbstractEntity;
  */
 class Application extends AbstractEntity
 {
+    const STATUS_ENABLED  = 1;
+    const STATUS_DISABLED = 2;
+
     /**
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -36,6 +39,13 @@ class Application extends AbstractEntity
      * @var string
      */
     protected $url;
+
+    /**
+     * @Column(type="integer")
+     *
+     * @var int
+     */
+    protected $status = self::STATUS_ENABLED;
 
     /**
      * Get Id
@@ -107,5 +117,44 @@ class Application extends AbstractEntity
         $this->url = $url;
 
         return $this;
+    }
+
+    /**
+     * Get Status
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set Status
+     *
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Fetch all possible statuses for an application
+     *
+     * @return array
+     */
+    public static function fetchStatuses()
+    {
+        $statuses = [
+            self::STATUS_ENABLED  => 'Enabled',
+            self::STATUS_DISABLED => 'Disabled'
+        ];
+
+        return $statuses;
     }
 }

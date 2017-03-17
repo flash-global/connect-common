@@ -112,7 +112,8 @@ class AttributionTest extends TestCase
                 'application' => [
                     'id' => 1,
                     'name' => 'application 1',
-                    'url' => null
+                    'url' => null,
+                    'status' => Application::STATUS_ENABLED
                 ],
                 'role' => [
                     'id' => 1,
@@ -142,7 +143,8 @@ class AttributionTest extends TestCase
                             'application' => [
                                 'id' => 1,
                                 'name' => 'application 1',
-                                'url' => null
+                                'url' => null,
+                                'status' => Application::STATUS_ENABLED
                             ],
                             'role' => [
                                 'id' => 1,
