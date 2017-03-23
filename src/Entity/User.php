@@ -105,6 +105,20 @@ class User extends AbstractEntity
     protected $foreignServicesIds;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $avatarUrl;
+
+    /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $miniAvatarUrl;
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -457,12 +471,59 @@ class User extends AbstractEntity
     }
 
     /**
+     * Get AvatarUrl
+     *
+     * @return string
+     */
+    public function getAvatarUrl()
+    {
+        return $this->avatarUrl;
+    }
+
+    /**
+     * Set AvatarUrl
+     *
+     * @param string $avatarUrl
+     *
+     * @return User
+     */
+    public function setAvatarUrl(string $avatarUrl = null) : User
+    {
+        $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get MiniAvatarUrl
+     *
+     * @return string
+     */
+    public function getMiniAvatarUrl()
+    {
+        return $this->miniAvatarUrl;
+    }
+
+    /**
+     * Set MiniAvatarUrl
+     *
+     * @param string $miniAvatarUrl
+     *
+     * @return User
+     */
+    public function setMiniAvatarUrl(string $miniAvatarUrl = null) : User
+    {
+        $this->miniAvatarUrl = $miniAvatarUrl;
+
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($mapped = false)
     {
         $data = parent::toArray($mapped);
-
         $attributions = [];
         $foreignServicesIds = [];
 
