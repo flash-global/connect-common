@@ -48,6 +48,13 @@ class Application extends AbstractEntity
     protected $status = self::STATUS_ENABLED;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $logoUrl;
+
+    /**
      * Get Id
      *
      * @return int
@@ -156,5 +163,29 @@ class Application extends AbstractEntity
         ];
 
         return $statuses;
+    }
+
+    /**
+     * Get LogoUrl
+     *
+     * @return string
+     */
+    public function getLogoUrl()
+    {
+        return $this->logoUrl;
+    }
+
+    /**
+     * Set LogoUrl
+     *
+     * @param string $logoUrl
+     *
+     * @return $this
+     */
+    public function setLogoUrl(string $logoUrl = null)
+    {
+        $this->logoUrl = $logoUrl;
+
+        return $this;
     }
 }
