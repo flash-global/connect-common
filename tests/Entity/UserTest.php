@@ -87,6 +87,26 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getCurrentRole(), 'currentRole', $user);
     }
 
+    public function testAvatarUrlAccessors()
+    {
+        $user = new User();
+
+        $user->setAvatarUrl('test');
+
+        $this->assertEquals('test', $user->getAvatarUrl());
+        $this->assertAttributeEquals($user->getAvatarUrl(), 'avatarUrl', $user);
+    }
+
+    public function testMiniAvatarUrlAccessors()
+    {
+        $user = new User();
+
+        $user->setMiniAvatarUrl('test');
+
+        $this->assertEquals('test', $user->getMiniAvatarUrl());
+        $this->assertAttributeEquals($user->getMiniAvatarUrl(), 'miniAvatarUrl', $user);
+    }
+
     public function testForeignServicesIdsAccessors()
     {
         $user = new User();
@@ -223,6 +243,8 @@ class UserTest extends TestCase
                 'register_token' => null,
                 'current_role' => null,
                 'attributions' => [],
+                'avatar_url' => null,
+                'mini_avatar_url' => null,
                 'foreign_services_ids' => []
             ],
             $user->toArray()
@@ -292,6 +314,8 @@ class UserTest extends TestCase
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
                 'current_role' => null,
+                'avatar_url' => null,
+                'mini_avatar_url' => null,
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',

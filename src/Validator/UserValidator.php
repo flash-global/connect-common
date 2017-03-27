@@ -41,6 +41,8 @@ class UserValidator extends AbstractValidator
         $this->validatePassword($entity->getPassword());
         $this->validateStatus($entity->getStatus());
         $this->validateRegisterToken($entity->getStatus());
+        $this->validateAvatarUrl($entity->getAvatarUrl());
+        $this->validateAvatarUrl($entity->getMiniAvatarUrl());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -234,6 +236,37 @@ class UserValidator extends AbstractValidator
     {
         if (mb_strlen($registerToken, 'UTF-8') > 36) {
             $this->addError('registerToken', 'Register token length has to be less or equal to 36');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate avatar url
+     *
+     * @param mixed $url
+     *
+     * @return bool
+     */
+    public function validateAvatarUrl($url)
+    {
+        if (empty($url)) {
+            return true;
+        }
+
+        if (!is_string($url)) {
+            $this->addError('url', 'Url must be a string');
+            return false;
+        }
+
+        if (mb_strlen($url, 'UTF-8') > 255) {
+            $this->addError('url', 'Url length has to be less or equal to 255');
+            return false;
+        }
+
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            $this->addError('url', 'Url must contain protocol and domain name');
             return false;
         }
 
