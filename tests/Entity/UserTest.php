@@ -306,7 +306,8 @@ class UserTest extends TestCase
                         'application' => [
                             'id' => 1,
                             'name' => 'application test 1',
-                            'url' => null
+                            'url' => null,
+                            'status' => Application::STATUS_ENABLED
                         ],
                         'role' => [
                             'id' => 1,
@@ -319,7 +320,8 @@ class UserTest extends TestCase
                         'application' => [
                             'id' => 2,
                             'name' => 'application test 2',
-                            'url' => null
+                            'url' => null,
+                            'status' => Application::STATUS_ENABLED
                         ],
                         'role' => [
                             'id' => 2,
