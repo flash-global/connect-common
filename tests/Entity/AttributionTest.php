@@ -96,6 +96,7 @@ class AttributionTest extends TestCase
                 (new Application())
                     ->setId(1)
                     ->setName('application 1')
+                    ->setLogoUrl('test')
             )
             ->setRole(
                 (new Role())
@@ -112,7 +113,9 @@ class AttributionTest extends TestCase
                 'application' => [
                     'id' => 1,
                     'name' => 'application 1',
-                    'url' => null
+                    'url' => null,
+                    'status' => Application::STATUS_ENABLED,
+                    'logo_url' => 'test'
                 ],
                 'role' => [
                     'id' => 1,
@@ -130,6 +133,8 @@ class AttributionTest extends TestCase
                     'status' => User::STATUS_PENDING,
                     'register_token' => null,
                     'current_role' => null,
+                    'avatar_url' => null,
+                    'mini_avatar_url' => null,
                     'foreign_services_ids' => [
                         [
                             'name' => 'google',
@@ -142,7 +147,9 @@ class AttributionTest extends TestCase
                             'application' => [
                                 'id' => 1,
                                 'name' => 'application 1',
-                                'url' => null
+                                'url' => null,
+                                'status' => Application::STATUS_ENABLED,
+                                'logo_url' => 'test'
                             ],
                             'role' => [
                                 'id' => 1,

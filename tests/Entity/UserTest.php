@@ -87,6 +87,26 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getCurrentRole(), 'currentRole', $user);
     }
 
+    public function testAvatarUrlAccessors()
+    {
+        $user = new User();
+
+        $user->setAvatarUrl('test');
+
+        $this->assertEquals('test', $user->getAvatarUrl());
+        $this->assertAttributeEquals($user->getAvatarUrl(), 'avatarUrl', $user);
+    }
+
+    public function testMiniAvatarUrlAccessors()
+    {
+        $user = new User();
+
+        $user->setMiniAvatarUrl('test');
+
+        $this->assertEquals('test', $user->getMiniAvatarUrl());
+        $this->assertAttributeEquals($user->getMiniAvatarUrl(), 'miniAvatarUrl', $user);
+    }
+
     public function testForeignServicesIdsAccessors()
     {
         $user = new User();
@@ -223,6 +243,8 @@ class UserTest extends TestCase
                 'register_token' => null,
                 'current_role' => null,
                 'attributions' => [],
+                'avatar_url' => null,
+                'mini_avatar_url' => null,
                 'foreign_services_ids' => []
             ],
             $user->toArray()
@@ -253,6 +275,7 @@ class UserTest extends TestCase
                         (new Application())
                             ->setId(1)
                             ->setName('application test 1')
+                            ->setLogoUrl('test1')
                     )
                     ->setRole(
                         (new Role())
@@ -268,6 +291,7 @@ class UserTest extends TestCase
                         (new Application())
                             ->setId(2)
                             ->setName('application test 2')
+                            ->setLogoUrl('test2')
                     )
                     ->setRole(
                         (new Role())
@@ -290,6 +314,8 @@ class UserTest extends TestCase
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
                 'current_role' => null,
+                'avatar_url' => null,
+                'mini_avatar_url' => null,
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',
@@ -306,7 +332,9 @@ class UserTest extends TestCase
                         'application' => [
                             'id' => 1,
                             'name' => 'application test 1',
-                            'url' => null
+                            'url' => null,
+                            'status' => Application::STATUS_ENABLED,
+                            'logo_url' => 'test1'
                         ],
                         'role' => [
                             'id' => 1,
@@ -319,7 +347,9 @@ class UserTest extends TestCase
                         'application' => [
                             'id' => 2,
                             'name' => 'application test 2',
-                            'url' => null
+                            'url' => null,
+                            'status' => Application::STATUS_ENABLED,
+                            'logo_url' => 'test2'
                         ],
                         'role' => [
                             'id' => 2,

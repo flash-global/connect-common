@@ -28,6 +28,8 @@ class ApplicationValidator extends AbstractValidator
 
         $this->validateName($entity->getName());
         $this->validateUrl($entity->getUrl());
+        $this->validateStatus($entity->getStatus());
+        $this->validateLogoUrl($entity->getLogoUrl());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -85,12 +87,66 @@ class ApplicationValidator extends AbstractValidator
             return false;
         }
 
-        if (filter_var($url, FILTER_VALIDATE_URL) === false)
-        {
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             $this->addError('url', 'Url must contain protocol and domain name');
             return false;
         }
 
+
+        return true;
+    }
+
+    /**
+     * Validate status
+     *
+     * @param mixed $status
+     *
+     * @return bool
+     */
+    public function validateStatus($status)
+    {
+        if ($status === null) {
+            $this->addError('status', 'Status cannot be null');
+            return false;
+        }
+
+        $valid = [Application::STATUS_ENABLED, Application::STATUS_DISABLED];
+
+        if (!in_array($status, $valid, true)) {
+            $this->addError('status', 'Status must be equal to 1 or 2');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate logo url
+     *
+     * @param mixed $url
+     *
+     * @return bool
+     */
+    public function validateLogoUrl($url)
+    {
+        if (empty($url)) {
+            return true;
+        }
+
+        if (!is_string($url)) {
+            $this->addError('url', 'Url must be a string');
+            return false;
+        }
+
+        if (mb_strlen($url, 'UTF-8') > 255) {
+            $this->addError('url', 'Url length has to be less or equal to 255');
+            return false;
+        }
+
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            $this->addError('url', 'Url must contain protocol and domain name');
+            return false;
+        }
 
         return true;
     }

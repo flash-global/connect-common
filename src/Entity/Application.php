@@ -14,6 +14,9 @@ use Fei\Entity\AbstractEntity;
  */
 class Application extends AbstractEntity
 {
+    const STATUS_ENABLED  = 1;
+    const STATUS_DISABLED = 2;
+
     /**
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -36,6 +39,20 @@ class Application extends AbstractEntity
      * @var string
      */
     protected $url;
+
+    /**
+     * @Column(type="integer")
+     *
+     * @var int
+     */
+    protected $status = self::STATUS_ENABLED;
+
+    /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $logoUrl;
 
     /**
      * Get Id
@@ -105,6 +122,69 @@ class Application extends AbstractEntity
     public function setUrl($url)
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get Status
+     *
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set Status
+     *
+     * @param int $status
+     *
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Fetch all possible statuses for an application
+     *
+     * @return array
+     */
+    public static function fetchStatuses()
+    {
+        $statuses = [
+            self::STATUS_ENABLED  => 'Enabled',
+            self::STATUS_DISABLED => 'Disabled'
+        ];
+
+        return $statuses;
+    }
+
+    /**
+     * Get LogoUrl
+     *
+     * @return string
+     */
+    public function getLogoUrl()
+    {
+        return $this->logoUrl;
+    }
+
+    /**
+     * Set LogoUrl
+     *
+     * @param string $logoUrl
+     *
+     * @return $this
+     */
+    public function setLogoUrl(string $logoUrl = null)
+    {
+        $this->logoUrl = $logoUrl;
 
         return $this;
     }
