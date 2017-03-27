@@ -253,6 +253,7 @@ class UserTest extends TestCase
                         (new Application())
                             ->setId(1)
                             ->setName('application test 1')
+                            ->setLogoUrl('test1')
                     )
                     ->setRole(
                         (new Role())
@@ -268,6 +269,7 @@ class UserTest extends TestCase
                         (new Application())
                             ->setId(2)
                             ->setName('application test 2')
+                            ->setLogoUrl('test2')
                     )
                     ->setRole(
                         (new Role())
@@ -307,7 +309,8 @@ class UserTest extends TestCase
                             'id' => 1,
                             'name' => 'application test 1',
                             'url' => null,
-                            'status' => Application::STATUS_ENABLED
+                            'status' => Application::STATUS_ENABLED,
+                            'logo_url' => 'test1'
                         ],
                         'role' => [
                             'id' => 1,
@@ -321,7 +324,8 @@ class UserTest extends TestCase
                             'id' => 2,
                             'name' => 'application test 2',
                             'url' => null,
-                            'status' => Application::STATUS_ENABLED
+                            'status' => Application::STATUS_ENABLED,
+                            'logo_url' => 'test2'
                         ],
                         'role' => [
                             'id' => 2,
