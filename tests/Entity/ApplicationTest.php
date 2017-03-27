@@ -53,4 +53,14 @@ class ApplicationTest extends TestCase
 
         $this->assertEquals($expected, $result);
     }
+
+    public function testLogoUrlAccessors()
+    {
+        $application = new Application();
+
+        $application->setLogoUrl('test');
+
+        $this->assertEquals('test', $application->getLogoUrl());
+        $this->assertAttributeEquals($application->getLogoUrl(), 'logoUrl', $application);
+    }
 }

@@ -23,7 +23,7 @@ class ApplicationValidatorTest extends TestCase
         $application = (new Application())
             ->setName('toto')
             ->setUrl('http://www.toto.com')
-        ;
+            ->setLogoUrl('http://test.com');
 
         $this->assertTrue($validator->validate($application));
         $this->assertEmpty($validator->getErrors());
@@ -99,5 +99,28 @@ class ApplicationValidatorTest extends TestCase
 
         $validator = new ApplicationValidator();
         $this->assertTrue($validator->validateStatus(Application::STATUS_ENABLED));
+    }
+
+    public function testValidateLogoUrl()
+    {
+        $validator = new ApplicationValidator();
+        $this->assertTrue($validator->validateLogoUrl(''));
+        $this->assertTrue($validator->validateLogoUrl(null));
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateLogoUrl(true));
+        $this->assertEquals('Url must be a string', $validator->getErrors()['url'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateLogoUrl(str_repeat('☃', 256)));
+        $this->assertEquals('Url length has to be less or equal to 255', $validator->getErrors()['url'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateLogoUrl('toto'));
+        $this->assertEquals('Url must contain protocol and domain name', $validator->getErrors()['url'][0]);
+
+        $validator = new ApplicationValidator();
+        $this->assertTrue($validator->validateLogoUrl('http://www.toto.com'));
+        $this->assertEmpty($validator->getErrors());
     }
 }
