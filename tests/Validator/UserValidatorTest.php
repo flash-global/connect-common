@@ -25,7 +25,8 @@ class UserValidatorTest extends TestCase
             ->setFirstName('toto')
             ->setLastName('toto')
             ->setEmail('toto@toto.com')
-        ;
+            ->setAvatarUrl('http://toto.com')
+            ->setMiniAvatarUrl('http://toto.com');
 
         $this->assertTrue($validator->validate($user));
         $this->assertEmpty($validator->getErrors());
@@ -175,5 +176,28 @@ class UserValidatorTest extends TestCase
 
         $validator = new UserValidator();
         $this->assertTrue($validator->validateStatus(User::STATUS_ACTIVE));
+    }
+
+    public function testValidateAvatarUrl()
+    {
+        $validator = new UserValidator();
+        $this->assertTrue($validator->validateAvatarUrl(''));
+        $this->assertTrue($validator->validateAvatarUrl(null));
+
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateAvatarUrl(true));
+        $this->assertEquals('Url must be a string', $validator->getErrors()['url'][0]);
+
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateAvatarUrl(str_repeat('☃', 256)));
+        $this->assertEquals('Url length has to be less or equal to 255', $validator->getErrors()['url'][0]);
+
+        $validator = new UserValidator();
+        $this->assertFalse($validator->validateAvatarUrl('toto'));
+        $this->assertEquals('Url must contain protocol and domain name', $validator->getErrors()['url'][0]);
+
+        $validator = new UserValidator();
+        $this->assertTrue($validator->validateAvatarUrl('http://www.toto.com'));
+        $this->assertEmpty($validator->getErrors());
     }
 }
