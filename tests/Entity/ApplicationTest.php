@@ -63,4 +63,18 @@ class ApplicationTest extends TestCase
         $this->assertEquals('test', $application->getLogoUrl());
         $this->assertAttributeEquals($application->getLogoUrl(), 'logoUrl', $application);
     }
+
+    public function testAllowProfileAssociation()
+    {
+        $application = new Application();
+
+        $application->setAllowProfileAssociation(true);
+
+        $this->assertEquals(true, $application->getAllowProfileAssociation());
+        $this->assertAttributeEquals(
+            $application->getAllowProfileAssociation(),
+            'allowProfileAssociation',
+            $application
+        );
+    }
 }

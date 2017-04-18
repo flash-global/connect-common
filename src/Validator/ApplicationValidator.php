@@ -30,6 +30,7 @@ class ApplicationValidator extends AbstractValidator
         $this->validateUrl($entity->getUrl());
         $this->validateStatus($entity->getStatus());
         $this->validateLogoUrl($entity->getLogoUrl());
+        $this->validateAllowProfileAssociation($entity->getAllowProfileAssociation());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -145,6 +146,28 @@ class ApplicationValidator extends AbstractValidator
 
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             $this->addError('url', 'Url must contain protocol and domain name');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate allow profile association
+     *
+     * @param mixed $bool
+     *
+     * @return bool
+     */
+    public function validateAllowProfileAssociation($bool)
+    {
+        if (!is_bool($bool) && !is_numeric($bool)) {
+            $this->addError('allow_profile_association', 'Allow profile association must be a boolean or 0 or 1');
+            return false;
+        }
+
+        if (0 != (integer) $bool && 1 != (integer) $bool) {
+            $this->addError('allow_profile_association', 'Allow profile association must be a boolean or 0 or 1');
             return false;
         }
 

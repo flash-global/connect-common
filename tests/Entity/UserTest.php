@@ -334,12 +334,14 @@ class UserTest extends TestCase
                             'name' => 'application test 1',
                             'url' => null,
                             'status' => Application::STATUS_ENABLED,
-                            'logo_url' => 'test1'
+                            'logo_url' => 'test1',
+                            'allow_profile_association' => false
                         ],
                         'role' => [
                             'id' => 1,
                             'role' => 'role test 1',
-                            'label' => 'role test 1'
+                            'label' => 'role test 1',
+                            'user_created' => false
                         ]
                     ],
                     [
@@ -349,12 +351,14 @@ class UserTest extends TestCase
                             'name' => 'application test 2',
                             'url' => null,
                             'status' => Application::STATUS_ENABLED,
-                            'logo_url' => 'test2'
+                            'logo_url' => 'test2',
+                            'allow_profile_association' => false
                         ],
                         'role' => [
                             'id' => 2,
                             'role' => 'role test 2',
-                            'label' => 'role test 2'
+                            'label' => 'role test 2',
+                            'user_created' => false
                         ]
                     ]
                 ]

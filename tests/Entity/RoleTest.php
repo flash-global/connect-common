@@ -31,4 +31,14 @@ class RoleTest extends TestCase
         $this->assertEquals('test', $role->getLabel());
         $this->assertAttributeEquals($role->getLabel(), 'label', $role);
     }
+
+    public function testUserCreatedAccessors()
+    {
+        $role = new Role();
+
+        $role->setUserCreated(true);
+
+        $this->assertEquals(true, $role->getUserCreated());
+        $this->assertAttributeEquals($role->getUserCreated(), 'userCreated', $role);
+    }
 }

@@ -115,12 +115,14 @@ class AttributionTest extends TestCase
                     'name' => 'application 1',
                     'url' => null,
                     'status' => Application::STATUS_ENABLED,
-                    'logo_url' => 'test'
+                    'logo_url' => 'test',
+                    'allow_profile_association' => false
                 ],
                 'role' => [
                     'id' => 1,
                     'role' => 'role 1',
-                    'label' => 'role 1'
+                    'label' => 'role 1',
+                    'user_created' => false
                 ],
                 'user' => [
                     'id' => 1,
@@ -149,12 +151,14 @@ class AttributionTest extends TestCase
                                 'name' => 'application 1',
                                 'url' => null,
                                 'status' => Application::STATUS_ENABLED,
-                                'logo_url' => 'test'
+                                'logo_url' => 'test',
+                                'allow_profile_association' => false
                             ],
                             'role' => [
                                 'id' => 1,
                                 'role' => 'role 1',
-                                'label' => 'role 1'
+                                'label' => 'role 1',
+                                'user_created' => false
                             ]
                         ]
                     ]

@@ -14,6 +14,8 @@ use Fei\Entity\AbstractEntity;
  */
 class Application extends AbstractEntity
 {
+    const ALLOW_PROFILE_ASSOCIATIONS = 'allow_profile_association';
+
     const STATUS_ENABLED  = 1;
     const STATUS_DISABLED = 2;
 
@@ -53,6 +55,13 @@ class Application extends AbstractEntity
      * @var string
      */
     protected $logoUrl;
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $allowProfileAssociation = false;
 
     /**
      * Get Id
@@ -182,9 +191,33 @@ class Application extends AbstractEntity
      *
      * @return $this
      */
-    public function setLogoUrl(string $logoUrl = null)
+    public function setLogoUrl($logoUrl = null)
     {
         $this->logoUrl = $logoUrl;
+
+        return $this;
+    }
+
+    /**
+     * Get AllowProfileAssociation
+     *
+     * @return bool
+     */
+    public function getAllowProfileAssociation()
+    {
+        return $this->allowProfileAssociation;
+    }
+
+    /**
+     * Set AllowProfileAssociation
+     *
+     * @param bool $allowProfileAssociation
+     *
+     * @return $this
+     */
+    public function setAllowProfileAssociation($allowProfileAssociation)
+    {
+        $this->allowProfileAssociation = $allowProfileAssociation;
 
         return $this;
     }
