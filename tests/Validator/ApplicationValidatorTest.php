@@ -123,4 +123,36 @@ class ApplicationValidatorTest extends TestCase
         $this->assertTrue($validator->validateLogoUrl('http://www.toto.com'));
         $this->assertEmpty($validator->getErrors());
     }
+
+    public function testValidateAllowProfileAssociation()
+    {
+        $validator = new ApplicationValidator();
+        $this->assertTrue($validator->validateAllowProfileAssociation(true));
+        $this->assertTrue($validator->validateAllowProfileAssociation(false));
+        $this->assertTrue($validator->validateAllowProfileAssociation(0));
+        $this->assertTrue($validator->validateAllowProfileAssociation(1));
+        $this->assertTrue($validator->validateAllowProfileAssociation("1"));
+        $this->assertTrue($validator->validateAllowProfileAssociation("0"));
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateAllowProfileAssociation(null));
+        $this->assertEquals(
+            'Allow profile association must be a boolean or 0 or 1',
+            $validator->getErrors()['allow_profile_association'][0]
+        );
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateAllowProfileAssociation('toto'));
+        $this->assertEquals(
+            'Allow profile association must be a boolean or 0 or 1',
+            $validator->getErrors()['allow_profile_association'][0]
+        );
+
+        $validator = new ApplicationValidator();
+        $this->assertFalse($validator->validateAllowProfileAssociation('10'));
+        $this->assertEquals(
+            'Allow profile association must be a boolean or 0 or 1',
+            $validator->getErrors()['allow_profile_association'][0]
+        );
+    }
 }

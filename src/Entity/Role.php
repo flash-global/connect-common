@@ -38,6 +38,13 @@ class Role extends AbstractEntity
     protected $label;
 
     /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $userCreated = false;
+
+    /**
      * Get Id
      *
      * @return int
@@ -105,6 +112,30 @@ class Role extends AbstractEntity
     public function setLabel($label)
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    /**
+     * Get UserCreated
+     *
+     * @return bool
+     */
+    public function getUserCreated()
+    {
+        return $this->userCreated;
+    }
+
+    /**
+     * Set UserCreated
+     *
+     * @param bool $userCreated
+     *
+     * @return $this
+     */
+    public function setUserCreated($userCreated)
+    {
+        $this->userCreated = $userCreated;
 
         return $this;
     }

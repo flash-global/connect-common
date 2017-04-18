@@ -76,4 +76,36 @@ class RoleValidatorTest extends TestCase
         $this->assertTrue($validator->validateLabel('toto'));
         $this->assertEmpty($validator->getErrors());
     }
+
+    public function testValidateRoleValidator()
+    {
+        $validator = new RoleValidator();
+        $this->assertTrue($validator->validateUserCreated(true));
+        $this->assertTrue($validator->validateUserCreated(false));
+        $this->assertTrue($validator->validateUserCreated(0));
+        $this->assertTrue($validator->validateUserCreated(1));
+        $this->assertTrue($validator->validateUserCreated("1"));
+        $this->assertTrue($validator->validateUserCreated("0"));
+
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateUserCreated(null));
+        $this->assertEquals(
+            'User created must be a boolean or 0 or 1',
+            $validator->getErrors()['user_created'][0]
+        );
+
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateUserCreated('toto'));
+        $this->assertEquals(
+            'User created must be a boolean or 0 or 1',
+            $validator->getErrors()['user_created'][0]
+        );
+
+        $validator = new RoleValidator();
+        $this->assertFalse($validator->validateUserCreated('10'));
+        $this->assertEquals(
+            'User created must be a boolean or 0 or 1',
+            $validator->getErrors()['user_created'][0]
+        );
+    }
 }
