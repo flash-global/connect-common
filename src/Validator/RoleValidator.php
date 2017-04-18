@@ -33,6 +33,7 @@ class RoleValidator extends AbstractValidator
 
         $this->validateRole($entity->getRole());
         $this->validateLabel($entity->getLabel());
+        $this->validateUserCreated($entity->getUserCreated());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -86,6 +87,28 @@ class RoleValidator extends AbstractValidator
 
         if (mb_strlen($label, 'UTF-8') > 255) {
             $this->addError('label', 'Label length has to be less or equal to 255');
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate user created
+     *
+     * @param mixed $bool
+     *
+     * @return bool
+     */
+    public function validateUserCreated($bool)
+    {
+        if (!is_bool($bool) && !is_numeric($bool)) {
+            $this->addError('user_created', 'User created must be a boolean or 0 or 1');
+            return false;
+        }
+
+        if (0 != (integer) $bool && 1 != (integer) $bool) {
+            $this->addError('user_created', 'User created must be a boolean or 0 or 1');
             return false;
         }
 

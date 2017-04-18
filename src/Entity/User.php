@@ -487,7 +487,7 @@ class User extends AbstractEntity
      *
      * @return User
      */
-    public function setAvatarUrl(string $avatarUrl = null) : User
+    public function setAvatarUrl($avatarUrl = null)
     {
         $this->avatarUrl = $avatarUrl;
 
@@ -511,7 +511,7 @@ class User extends AbstractEntity
      *
      * @return User
      */
-    public function setMiniAvatarUrl(string $miniAvatarUrl = null) : User
+    public function setMiniAvatarUrl($miniAvatarUrl = null)
     {
         $this->miniAvatarUrl = $miniAvatarUrl;
 
