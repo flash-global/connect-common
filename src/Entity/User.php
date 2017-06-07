@@ -93,6 +93,11 @@ class User extends AbstractEntity
     protected $currentRole;
 
     /**
+     * @var string
+     */
+    protected $localUsername;
+
+    /**
      * @OneToMany(targetEntity="Attribution", mappedBy="user", cascade={"all"})
      *
      * @var ArrayCollection;
@@ -367,6 +372,30 @@ class User extends AbstractEntity
     public function setCurrentRole($currentRole)
     {
         $this->currentRole = $currentRole;
+
+        return $this;
+    }
+
+    /**
+     * Get LocalUsername
+     *
+     * @return string
+     */
+    public function getLocalUsername()
+    {
+        return $this->localUsername;
+    }
+
+    /**
+     * Set LocalUsername
+     *
+     * @param string $localUsername
+     *
+     * @return $this
+     */
+    public function setLocalUsername($localUsername)
+    {
+        $this->localUsername = $localUsername;
 
         return $this;
     }
