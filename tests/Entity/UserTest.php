@@ -242,6 +242,7 @@ class UserTest extends TestCase
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
                 'current_role' => null,
+                'local_username' => null,
                 'attributions' => [],
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
@@ -314,6 +315,7 @@ class UserTest extends TestCase
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
                 'current_role' => null,
+                'local_username' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
                 'foreign_services_ids' => [
