@@ -19,7 +19,7 @@ trait MessageAwareTrait
      *
      * @return MessageInterface
      */
-    public function getProfileAssociationMessage() : MessageInterface
+    public function getProfileAssociationMessage()
     {
         return $this->profileAssociationMessage;
     }

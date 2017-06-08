@@ -27,7 +27,7 @@ class ProfileAssociationMessageExtractor
      *
      * @throws ProfileAssociationException
      */
-    public function extract(HttpMessageInterface $httpMessage, $privateKey) : MessageInterface
+    public function extract(HttpMessageInterface $httpMessage, $privateKey)
     {
         $httpMessage->getBody()->rewind();
         $message = $httpMessage->getBody()->getContents();

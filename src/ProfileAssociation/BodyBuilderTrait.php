@@ -47,5 +47,5 @@ trait BodyBuilderTrait
      *
      * @return MessageInterface
      */
-    abstract public function getHttpMessage() : MessageInterface;
+    abstract public function getHttpMessage();
 }

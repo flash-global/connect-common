@@ -17,7 +17,7 @@ class Cryptography
      *
      * @return string
      */
-    public function encryptMessage(string $message, string $certificate) : string
+    public function encryptMessage($message, $certificate)
     {
         $key = openssl_pkey_get_public($certificate);
 
@@ -49,7 +49,7 @@ class Cryptography
      *
      * @return string
      */
-    public function decryptMessage(string $message, $key) : string
+    public function decryptMessage($message, $key)
     {
         $key = openssl_pkey_get_private($key);
 

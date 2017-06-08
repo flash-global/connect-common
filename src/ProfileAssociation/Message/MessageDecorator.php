@@ -24,7 +24,7 @@ class MessageDecorator implements MessageInterface
      *
      * @return MessageInterface
      */
-    public function getMessage() : MessageInterface
+    public function getMessage()
     {
         return $this->message;
     }

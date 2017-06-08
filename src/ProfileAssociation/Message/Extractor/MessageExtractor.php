@@ -22,7 +22,7 @@ class MessageExtractor
      *
      * @return MessageHydrator
      */
-    public function getHydrator() : MessageHydrator
+    public function getHydrator()
     {
         return $this->hydrator;
     }
@@ -48,7 +48,7 @@ class MessageExtractor
      *
      * @return MessageInterface
      */
-    public function extract(array $data) : MessageInterface
+    public function extract(array $data)
     {
         if (!array_key_exists('class', $data)) {
             throw new \RuntimeException('Unable to extract class name from data');

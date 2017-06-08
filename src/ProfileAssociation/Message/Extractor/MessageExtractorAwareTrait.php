@@ -19,7 +19,7 @@ trait MessageExtractorAwareTrait
      *
      * @return MessageExtractor
      */
-    public function getMessageExtractor() : MessageExtractor
+    public function getMessageExtractor()
     {
         return $this->messageExtractor;
     }

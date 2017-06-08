@@ -19,7 +19,7 @@ trait CryptographyAwareTrait
      *
      * @return Cryptography
      */
-    public function getCryptography() : Cryptography
+    public function getCryptography()
     {
         if (is_null($this->cryptography)) {
             $this->cryptography = new Cryptography();

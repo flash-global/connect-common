@@ -19,7 +19,7 @@ class ErrorMessage implements MessageInterface
      *
      * @return string
      */
-    public function getError() : string
+    public function getError()
     {
         return $this->error;
     }
@@ -31,7 +31,7 @@ class ErrorMessage implements MessageInterface
      *
      * @return $this
      */
-    public function setError(string $error)
+    public function setError($error)
     {
         $this->error = $error;
 
