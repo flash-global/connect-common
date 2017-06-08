@@ -19,7 +19,7 @@ class ResponseMessage implements ResponseMessageInterface
      *
      * @return string
      */
-    public function getRole() : string
+    public function getRole()
     {
         return $this->role;
     }
@@ -31,7 +31,7 @@ class ResponseMessage implements ResponseMessageInterface
      *
      * @return $this
      */
-    public function setRole(string $role)
+    public function setRole($role)
     {
         $this->role = $role;
 

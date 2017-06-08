@@ -35,7 +35,7 @@ class ProfileAssociationException extends \Exception implements ResponseExceptio
      *
      * @return $this
      */
-    public function setCertificate(string $certificate)
+    public function setCertificate($certificate)
     {
         $this->certificate = $certificate;
 

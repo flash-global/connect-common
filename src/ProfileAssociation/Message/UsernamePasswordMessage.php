@@ -29,7 +29,7 @@ class UsernamePasswordMessage implements RequestMessageInterface
      *
      * @return string
      */
-    public function getUsername() : string
+    public function getUsername()
     {
         return $this->username;
     }
@@ -41,7 +41,7 @@ class UsernamePasswordMessage implements RequestMessageInterface
      *
      * @return $this
      */
-    public function setUsername(string $username)
+    public function setUsername($username)
     {
         $this->username = $username;
 
@@ -53,7 +53,7 @@ class UsernamePasswordMessage implements RequestMessageInterface
      *
      * @return string
      */
-    public function getPassword() : string
+    public function getPassword()
     {
         return $this->password;
     }
@@ -65,7 +65,7 @@ class UsernamePasswordMessage implements RequestMessageInterface
      *
      * @return $this
      */
-    public function setPassword(string $password)
+    public function setPassword($password)
     {
         $this->password = $password;
 
@@ -77,7 +77,7 @@ class UsernamePasswordMessage implements RequestMessageInterface
      *
      * @return array
      */
-    public function getRoles() : array
+    public function getRoles()
     {
         return $this->roles;
     }

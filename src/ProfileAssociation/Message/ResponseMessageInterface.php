@@ -14,5 +14,5 @@ interface ResponseMessageInterface extends MessageInterface
      *
      * @return string
      */
-    public function getRole() : string;
+    public function getRole();
 }

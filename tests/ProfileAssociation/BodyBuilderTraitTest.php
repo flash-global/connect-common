@@ -32,7 +32,7 @@ class BodyBuilderTraitTest extends TestCase
         $instance = new class {
             use BodyBuilderTrait;
 
-            public function getHttpMessage() : MessageInterface
+            public function getHttpMessage()
             {
                 return new Response();
             }

@@ -23,7 +23,7 @@ class ProfileAssociationServerRequest extends ServerRequest
      *
      * @return ProfileAssociationMessageExtractor
      */
-    public function getProfileAssociationMessageExtractor() : ProfileAssociationMessageExtractor
+    public function getProfileAssociationMessageExtractor()
     {
         return $this->profileAssociationMessageExtractor;
     }
@@ -52,7 +52,7 @@ class ProfileAssociationServerRequest extends ServerRequest
      *
      * @throws ProfileAssociationException
      */
-    public function extract($privateKey) : RequestMessageInterface
+    public function extract($privateKey)
     {
         /** @var RequestMessageInterface $message */
         $message = $this->getProfileAssociationMessageExtractor()->extract($this, $privateKey);

@@ -3,7 +3,6 @@
 namespace Fei\Service\Connect\Common\ProfileAssociation;
 
 use Fei\Service\Connect\Common\ProfileAssociation\Message\MessageInterface;
-use Psr\Http\Message\MessageInterface as HttpMessageInterface;
 use Zend\Diactoros\Response;
 
 /**
@@ -32,7 +31,7 @@ class ProfileAssociationResponse extends Response
     /**
      * {@inheritdoc}
      */
-    public function getHttpMessage() : HttpMessageInterface
+    public function getHttpMessage()
     {
         return $this;
     }
