@@ -138,6 +138,7 @@ class AttributionTest extends TestCase
                     'local_username' => null,
                     'avatar_url' => null,
                     'mini_avatar_url' => null,
+                    'role_id' => null,
                     'foreign_services_ids' => [
                         [
                             'name' => 'google',
