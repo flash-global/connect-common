@@ -246,6 +246,7 @@ class UserTest extends TestCase
                 'attributions' => [],
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
+                'role_id' => null,
                 'foreign_services_ids' => []
             ],
             $user->toArray()
@@ -318,6 +319,7 @@ class UserTest extends TestCase
                 'local_username' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
+                'role_id' => null,
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',
