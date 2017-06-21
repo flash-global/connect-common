@@ -4,6 +4,7 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\AbstractEntity;
+use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class User
@@ -13,7 +14,7 @@ use Fei\Entity\AbstractEntity;
  *
  * @package Fei\Service\Connect\Common\Entity
  */
-class User extends AbstractEntity
+class User extends AbstractEntity implements RoleInterface
 {
     const USER_NAME = 'user_name';
     const REGISTER_TOKEN = 'register_token';
@@ -616,5 +617,15 @@ class User extends AbstractEntity
         $data['attributions'] = $attributions;
 
         return parent::hydrate($data);
+    }
+
+    /**
+     * Returns the string identifier of the Role
+     *
+     * @return string
+     */
+    public function getRoleId()
+    {
+        return $this->getCurrentRole();
     }
 }

@@ -5,7 +5,6 @@ namespace Test\Fei\Service\Connect\Common\ProfileAssociation;
 use Fei\Service\Connect\Common\ProfileAssociation\BodyBuilderTrait;
 use Fei\Service\Connect\Common\ProfileAssociation\Cryptography\Cryptography;
 use PHPUnit\Framework\TestCase;
-use Psr\Http\Message\MessageInterface;
 use Fei\Service\Connect\Common\ProfileAssociation\Message\MessageInterface as ProfileAssociationMessageInterface;
 use Zend\Diactoros\Response;
 
