@@ -3,10 +3,6 @@
 namespace Fei\Service\Connect\Common\Token;
 
 use Fei\Service\Connect\Common\Entity\User;
-use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token;
 
 /**
  * Class Token
@@ -16,79 +12,85 @@ use Lcobucci\JWT\Token;
 class Tokenizer
 {
     /**
-     * Get a Builder instance
+     * Create a unique token
      *
-     * @return Builder
+     * @return string
      */
-    public function createBuilderInstance()
+    public function createToken()
     {
-        return new Builder();
+        return sha1(uniqid('', true));
     }
 
     /**
-     * Get a Parser instance
-     *
-     * @return Parser
-     */
-    public function createParserInstance()
-    {
-        return new Parser();
-    }
-
-    /**
-     * Create a token with an User entity
+     * Create a request for a token with an User entity
      *
      * @param User   $user
      * @param string $issuer
-     * @param string $privateKey
      *
-     * @return Token
+     * @return TokenRequest
      */
-    public function createToken(User $user, $issuer, $privateKey)
+    public function createTokenRequest(User $user, $issuer)
     {
-        return $this->createBuilderInstance()
-            ->setIssuer($issuer)
-            ->set('user_entity', json_encode($user->toArray()))
-            ->sign(new Sha256(), $privateKey)
-            ->getToken();
+        return (new TokenRequest())
+                ->setUsername($user->getUserName())
+                ->setIssuer($issuer);
     }
 
     /**
-     * Parse and return a Token from a string
+     * Sign a request token
      *
-     * @param string $string
+     * @param TokenRequest    $tokenRequest
+     * @param resource|string $privateKey
      *
-     * @return Token
+     * @return TokenRequest
      */
-    public function parseFromString($string)
+    public function signTokenRequest(TokenRequest $tokenRequest, $privateKey)
     {
-        return $this->createParserInstance()->parse($string);
+        openssl_sign($tokenRequest->getIssuer() . ':' . $tokenRequest->getUsername(), $signature, $privateKey);
+
+        return $tokenRequest->setSignature(base64_encode($signature));
     }
 
     /**
-     * Verify the token's signature
+     * Verify the signature
      *
-     * @param Token  $token
-     * @param string $certificate
+     * @param TokenRequest    $tokenRequest
+     * @param resource|string $certificate
      *
      * @return bool
      */
-    public function verifySignature(Token $token, $certificate)
+    public function verifySignature(TokenRequest $tokenRequest, $certificate)
     {
-        return $token->verify(new Sha256(), $certificate);
+        $result = openssl_verify(
+            $tokenRequest->getIssuer() . ':' . $tokenRequest->getUsername(),
+            base64_decode($tokenRequest->getSignature()),
+            $certificate
+        );
+
+        return $result === 1 ? true : false;
     }
 
     /**
-     * Extract a User instance from Token
+     * Validate a request token
      *
-     * @param Token $token
+     * @param TokenRequest    $requestToken
+     * @param resource|string $certificate
      *
-     * @return User|null
+     * @return bool
      */
-    public function extractUser(Token $token)
+    public function validateRequestToken(TokenRequest $requestToken, $certificate = null)
     {
-        $user = $token->getClaim('user_entity', null);
+        if (empty($requestToken->getIssuer())
+            || empty($requestToken->getUsername())
+            || empty($requestToken->getSignature())
+        ) {
+            return false;
+        }
 
-        return $user ? new User(json_decode($user, true)) : $user;
+        if (!is_null($certificate)) {
+            return $this->verifySignature($requestToken, $certificate);
+        }
+
+        return true;
     }
 }
