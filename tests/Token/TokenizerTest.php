@@ -4,7 +4,7 @@ namespace Test\Fei\Service\Connect\Common\ProfileAssociation;
 
 use Fei\Service\Connect\Common\Entity\User;
 use Fei\Service\Connect\Common\Token\Tokenizer;
-use Lcobucci\JWT\Token;
+use Fei\Service\Connect\Common\Token\TokenRequest;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,78 +14,107 @@ class TokenizerTest extends TestCase
 {
     public function testCreateToken()
     {
-        $tokenizer = new Tokenizer();
+        $token = (new Tokenizer())->createToken();
 
-        $user = (new User())
-            ->setUserName('test');
-
-        $t = $tokenizer->createToken(
-            $user,
-            'http://sp.dev:8080',
-            file_get_contents('file://' . __DIR__ . '/../data/idp.pem')
-        );
-
-        $this->assertInstanceOf(Token::class, $t);
-        $this->assertEquals('http://sp.dev:8080', $t->getClaim('iss'));
-        $this->assertEquals(['typ' => 'JWT', 'alg' => 'RS256'], $t->getHeaders());
-
-        $tokenize = new User(json_decode($t->getClaim('user_entity'), true));
-
-        $this->assertEquals($user, $tokenize);
-        $this->assertEquals($user->getUserName(), $tokenize->getUserName());
+        $this->assertEquals(40, strlen($token));
+        $this->assertRegExp('/[[:alnum:]]/', $token);
     }
 
-    public function testParseFromString()
+    public function testCreateTokenRequest()
+    {
+        $request = (new Tokenizer())->createTokenRequest(new User(['username' => 'username']), 'issuer');
+
+        $this->assertInstanceOf(TokenRequest::class, $request);
+        $this->assertEquals('username', $request->getUsername());
+        $this->assertEquals('issuer', $request->getIssuer());
+    }
+
+    public function testSignTokenRequest()
     {
         $tokenizer = new Tokenizer();
 
-        $user = (new User())
-            ->setUserName('test');
+        $request = $tokenizer->createTokenRequest(new User(['username' => 'username']), 'issuer');
 
-        $token = $tokenizer->createToken(
-            $user,
-            'http://sp.dev:8080',
-            file_get_contents('file://' . __DIR__ . '/../data/idp.pem')
+        $request = $tokenizer->signTokenRequest($request, 'file://' . __DIR__ . '/../data/sp.pem');
+
+        $this->assertEquals(
+            1,
+            openssl_verify(
+                $request->getIssuer() . ':' . $request->getUsername(),
+                base64_decode($request->getSignature()),
+                'file://' . __DIR__ . '/../data/sp.crt'
+            )
         );
-
-        $this->assertEquals($token, $tokenizer->parseFromString((string) $token));
     }
 
     public function testVerifySignature()
     {
         $tokenizer = new Tokenizer();
 
-        $user = (new User())
-            ->setUserName('test');
+        $request = $tokenizer->createTokenRequest(new User(['username' => 'vincent']), 'http://shaq.dev:8086');
 
-        $token = $tokenizer->createToken(
-            $user,
-            'http://sp.dev:8080',
-            file_get_contents('file://' . __DIR__ . '/../data/idp.pem')
-        );
+        $request = $tokenizer->signTokenRequest($request, 'file://' . __DIR__ . '/../data/sp.pem');
 
         $this->assertTrue(
-            $tokenizer->verifySignature($token, file_get_contents('file://' . __DIR__ . '/../data/idp.crt'))
+            $tokenizer->verifySignature($request, 'file://' . __DIR__ . '/../data/sp.crt')
         );
     }
 
-    public function testExtractUser()
+    public function testValidateRequestToken()
     {
-        $tokenizer = new Tokenizer();
-
-        $user = (new User())
-            ->setUserName('vincent');
-
-        $token = $tokenizer->createToken(
-            $user,
-            'http://shaq.dev:8086',
-            file_get_contents('file://' . __DIR__ . '/../data/sp.pem')
+        $this->assertTrue(
+            (new Tokenizer())
+                ->validateRequestToken(
+                    (new Tokenizer())->signTokenRequest(
+                        (new TokenRequest())
+                            ->setUsername('test')
+                            ->setIssuer('test'),
+                        'file://' . __DIR__ . '/../data/sp.pem'
+                    ),
+                    'file://' . __DIR__ . '/../data/sp.crt'
+                )
         );
+    }
 
-        $token = $tokenizer->parseFromString((string) $token);
+    public function testValidateRequestTokenWithOutCert()
+    {
+        $this->assertTrue(
+            (new Tokenizer())
+                ->validateRequestToken(
+                    (new Tokenizer())->signTokenRequest(
+                        (new TokenRequest())
+                            ->setUsername('test')
+                            ->setIssuer('test'),
+                        'file://' . __DIR__ . '/../data/sp.pem'
+                    )
+                )
+        );
+    }
 
-        $newUser = $tokenizer->extractUser($token);
+    public function testValidateRequestWithBadSignature()
+    {
+        $this->assertFalse(
+            (new Tokenizer())
+                ->validateRequestToken(
+                    (new TokenRequest())
+                        ->setUsername('test')
+                        ->setIssuer('test')
+                        ->setSignature('badsign'),
+                    'file://' . __DIR__ . '/../data/sp.crt'
+                )
+        );
+    }
 
-        $this->assertEquals($user, $newUser);
+    public function testValidateRequestWithBadRequest()
+    {
+        $this->assertFalse(
+            (new Tokenizer())
+                ->validateRequestToken(
+                    (new TokenRequest())
+                        ->setUsername('')
+                        ->setIssuer('test'),
+                    'file://' . __DIR__ . '/../data/sp.crt'
+                )
+        );
     }
 }
