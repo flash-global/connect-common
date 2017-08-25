@@ -58,4 +58,16 @@ class TokenTest extends TestCase
         $this->assertEquals(new User(), $token->getUser());
         $this->assertAttributeEquals($token->getUser(), 'user', $token);
     }
+
+    public function testExpirationAccessors()
+    {
+        $token = new Token();
+
+        $expected = new \DateTime('2018-12-12');
+
+        $token->setExpiration($expected);
+
+        $this->assertEquals($expected, $token->getExpiration());
+        $this->assertAttributeEquals($token->getExpiration(), 'expiration', $token);
+    }
 }
