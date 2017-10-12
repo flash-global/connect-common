@@ -44,11 +44,18 @@ class Token extends AbstractEntity
 
     /**
      * @ManyToOne(targetEntity="User")
-     * @JoinColumn(name="user_id", onDelete="CASCADE", nullable=false)
+     * @JoinColumn(name="user_id", onDelete="CASCADE", nullable=true)
      *
      * @var User
      */
     protected $user;
+
+    /**
+     * @Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
+     */
+    protected $expiration;
 
     /**
      * Token constructor.
@@ -155,6 +162,29 @@ class Token extends AbstractEntity
     {
         $this->user = $user;
 
+        return $this;
+    }
+
+    /**
+     * Get Expiration
+     *
+     * @return \DateTime
+     */
+    public function getExpiration()
+    {
+        return $this->expiration;
+    }
+
+    /**
+     * Set Expiration
+     *
+     * @param \DateTime $expiration
+     *
+     * @return $this
+     */
+    public function setExpiration(\DateTime $expiration)
+    {
+        $this->expiration = $expiration;
         return $this;
     }
 }

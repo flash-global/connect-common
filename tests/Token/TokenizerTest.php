@@ -117,4 +117,18 @@ class TokenizerTest extends TestCase
                 )
         );
     }
+
+    public function testValidateRequestWithoutUser()
+    {
+        $this->assertFalse(
+            (new Tokenizer())
+                ->validateRequestToken(
+                    (new TokenRequest())
+                        ->setIssuer('test')
+                        ->setSignature('fake-signature'),
+                    null,
+                    false
+                )
+        );
+    }
 }
