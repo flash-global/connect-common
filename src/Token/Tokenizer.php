@@ -73,17 +73,21 @@ class Tokenizer
     /**
      * Validate a request token
      *
-     * @param TokenRequest    $requestToken
+     * @param TokenRequest $requestToken
      * @param resource|string $certificate
+     * @param bool $application
      *
      * @return bool
      */
-    public function validateRequestToken(TokenRequest $requestToken, $certificate = null)
+    public function validateRequestToken(TokenRequest $requestToken, $certificate = null, $application = false)
     {
         if (empty($requestToken->getIssuer())
-            || empty($requestToken->getUsername())
             || empty($requestToken->getSignature())
         ) {
+            return false;
+        }
+
+        if (false === $application && empty($requestToken->getUsername())) {
             return false;
         }
 
