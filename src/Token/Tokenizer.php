@@ -36,6 +36,20 @@ class Tokenizer
                 ->setIssuer($issuer);
     }
 
+
+    /**
+     * Create a request for a token with an Application
+     *
+     * @param string $application
+     *
+     * @return TokenRequest
+     */
+    public function createApplicationTokenRequest($application)
+    {
+        return (new TokenRequest())
+            ->setIssuer($application);
+    }
+
     /**
      * Sign a request token
      *
