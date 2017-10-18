@@ -2,6 +2,7 @@
 
 namespace Test\Fei\Service\Connect\Common\Entity;
 
+use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Token;
 use Fei\Service\Connect\Common\Entity\User;
 use PHPUnit\Framework\TestCase;
@@ -69,5 +70,17 @@ class TokenTest extends TestCase
 
         $this->assertEquals($expected, $token->getExpiration());
         $this->assertAttributeEquals($token->getExpiration(), 'expiration', $token);
+    }
+
+    public function testApplicationAccessors()
+    {
+        $token = new Token();
+
+        $application = new Application();
+
+        $token->setApplication($application);
+
+        $this->assertEquals($application, $token->getApplication());
+        $this->assertAttributeEquals($token->getApplication(), 'application', $token);
     }
 }

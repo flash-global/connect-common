@@ -29,6 +29,15 @@ class TokenizerTest extends TestCase
         $this->assertEquals('issuer', $request->getIssuer());
     }
 
+    public function testCreateApplicationTokenRequest()
+    {
+        $request = (new Tokenizer())->createApplicationTokenRequest('test');
+
+        $this->assertInstanceOf(TokenRequest::class, $request);
+        $this->assertNull($request->getUsername());
+        $this->assertEquals('test', $request->getIssuer());
+    }
+
     public function testSignTokenRequest()
     {
         $tokenizer = new Tokenizer();
@@ -114,20 +123,6 @@ class TokenizerTest extends TestCase
                         ->setUsername('')
                         ->setIssuer('test'),
                     'file://' . __DIR__ . '/../data/sp.crt'
-                )
-        );
-    }
-
-    public function testValidateRequestWithoutUser()
-    {
-        $this->assertFalse(
-            (new Tokenizer())
-                ->validateRequestToken(
-                    (new TokenRequest())
-                        ->setIssuer('test')
-                        ->setSignature('fake-signature'),
-                    null,
-                    false
                 )
         );
     }

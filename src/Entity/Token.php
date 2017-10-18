@@ -51,6 +51,14 @@ class Token extends AbstractEntity
     protected $user;
 
     /**
+     * @ManyToOne(targetEntity="Application")
+     * @JoinColumn(name="application_id", onDelete="CASCADE", nullable=true)
+     *
+     * @var Application
+     */
+    protected $application;
+
+    /**
      * @Column(type="datetime", nullable=true)
      *
      * @var \DateTime
@@ -161,6 +169,30 @@ class Token extends AbstractEntity
     public function setUser(User $user)
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get Application
+     *
+     * @return Application
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Set Application
+     *
+     * @param Application $application
+     *
+     * @return $this
+     */
+    public function setApplication(Application $application)
+    {
+        $this->application = $application;
 
         return $this;
     }
