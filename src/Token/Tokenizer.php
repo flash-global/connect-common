@@ -32,8 +32,8 @@ class Tokenizer
     public function createTokenRequest(User $user, $issuer)
     {
         return (new TokenRequest())
-                ->setUsername($user->getUserName())
-                ->setIssuer($issuer);
+            ->setUsername($user->getUserName())
+            ->setIssuer($issuer);
     }
 
 
@@ -89,19 +89,12 @@ class Tokenizer
      *
      * @param TokenRequest $requestToken
      * @param resource|string $certificate
-     * @param bool $application
      *
      * @return bool
      */
-    public function validateRequestToken(TokenRequest $requestToken, $certificate = null, $application = false)
+    public function validateRequestToken(TokenRequest $requestToken, $certificate = null)
     {
-        if (empty($requestToken->getIssuer())
-            || empty($requestToken->getSignature())
-        ) {
-            return false;
-        }
-
-        if (false === $application && empty($requestToken->getUsername())) {
+        if (empty($requestToken->getIssuer()) || empty($requestToken->getSignature())) {
             return false;
         }
 
