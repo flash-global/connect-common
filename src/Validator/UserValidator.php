@@ -43,6 +43,7 @@ class UserValidator extends AbstractValidator
         $this->validateRegisterToken($entity->getStatus());
         $this->validateAvatarUrl($entity->getAvatarUrl());
         $this->validateAvatarUrl($entity->getMiniAvatarUrl());
+        $this->validateLanguage($entity->getLanguage());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -267,6 +268,16 @@ class UserValidator extends AbstractValidator
 
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
             $this->addError('url', 'Url must contain protocol and domain name');
+            return false;
+        }
+
+        return true;
+    }
+
+    public function validateLanguage($language)
+    {
+        if (!preg_match('/^[a-z]{2}$/', $language)) {
+            $this->addError('language', 'Language has to be a ISO 639-1 code formatted string (en, fr, de, ...)');
             return false;
         }
 
