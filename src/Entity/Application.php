@@ -36,7 +36,7 @@ class Application extends AbstractEntity
     protected $name;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", unique=true)
      *
      * @var string
      */
@@ -62,6 +62,13 @@ class Application extends AbstractEntity
      * @var bool
      */
     protected $allowProfileAssociation = false;
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $isSubscribed = false;
 
     /**
      * Get Id
@@ -219,6 +226,28 @@ class Application extends AbstractEntity
     {
         $this->allowProfileAssociation = $allowProfileAssociation;
 
+        return $this;
+    }
+
+    /**
+     * Get isSubscribed
+     *
+     * @return bool
+     */
+    public function getIsSubscribed()
+    {
+        return $this->isSubscribed;
+    }
+
+    /**
+     * Set isSubscribed
+     *
+     * @param $isSubscribed
+     * @return $this
+     */
+    public function setIsSubscribed($isSubscribed)
+    {
+        $this->isSubscribed = $isSubscribed;
         return $this;
     }
 }

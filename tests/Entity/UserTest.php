@@ -339,7 +339,8 @@ class UserTest extends TestCase
                             'url' => null,
                             'status' => Application::STATUS_ENABLED,
                             'logo_url' => 'test1',
-                            'allow_profile_association' => false
+                            'allow_profile_association' => false,
+                            'is_subscribed' => false
                         ],
                         'role' => [
                             'id' => 1,
@@ -356,7 +357,8 @@ class UserTest extends TestCase
                             'url' => null,
                             'status' => Application::STATUS_ENABLED,
                             'logo_url' => 'test2',
-                            'allow_profile_association' => false
+                            'allow_profile_association' => false,
+                            'is_subscribed' => false
                         ],
                         'role' => [
                             'id' => 2,

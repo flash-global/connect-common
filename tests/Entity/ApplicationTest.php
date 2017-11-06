@@ -77,4 +77,18 @@ class ApplicationTest extends TestCase
             $application
         );
     }
+
+    public function testIsSubscribed()
+    {
+        $application = new Application();
+
+        $application->setIsSubscribed(true);
+
+        $this->assertEquals(true, $application->getIsSubscribed());
+        $this->assertAttributeEquals(
+            $application->getIsSubscribed(),
+            'isSubscribed',
+            $application
+        );
+    }
 }
