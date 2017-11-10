@@ -71,6 +71,13 @@ class Application extends AbstractEntity
     protected $isSubscribed = false;
 
     /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $isManageable = false;
+
+    /**
      * Get Id
      *
      * @return int
@@ -250,4 +257,25 @@ class Application extends AbstractEntity
         $this->isSubscribed = $isSubscribed;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function getIsManageable()
+    {
+        return $this->isManageable;
+    }
+
+    /**
+     * @param bool $isManageable
+     * @return Application
+     */
+    public function setIsManageable($isManageable)
+    {
+        $this->isManageable = $isManageable;
+        return $this;
+    }
+
+
+
 }
