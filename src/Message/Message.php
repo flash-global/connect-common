@@ -3,6 +3,9 @@
 namespace Fei\Service\Connect\Common\Message;
 
 
+use Fei\Service\Connect\Common\Cryptography\Signature;
+use Fei\Service\Connect\Common\Cryptography\X509CertificateGen;
+
 class Message implements MessageInterface
 {
     /**
@@ -74,17 +77,34 @@ class Message implements MessageInterface
         return $this;
     }
 
-    public function sign()
+    /**
+     * @param $privateKey
+     */
+    public function sign($privateKey)
     {
-        // TODO: Implement sign() method.
+        $signature  = base64_encode((new Signature())
+            ->sign(json_encode($this->getData()), $privateKey));
+
+        $certificat = (new X509CertificateGen())
+            ->createX509Certificate($privateKey);
+
+        $this->setCertificat($certificat);
+        $this->setSignature($signature);
+
     }
 
+    /**
+     * @return mixed
+     */
     public function isSignatureValid()
     {
-        return true;
-        // TODO: Implement isSignatureValid() method.
+        return (new Signature())
+            ->verify(json_encode($this->getData()), base64_decode($this->getSignature()), $this->getCertificat());
     }
 
+    /**
+     * @param $data
+     */
     public function hydrate($data)
     {
         $this->setData($data['data']);
@@ -92,6 +112,9 @@ class Message implements MessageInterface
         $this->setSignature($data['signature']);
     }
 
+    /**
+     * @return array
+     */
     public function jsonSerialize()
     {
         return [
