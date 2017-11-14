@@ -2,10 +2,14 @@
 
 namespace Fei\Service\Connect\Common\Message;
 
-
 use Fei\Service\Connect\Common\Cryptography\Signature;
 use Fei\Service\Connect\Common\Cryptography\X509CertificateGen;
 
+/**
+ * Class Message
+ *
+ * @package Fei\Service\Connect\Common\Message
+ */
 class Message implements MessageInterface
 {
     /**
@@ -19,12 +23,12 @@ class Message implements MessageInterface
     protected $signature;
 
     /**
-     * @var string $certificat
+     * @var string $certificate
      */
-    protected $certificat;
+    protected $certificate;
 
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public function getData()
     {
@@ -32,17 +36,21 @@ class Message implements MessageInterface
     }
 
     /**
+     * Set the message data
+     *
      * @param array $data
+     *
      * @return Message
      */
     public function setData(array $data)
     {
         $this->data = $data;
+
         return $this;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getSignature()
     {
@@ -50,66 +58,80 @@ class Message implements MessageInterface
     }
 
     /**
+     * Set the message signature
+     *
      * @param string $signature
+     *
      * @return Message
      */
     public function setSignature($signature)
     {
         $this->signature = $signature;
+
         return $this;
     }
 
     /**
+     * Get Certificate
+     *
      * @return string
      */
-    public function getCertificat()
+    public function getCertificate()
     {
-        return $this->certificat;
+        return $this->certificate;
     }
 
     /**
-     * @param string $certificat
-     * @return Message
+     * Set Certificate
+     *
+     * @param string $certificate
+     *
+     * @return $this
      */
-    public function setCertificat($certificat)
+    public function setCertificate($certificate)
     {
-        $this->certificat = $certificat;
+        $this->certificate = $certificate;
+
         return $this;
     }
 
     /**
-     * @param $privateKey
+     * {@inheritdoc}
      */
     public function sign($privateKey)
     {
         $signature  = base64_encode((new Signature())
             ->sign(json_encode($this->getData()), $privateKey));
 
-        $certificat = (new X509CertificateGen())
-            ->createX509Certificate($privateKey);
+        if (empty($this->getCertificate())) {
+            $this->setCertificate((new X509CertificateGen())->createX509Certificate($privateKey));
+        }
 
-        $this->setCertificat($certificat);
         $this->setSignature($signature);
-
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function isSignatureValid()
     {
-        return (new Signature())
-            ->verify(json_encode($this->getData()), base64_decode($this->getSignature()), $this->getCertificat());
+        return (new Signature())->verify(
+            json_encode($this->getData()),
+            base64_decode($this->getSignature()),
+            $this->getCertificate()
+        );
     }
 
     /**
-     * @param $data
+     * Hydrate the message entity
+     *
+     * @param array $data
      */
-    public function hydrate($data)
+    public function hydrate(array $data)
     {
         $this->setData($data['data']);
-        $this->setCertificat($data['certificat']);
         $this->setSignature($data['signature']);
+        $this->setCertificate($data['certificate']);
     }
 
     /**
@@ -118,11 +140,9 @@ class Message implements MessageInterface
     public function jsonSerialize()
     {
         return [
-            'data'      => $this->getData(),
-            'signature' => $this->getSignature(),
-            'certificat'=> $this->getCertificat()
+            'data'        => $this->getData(),
+            'signature'   => $this->getSignature(),
+            'certificate' => $this->getCertificate()
         ];
     }
-
-
 }
