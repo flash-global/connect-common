@@ -32,7 +32,9 @@ class Cryptography
             $message = substr($message, $length);
 
             if (openssl_public_encrypt($input, $encrypted, $key) === false) {
+                // @codeCoverageIgnoreStart
                 throw new \RuntimeException(openssl_error_string());
+                // @codeCoverageIgnoreEnd
             }
 
             $output .= $encrypted;
@@ -64,7 +66,9 @@ class Cryptography
             $message = substr($message, $length);
 
             if (openssl_private_decrypt($input, $decrypted, $key) === false) {
+                // @codeCoverageIgnoreStart
                 throw new \RuntimeException(openssl_error_string());
+                // @codeCoverageIgnoreEnd
             }
 
             $output .= $decrypted;

@@ -46,6 +46,7 @@ class CryptographyTest extends TestCase
         $crypt->decryptMessage('test', 'notakey');
     }
 
+
     public function dataForEncryptionDecryption()
     {
         return [

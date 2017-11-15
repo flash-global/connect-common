@@ -91,4 +91,35 @@ class ApplicationTest extends TestCase
             $application
         );
     }
+
+    public function testIsManageable()
+    {
+        $application = new Application();
+        $application->setIsManageable(true);
+
+        $this->assertEquals(true, $application->getIsManageable());
+        $this->assertAttributeEquals(
+            $application->getIsManageable(),
+            'isManageable',
+            $application
+        );
+    }
+
+    public function testContexts()
+    {
+        $contexts  = ['key' => 'value'];
+        $contexts2 = ['key2' => 'value2'];
+        $application = new Application();
+        $application->setContexts($contexts);
+
+        $this->assertEquals($contexts, $application->getContexts());
+        $application->setContexts($contexts2, false);
+        $this->assertEquals($contexts+$contexts2, $application->getContexts());
+
+
+        $application = new Application();
+        $application->addContext('key', 'value');
+
+        $this->assertEquals('value', $application->retrieveContext('key'));
+    }
 }

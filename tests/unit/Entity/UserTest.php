@@ -107,6 +107,16 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getMiniAvatarUrl(), 'miniAvatarUrl', $user);
     }
 
+    public function testLocalUsernameAccessors()
+    {
+        $user = new User();
+
+        $user->setLocalUsername('batman');
+
+        $this->assertEquals('batman', $user->getLocalUsername());
+        $this->assertAttributeEquals($user->getLocalUsername(), 'localUsername', $user);
+    }
+
     public function testForeignServicesIdsAccessors()
     {
         $user = new User();
@@ -157,6 +167,7 @@ class UserTest extends TestCase
             $user->getForeignServicesIds()
         );
     }
+
 
     public function testAttributionAccessors()
     {
@@ -340,7 +351,9 @@ class UserTest extends TestCase
                             'status' => Application::STATUS_ENABLED,
                             'logo_url' => 'test1',
                             'allow_profile_association' => false,
-                            'is_subscribed' => false
+                            'is_subscribed' => false,
+                            'is_manageable' => false,
+                            'contexts' => []
                         ],
                         'role' => [
                             'id' => 1,
@@ -358,7 +371,9 @@ class UserTest extends TestCase
                             'status' => Application::STATUS_ENABLED,
                             'logo_url' => 'test2',
                             'allow_profile_association' => false,
-                            'is_subscribed' => false
+                            'is_subscribed' => false,
+                            'is_manageable' => false,
+                            'contexts' => []
                         ],
                         'role' => [
                             'id' => 2,

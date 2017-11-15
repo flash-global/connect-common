@@ -118,6 +118,8 @@ class AttributionTest extends TestCase
                     'logo_url' => 'test',
                     'allow_profile_association' => false,
                     'is_subscribed' => false,
+                    'is_manageable' => false,
+                    'contexts' => []
                 ],
                 'role' => [
                     'id' => 1,
@@ -156,7 +158,9 @@ class AttributionTest extends TestCase
                                 'status' => Application::STATUS_ENABLED,
                                 'logo_url' => 'test',
                                 'allow_profile_association' => false,
-                                'is_subscribed' => false
+                                'is_subscribed' => false,
+                                'is_manageable' => false,
+                                'contexts' => []
                             ],
                             'role' => [
                                 'id' => 1,
