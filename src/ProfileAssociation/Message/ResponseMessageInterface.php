@@ -2,6 +2,8 @@
 
 namespace Fei\Service\Connect\Common\ProfileAssociation\Message;
 
+use Fei\Service\Connect\Common\Message\MessageInterface;
+
 /**
  * Interface ResponseMessageInterface
  *
