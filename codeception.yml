@@ -10,11 +10,8 @@ extensions:
         - Codeception\Extension\RunFailed
 coverage:
     enabled: true
+    remote: false
     include:
-        - src/Cryptography/*
-        - src/Entity/*
-        - src/ProfileAssociation/*
-        - src/Token/*
-        - src/Validator/*
+        - src/*
     exclude:
-        - src/ProfileAssociation/ProfileAssociationServerRequestFactory.php
+        - vendor/*

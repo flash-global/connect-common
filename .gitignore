@@ -1,3 +1,2 @@
 vendor/
-tests/coverage
-tests/_*
+tests/_output
