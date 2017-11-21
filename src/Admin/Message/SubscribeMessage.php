@@ -9,7 +9,7 @@ use Fei\Service\Connect\Common\Message\MessageInterface;
  *
  * @package Fei\Service\Connect\Common\Admin\Message
  */
-class RegistrationMessage implements MessageInterface
+class SubscribeMessage implements MessageInterface
 {
     /**
      * @var string
