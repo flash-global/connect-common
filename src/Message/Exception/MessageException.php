@@ -52,7 +52,9 @@ class MessageException extends \Exception implements ResponseExceptionInterface
         $status = $code = ($this->getCode() < 100 || $this->getCode() > 599) ? 500 : $this->getCode();
 
         if ($this->getCertificate()) {
-            $response = $response->build($this->getCertificate());
+            $response = $response->buildEncrypted($this->getCertificate());
+        } else {
+            $response = $response->build();
         }
 
         $response = $response->withStatus($status);

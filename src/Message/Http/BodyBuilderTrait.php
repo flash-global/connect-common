@@ -18,13 +18,13 @@ trait BodyBuilderTrait
     use MessageAwareTrait;
 
     /**
-     * Build the response to send
+     * Build the encrypted response to send
      *
      * @param string $certificate
      *
      * @return MessageInterface
      */
-    public function build($certificate)
+    public function buildEncrypted($certificate)
     {
         $stream = new Stream('php://temp', 'wb+');
 
@@ -39,6 +39,23 @@ trait BodyBuilderTrait
 
         return $this->getHttpMessage()
             ->withAddedHeader('Content-Type', 'text/plain')
+            ->withBody($stream);
+    }
+
+    /**
+     * Build the response to send
+     *
+     * @return MessageInterface
+     */
+    public function build()
+    {
+        $stream = new Stream('php://temp', 'wb+');
+
+
+        $stream->write(json_encode(new MessageDecorator($this->getMessage())));
+
+        return $this->getHttpMessage()
+            ->withAddedHeader('Content-Type', 'application/json')
             ->withBody($stream);
     }
 
