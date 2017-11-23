@@ -2,6 +2,7 @@
 
 namespace Test\Fei\Service\Connect\Common\Message\Http;
 
+use Fei\Service\Connect\Common\Admin\Message\PingMessage;
 use Fei\Service\Connect\Common\Cryptography\Cryptography;
 use Fei\Service\Connect\Common\Cryptography\RsaKeyGen;
 use Fei\Service\Connect\Common\Cryptography\X509CertificateGen;
@@ -36,7 +37,7 @@ class BodyBuilderTraitTest extends TestCase
         $private = (new RsaKeyGen())->createPrivateKey();
         $certificate = (new X509CertificateGen())->createX509Certificate($private);
 
-        $instance = $instance->build($certificate);
+        $instance = $instance->buildEncrypted($certificate);
         $instance->getBody()->rewind();
 
         $this->assertEquals(

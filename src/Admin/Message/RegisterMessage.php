@@ -5,31 +5,34 @@ namespace Fei\Service\Connect\Common\Admin\Message;
 use Fei\Service\Connect\Common\Message\MessageInterface;
 
 /**
- * Class ResistrationMessage
+ * Class RegisterMessage
  *
  * @package Fei\Service\Connect\Common\Admin\Message
  */
-class SubscribeMessage implements MessageInterface
+class RegisterMessage implements MessageInterface
 {
     /**
-     * @var string
+     * @var
      */
     protected $entityID;
 
     /**
-     * @var string
+     * @var
      */
     protected $name;
 
     /**
-     * @var string
+     * @var
      */
-    protected $adminPathInfo;
+    protected $acs;
 
     /**
-     * Get EntityID
-     *
-     * @return string
+     * @var
+     */
+    protected $logout;
+
+    /**
+     * @return mixed
      */
     public function getEntityID()
     {
@@ -37,23 +40,17 @@ class SubscribeMessage implements MessageInterface
     }
 
     /**
-     * Set EntityID
-     *
-     * @param string $entityID
-     *
-     * @return $this
+     * @param mixed $entityID
+     * @return RegisterMessage
      */
     public function setEntityID($entityID)
     {
         $this->entityID = $entityID;
-
         return $this;
     }
 
     /**
-     * Get Name
-     *
-     * @return string
+     * @return mixed
      */
     public function getName()
     {
@@ -61,42 +58,52 @@ class SubscribeMessage implements MessageInterface
     }
 
     /**
-     * Set Name
-     *
-     * @param string $name
-     *
-     * @return $this
+     * @param mixed $name
+     * @return RegisterMessage
      */
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
 
     /**
-     * Get AdminPathInfo
-     *
-     * @return string
+     * @return mixed
      */
-    public function getAdminPathInfo()
+    public function getAcs()
     {
-        return $this->adminPathInfo;
+        return $this->acs;
     }
 
     /**
-     * Set AdminPathInfo
-     *
-     * @param string $adminPathInfo
-     *
-     * @return $this
+     * @param mixed $acs
+     * @return RegisterMessage
      */
-    public function setAdminPathInfo($adminPathInfo)
+    public function setAcs($acs)
     {
-        $this->adminPathInfo = $adminPathInfo;
-
+        $this->acs = $acs;
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLogout()
+    {
+        return $this->logout;
+    }
+
+    /**
+     * @param mixed $logout
+     * @return RegisterMessage
+     */
+    public function setLogout($logout)
+    {
+        $this->logout = $logout;
+        return $this;
+    }
+
+
 
     /**
      * Specify data which should be serialized to JSON
@@ -111,7 +118,8 @@ class SubscribeMessage implements MessageInterface
         return [
             'entityID' => $this->getEntityID(),
             'name' => $this->getName(),
-            'adminPathInfo' => $this->getAdminPathInfo()
+            'acs' => $this->getAcs(),
+            'logout' => $this->getLogout()
         ];
     }
 }

@@ -22,6 +22,16 @@ class SpEntityConfigurationMessage implements MessageInterface
     protected $xml;
 
     /**
+     * @var
+     */
+    protected $acs = '';
+
+    /**
+     * @var
+     */
+    protected $logout = '';
+
+    /**
      * Get Id
      *
      * @return string
@@ -70,6 +80,42 @@ class SpEntityConfigurationMessage implements MessageInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getAcs()
+    {
+        return $this->acs;
+    }
+
+    /**
+     * @param mixed $acs
+     * @return SpEntityConfigurationMessage
+     */
+    public function setAcs($acs)
+    {
+        $this->acs = $acs;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getLogout()
+    {
+        return $this->logout;
+    }
+
+    /**
+     * @param mixed $logout
+     * @return SpEntityConfigurationMessage
+     */
+    public function setLogout($logout)
+    {
+        $this->logout = $logout;
+        return $this;
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      *
      * @link  http://php.net/manual/en/jsonserializable.jsonserialize.php
@@ -81,7 +127,9 @@ class SpEntityConfigurationMessage implements MessageInterface
     {
         return [
             'id' => $this->getId(),
-            'xml' => $this->getXml()
+            'xml' => $this->getXml(),
+            'acs' => $this->getAcs(),
+            'logout' => $this->getLogout()
         ];
     }
 }

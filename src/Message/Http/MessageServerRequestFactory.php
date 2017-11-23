@@ -42,7 +42,7 @@ class MessageServerRequestFactory extends Base
 
     /**
      * {@inheritdoc}
-     *
+     * @codeCoverageIgnore
      * _Reimplemented_ this static method due to the private visibility
      */
     protected static function marshalProtocolVersion(array $server)
