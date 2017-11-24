@@ -440,9 +440,11 @@ class User extends AbstractEntity implements RoleInterface
      */
     public function addForeignServiceId(ForeignServiceId $foreignServiceId)
     {
+        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
+        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->add($foreignServiceId);
 
@@ -487,9 +489,11 @@ class User extends AbstractEntity implements RoleInterface
      */
     public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
     {
+        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
+        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->clear();
 
@@ -566,9 +570,11 @@ class User extends AbstractEntity implements RoleInterface
             ];
         }
 
+        // @codeCoverageIgnoreStart
         $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
             ? new ArrayCollection()
             : $data['foreign_services_ids'];
+        // @codeCoverageIgnoreEnd
 
         /** @var ForeignServiceId $foreignServiceId */
         if ($data['foreign_services_ids']) {
