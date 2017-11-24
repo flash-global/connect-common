@@ -36,7 +36,7 @@ class Application extends AbstractEntity
     protected $name;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", unique=true)
      *
      * @var string
      */
@@ -62,6 +62,27 @@ class Application extends AbstractEntity
      * @var bool
      */
     protected $allowProfileAssociation = false;
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $isSubscribed = false;
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $isManageable = false;
+
+    /**
+     * @Column(type="json_array")
+     * @var array
+     */
+    protected $contexts = [];
+
 
     /**
      * Get Id
@@ -221,4 +242,85 @@ class Application extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * Get isSubscribed
+     *
+     * @return bool
+     */
+    public function getIsSubscribed()
+    {
+        return $this->isSubscribed;
+    }
+
+    /**
+     * Set isSubscribed
+     *
+     * @param $isSubscribed
+     * @return $this
+     */
+    public function setIsSubscribed($isSubscribed)
+    {
+        $this->isSubscribed = $isSubscribed;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsManageable()
+    {
+        return $this->isManageable;
+    }
+
+    /**
+     * @param bool $isManageable
+     * @return Application
+     */
+    public function setIsManageable($isManageable)
+    {
+        $this->isManageable = $isManageable;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContexts()
+    {
+        return $this->contexts;
+    }
+
+    /**
+     * @param array $contexts
+     * @return Application
+     */
+    public function setContexts($contexts, $erase = true)
+    {
+        if (!$erase) {
+            $this->contexts = array_merge($this->contexts, $contexts);
+        } else {
+            $this->contexts = $contexts;
+        }
+        return $this;
+    }
+
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function addContext($key, $value)
+    {
+        $this->contexts[$key] = $value;
+    }
+
+    /**
+     * @param $key
+     * @return null
+     */
+    public function retrieveContext($key)
+    {
+        return isset($this->contexts[$key]) ? $this->contexts[$key] : null;
+    }
+
 }
