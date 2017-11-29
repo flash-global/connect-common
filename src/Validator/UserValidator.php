@@ -276,8 +276,8 @@ class UserValidator extends AbstractValidator
 
     public function validateLanguage($language)
     {
-        if (!preg_match('/^[a-z]{2}$/', $language)) {
-            $this->addError('language', 'Language has to be a ISO 639-1 code formatted string (en, fr, de, ...)');
+        if (!preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $language)) {
+            $this->addError('language', 'Lang has to be a locale formatted string (en or en_GB)');
             return false;
         }
 

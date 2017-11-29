@@ -207,8 +207,8 @@ class UserValidatorTest extends TestCase
         $validator = new UserValidator();
         $this->assertTrue($validator->validateLanguage('fr'));
 
-        // Only this format is correct: fr
-        $this->assertFalse($validator->validateLanguage('fr_FR'));
+        // Only this format is correct: fr_FR
+        $this->assertTrue($validator->validateLanguage('fr_FR'));
         $this->assertFalse($validator->validateLanguage('FR_FR'));
         $this->assertFalse($validator->validateLanguage('fr_fr'));
         $this->assertFalse($validator->validateLanguage('fr-FR'));
