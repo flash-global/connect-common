@@ -125,6 +125,13 @@ class User extends AbstractEntity implements RoleInterface
     protected $miniAvatarUrl;
 
     /**
+     * @Column(type="string", options={"default":"en"})
+     *
+     * @var string
+     */
+    protected $language;
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -134,6 +141,7 @@ class User extends AbstractEntity implements RoleInterface
         $this->attributions = new ArrayCollection();
         $this->foreignServicesIds = new ArrayCollection();
         $this->setCreatedAt(new \DateTime());
+        $this->setLanguage('en');
 
         parent::__construct($data);
     }
@@ -549,6 +557,29 @@ class User extends AbstractEntity implements RoleInterface
     {
         $this->miniAvatarUrl = $miniAvatarUrl;
 
+        return $this;
+    }
+
+    /**
+     * Get Language
+     *
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
+     * Set Language
+     *
+     * @param string $language
+     *
+     * @return $this
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
         return $this;
     }
 
