@@ -26,7 +26,8 @@ class UserValidatorTest extends TestCase
             ->setLastName('toto')
             ->setEmail('toto@toto.com')
             ->setAvatarUrl('http://toto.com')
-            ->setMiniAvatarUrl('http://toto.com');
+            ->setMiniAvatarUrl('http://toto.com')
+            ->setLanguage('fr');
 
         $this->assertTrue($validator->validate($user));
         $this->assertEmpty($validator->getErrors());
@@ -199,5 +200,20 @@ class UserValidatorTest extends TestCase
         $validator = new UserValidator();
         $this->assertTrue($validator->validateAvatarUrl('http://www.toto.com'));
         $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateLanguage()
+    {
+        $validator = new UserValidator();
+        $this->assertTrue($validator->validateLanguage('fr'));
+
+        // Only this format is correct: fr_FR
+        $this->assertTrue($validator->validateLanguage('fr_FR'));
+        $this->assertFalse($validator->validateLanguage('FR_FR'));
+        $this->assertFalse($validator->validateLanguage('fr_fr'));
+        $this->assertFalse($validator->validateLanguage('fr-FR'));
+        $this->assertFalse($validator->validateLanguage('fr_FRA'));
+        $this->assertFalse($validator->validateLanguage(null));
+        $this->assertFalse($validator->validateLanguage(''));
     }
 }

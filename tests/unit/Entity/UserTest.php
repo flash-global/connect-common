@@ -117,6 +117,16 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getLocalUsername(), 'localUsername', $user);
     }
 
+    public function testLanguageAccessors()
+    {
+        $user = new User();
+
+        $user->setLanguage('test');
+
+        $this->assertEquals('test', $user->getLanguage());
+        $this->assertAttributeEquals($user->getLanguage(), 'language', $user);
+    }
+
     public function testForeignServicesIdsAccessors()
     {
         $user = new User();
@@ -257,6 +267,7 @@ class UserTest extends TestCase
                 'attributions' => [],
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
+                'language' => 'en',
                 'role_id' => null,
                 'foreign_services_ids' => []
             ],
@@ -330,6 +341,7 @@ class UserTest extends TestCase
                 'local_username' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
+                'language' => 'en',
                 'role_id' => null,
                 'foreign_services_ids' => [
                     [
