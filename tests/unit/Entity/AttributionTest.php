@@ -57,6 +57,16 @@ class AttributionTest extends TestCase
         $this->assertAttributeEquals($attribution->getApplication(), 'application', $attribution);
     }
 
+    public function testIsDefaultAccessor()
+    {
+        $attribution = new Attribution();
+
+        $attribution->setIsDefault(true);
+
+        $this->assertEquals(true, $attribution->getIsDefault());
+        $this->assertAttributeEquals($attribution->getIsDefault(), 'isDefault', $attribution);
+    }
+
     public function testToArrayEmpty()
     {
         $attribution = new Attribution();
@@ -66,7 +76,8 @@ class AttributionTest extends TestCase
                 'id' => null,
                 'role' => null,
                 'application' => null,
-                'user' => null
+                'user' => null,
+                'is_default' => false
             ],
             $attribution->toArray()
         );
@@ -103,7 +114,8 @@ class AttributionTest extends TestCase
                     ->setId(1)
                     ->setRole('role 1')
                     ->setLabel('role 1')
-            );
+            )
+            ;
 
         $attribution->getUser()->getAttributions()->add($attribution);
 
@@ -168,10 +180,12 @@ class AttributionTest extends TestCase
                                 'role' => 'role 1',
                                 'label' => 'role 1',
                                 'user_created' => false
-                            ]
+                            ],
+                            'is_default' => false
                         ]
                     ]
-                ]
+                ],
+                'is_default' => false
             ],
             $attribution->toArray()
         );
@@ -185,6 +199,7 @@ class AttributionTest extends TestCase
         $this->assertNull($attribution->getUser());
         $this->assertNull($attribution->getApplication());
         $this->assertNull($attribution->getRole());
+        $this->assertFalse($attribution->getIsDefault());
     }
 
     public function testHydrate()
@@ -206,7 +221,8 @@ class AttributionTest extends TestCase
                 'created_at' => '2016-11-18T17:01:06+01:00',
                 'status' => User::STATUS_PENDING,
                 'register_token' => null,
-            ]
+            ],
+            'is_default' => true
         ]);
 
         $this->assertEquals(
@@ -231,6 +247,11 @@ class AttributionTest extends TestCase
                 ->setPassword('toto')
                 ->setAttributions(new ArrayCollection([$attribution])),
             $attribution->getUser()
+        );
+
+        $this->assertEquals(
+            true,
+            $attribution->getIsDefault()
         );
     }
 }
