@@ -265,6 +265,7 @@ class UserTest extends TestCase
                 'current_role' => null,
                 'local_username' => null,
                 'attributions' => [],
+                'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
                 'language' => 'en',
@@ -279,52 +280,54 @@ class UserTest extends TestCase
     {
         $user = new User();
 
-        $user->setForeignServicesIds(
-            new ArrayCollection([
-                (new ForeignServiceId())
-                    ->setName('google')
-                    ->setId('toto123'),
-                (new ForeignServiceId())
-                    ->setName('linkedin')
-                    ->setId('456')
-            ])
-        );
-
-        $user->setAttributions(
-            new ArrayCollection([
-                (new Attribution())
+        $currentAttribution = (new Attribution())
+            ->setId(1)
+            ->setUser($user)
+            ->setApplication(
+                (new Application())
                     ->setId(1)
-                    ->setUser($user)
-                    ->setApplication(
-                        (new Application())
-                            ->setId(1)
-                            ->setName('application test 1')
-                            ->setLogoUrl('test1')
-                    )
-                    ->setRole(
-                        (new Role())
-                            ->setId(1)
-                            ->setRole('role test 1')
-                            ->setLabel('role test 1')
-                    )
-                ,
-                (new Attribution())
-                    ->setId(2)
-                    ->setUser($user)
-                    ->setApplication(
-                        (new Application())
-                            ->setId(2)
-                            ->setName('application test 2')
-                            ->setLogoUrl('test2')
-                    )
-                    ->setRole(
-                        (new Role())
-                            ->setId(2)
-                            ->setRole('role test 2')
-                            ->setLabel('role test 2')
-                    )
-            ])
-        );
+                    ->setName('application test 1')
+                    ->setLogoUrl('test1')
+            )
+            ->setRole(
+                (new Role())
+                    ->setId(1)
+                    ->setRole('role test 1')
+                    ->setLabel('role test 1')
+            );
+
+        $user
+            ->setForeignServicesIds(
+                new ArrayCollection([
+                    (new ForeignServiceId())
+                        ->setName('google')
+                        ->setId('toto123'),
+                    (new ForeignServiceId())
+                        ->setName('linkedin')
+                        ->setId('456')
+                ])
+            )
+            ->setAttributions(
+                new ArrayCollection([
+                    $currentAttribution,
+                    (new Attribution())
+                        ->setId(2)
+                        ->setUser($user)
+                        ->setApplication(
+                            (new Application())
+                                ->setId(2)
+                                ->setName('application test 2')
+                                ->setLogoUrl('test2')
+                        )
+                        ->setRole(
+                            (new Role())
+                                ->setId(2)
+                                ->setRole('role test 2')
+                                ->setLabel('role test 2')
+                        )
+                ])
+            )
+            ->setCurrentAttribution($currentAttribution);
 
         $this->assertEquals(
             [
@@ -394,6 +397,26 @@ class UserTest extends TestCase
                             'user_created' => false
                         ]
                     ]
+                ],
+                'current_attribution' => [
+                    'id' => 1,
+                    'application' => [
+                        'id' => 1,
+                        'name' => 'application test 1',
+                        'url' => null,
+                        'status' => Application::STATUS_ENABLED,
+                        'logo_url' => 'test1',
+                        'allow_profile_association' => false,
+                        'is_subscribed' => false,
+                        'is_manageable' => false,
+                        'contexts' => []
+                    ],
+                    'role' => [
+                        'id' => 1,
+                        'role' => 'role test 1',
+                        'label' => 'role test 1',
+                        'user_created' => false
+                    ]
                 ]
             ],
             $user->toArray()
@@ -454,24 +477,37 @@ class UserTest extends TestCase
                         'role' => 'role test 2'
                     ]
                 ]
+            ],
+            'current_attribution' => [
+                'id' => 1,
+                'application' => [
+                    'id' => 1,
+                    'name' => 'application test 1'
+                ],
+                'role' => [
+                    'id' => 1,
+                    'role' => 'role test 1'
+                ]
             ]
         ]);
 
+        $currentAttribution = (new Attribution())
+            ->setId(1)
+            ->setUser($user)
+            ->setRole(
+                (new Role())
+                    ->setId(1)
+                    ->setRole('role test 1')
+            )
+            ->setApplication(
+                (new Application())
+                    ->setId(1)
+                    ->setName('application test 1')
+            );
+
         $this->assertEquals(
             new ArrayCollection([
-                (new Attribution())
-                    ->setId(1)
-                    ->setUser($user)
-                    ->setRole(
-                        (new Role())
-                            ->setId(1)
-                            ->setRole('role test 1')
-                    )
-                    ->setApplication(
-                        (new Application())
-                            ->setId(1)
-                            ->setName('application test 1')
-                    ),
+                $currentAttribution,
                 (new Attribution())
                     ->setId(2)
                     ->setUser($user)
@@ -499,6 +535,11 @@ class UserTest extends TestCase
                         ->setId('toto456')
             ]),
             $user->getForeignServicesIds()
+        );
+
+        $this->assertEquals(
+            $currentAttribution,
+            $user->getCurrentAttribution()
         );
     }
 }

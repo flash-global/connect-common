@@ -106,6 +106,11 @@ class User extends AbstractEntity implements RoleInterface
     protected $attributions;
 
     /**
+     * @var Attribution;
+     */
+    protected $currentAttribution;
+
+    /**
      * @var ArrayCollection
      */
     protected $foreignServicesIds;
@@ -440,6 +445,29 @@ class User extends AbstractEntity implements RoleInterface
     }
 
     /**
+     * Get CurrentAttribution
+     *
+     * @return Attribution
+     */
+    public function getCurrentAttribution()
+    {
+        return $this->currentAttribution;
+    }
+
+    /**
+     * Set CurrentAttribution
+     *
+     * @param Attribution|null $currentAttribution
+     *
+     * @return $this
+     */
+    public function setCurrentAttribution($currentAttribution)
+    {
+        $this->currentAttribution = $currentAttribution;
+        return $this;
+    }
+
+    /**
      * Add ForeignServiceId
      *
      * @param ForeignServiceId $foreignServiceId
@@ -590,6 +618,7 @@ class User extends AbstractEntity implements RoleInterface
     {
         $data = parent::toArray($mapped);
         $attributions = [];
+        $currentAttribution = null;
         $foreignServicesIds = [];
 
         /** @var Attribution $attribution */
@@ -598,6 +627,14 @@ class User extends AbstractEntity implements RoleInterface
                 'id' => $attribution->getId(),
                 'application' => $attribution->getApplication()->toArray(),
                 'role' => $attribution->getRole()->toArray()
+            ];
+        }
+
+        if ($data['current_attribution']) {
+            $currentAttribution = [
+                'id' => $data['current_attribution']->getId(),
+                'application' => $data['current_attribution']->getApplication()->toArray(),
+                'role' => $data['current_attribution']->getRole()->toArray()
             ];
         }
 
@@ -618,6 +655,7 @@ class User extends AbstractEntity implements RoleInterface
         }
 
         $data['attributions'] = $attributions;
+        $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
 
         return $data;
@@ -630,6 +668,7 @@ class User extends AbstractEntity implements RoleInterface
     {
         $attributions = new ArrayCollection();
         $foreignServicesIds = new ArrayCollection();
+        $currentAttribution = null;
 
         if (!empty($data['attributions'])) {
             foreach ($data['attributions'] as $attribution) {
@@ -650,8 +689,14 @@ class User extends AbstractEntity implements RoleInterface
             }
         }
 
+        if (!empty($data['current_attribution'])) {
+            $currentAttribution = (new Attribution($data['current_attribution']))
+                ->setUser($this);
+        }
+
         $data['foreign_services_ids'] = $foreignServicesIds;
         $data['attributions'] = $attributions;
+        $data['current_attribution'] = $currentAttribution;
 
         return parent::hydrate($data);
     }

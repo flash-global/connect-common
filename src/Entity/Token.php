@@ -66,6 +66,14 @@ class Token extends AbstractEntity
     protected $expiration;
 
     /**
+     * @ManyToOne(targetEntity="Attribution")
+     * @JoinColumn(name="attribution_id", nullable=true)
+     *
+     * @var Attribution
+     */
+    protected $attribution;
+
+    /**
      * Token constructor.
      *
      * @param array $data
@@ -217,6 +225,29 @@ class Token extends AbstractEntity
     public function setExpiration(\DateTime $expiration)
     {
         $this->expiration = $expiration;
+        return $this;
+    }
+
+    /**
+     * Get Attribution
+     *
+     * @return Attribution|null
+     */
+    public function getAttribution()
+    {
+        return $this->attribution;
+    }
+
+    /**
+     * Set Attribution
+     *
+     * @param Attribution|null $attribution
+     *
+     * @return $this
+     */
+    public function setAttribution($attribution)
+    {
+        $this->attribution = $attribution;
         return $this;
     }
 }

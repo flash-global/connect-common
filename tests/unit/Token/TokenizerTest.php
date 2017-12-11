@@ -2,6 +2,7 @@
 
 namespace Test\Fei\Service\Connect\Common\ProfileAssociation;
 
+use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\User;
 use Fei\Service\Connect\Common\Token\Tokenizer;
 use Fei\Service\Connect\Common\Token\TokenRequest;
@@ -27,6 +28,41 @@ class TokenizerTest extends TestCase
         $this->assertInstanceOf(TokenRequest::class, $request);
         $this->assertEquals('username', $request->getUsername());
         $this->assertEquals('issuer', $request->getIssuer());
+        $this->assertEquals(null, $request->getAttributionId());
+    }
+
+    public function testCreateTokenRequestWithNullAttributionId()
+    {
+        $request = (new Tokenizer())->createTokenRequest(
+            new User([
+                'username' => 'username',
+                'current_attribution' => null
+            ]),
+            'issuer'
+        );
+
+        $this->assertInstanceOf(TokenRequest::class, $request);
+        $this->assertEquals('username', $request->getUsername());
+        $this->assertEquals('issuer', $request->getIssuer());
+        $this->assertEquals(null, $request->getAttributionId());
+    }
+
+    public function testCreateTokenRequestWithAttributionId()
+    {
+        $request = (new Tokenizer())->createTokenRequest(
+            new User([
+                'username' => 'username',
+                'current_attribution' => [
+                    'id' => 1
+                ]
+            ]),
+            'issuer'
+        );
+
+        $this->assertInstanceOf(TokenRequest::class, $request);
+        $this->assertEquals('username', $request->getUsername());
+        $this->assertEquals('issuer', $request->getIssuer());
+        $this->assertEquals(1, $request->getAttributionId());
     }
 
     public function testCreateApplicationTokenRequest()

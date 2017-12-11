@@ -31,8 +31,11 @@ class Tokenizer
      */
     public function createTokenRequest(User $user, $issuer)
     {
+        $idAttribution = $user->getCurrentAttribution() ? $user->getCurrentAttribution()->getId() : null;
+
         return (new TokenRequest())
             ->setUsername($user->getUserName())
+            ->setAttributionId($idAttribution)
             ->setIssuer($issuer);
     }
 

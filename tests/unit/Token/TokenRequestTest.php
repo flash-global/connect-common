@@ -2,6 +2,9 @@
 
 namespace Test\Fei\Service\Connect\Common\ProfileAssociation;
 
+use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Token\TokenRequest;
 use PHPUnit\Framework\TestCase;
 
@@ -30,6 +33,31 @@ class TokenRequestTest extends TestCase
 
         $this->assertEquals('username', $tokenRequest->getUsername());
         $this->assertAttributeEquals($tokenRequest->getUsername(), 'username', $tokenRequest);
+    }
+
+    /**
+     * @dataProvider dataAttributionAccessor
+     */
+    public function testAttributionAccessor($attributionId)
+    {
+        $tokenRequest = new TokenRequest();
+
+        $tokenRequest->setAttributionId($attributionId);
+
+        $this->assertEquals($attributionId, $tokenRequest->getAttributionId());
+        $this->assertAttributeEquals($tokenRequest->getAttributionId(), 'attributionId', $tokenRequest);
+    }
+
+    public function dataAttributionAccessor()
+    {
+        return [
+            0 => [
+                1
+            ],
+            1 => [
+                null
+            ]
+        ];
     }
 
     public function testSignatureAccessor()
