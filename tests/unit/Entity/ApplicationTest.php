@@ -122,4 +122,14 @@ class ApplicationTest extends TestCase
 
         $this->assertEquals('value', $application->retrieveContext('key'));
     }
+
+    public function testConfig()
+    {
+        $config = '<EntityDescriptor entityID="http://127.0.0.1:8207" ID="_d75dfa42671b27489f6ac1ed2b1340cec8876deaf4" />';
+
+        $application = new Application();
+        $application->setConfig($config);
+
+        $this->assertEquals($config, $application->getConfig());
+    }
 }

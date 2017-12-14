@@ -78,6 +78,13 @@ class Application extends AbstractEntity
     protected $isManageable = false;
 
     /**
+     * @Column(type="text")
+     *
+     * @var string
+     */
+    protected $config;
+
+    /**
      * @Column(type="json_array")
      * @var array
      */
@@ -282,6 +289,25 @@ class Application extends AbstractEntity
         $this->isManageable = $isManageable;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param string $config
+     * @return Application
+     */
+    public function setConfig($config)
+    {
+        $this->config = $config;
+        return $this;
+    }
+
 
     /**
      * @return array
