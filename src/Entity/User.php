@@ -430,8 +430,20 @@ class User extends AbstractEntity implements RoleInterface
     {
         $this->attributions->clear();
 
+        $hasDefaultAttribution = false;
+
         /** @var Attribution $attr */
         foreach ($attributions as $attr) {
+            if ($hasDefaultAttribution) {
+                if ($attr->getIsDefault()) {
+                    $attr->setIsDefault(false);
+                }
+            } else {
+                if ($attr->getIsDefault()) {
+                    $hasDefaultAttribution = true;
+                }
+            }
+
             $attr->setUser($this);
             $this->attributions->add($attr);
         }
@@ -597,7 +609,8 @@ class User extends AbstractEntity implements RoleInterface
             $attributions[] = [
                 'id' => $attribution->getId(),
                 'application' => $attribution->getApplication()->toArray(),
-                'role' => $attribution->getRole()->toArray()
+                'role' => $attribution->getRole()->toArray(),
+                'is_default' => $attribution->getIsDefault()
             ];
         }
 

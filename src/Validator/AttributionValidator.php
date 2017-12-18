@@ -34,6 +34,7 @@ class AttributionValidator extends AbstractValidator
         $this->validateUser($entity->getUser());
         $this->validateApplication($entity->getApplication());
         $this->validateRole($entity->getRole());
+        $this->validateIsDefault($entity->getIsDefault());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -100,5 +101,20 @@ class AttributionValidator extends AbstractValidator
         }
 
         return $response;
+    }
+
+    public function validateIsDefault($isDefault)
+    {
+        if (!is_bool($isDefault) && !is_numeric($isDefault)) {
+            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
+            return false;
+        }
+
+        if (0 != (integer) $isDefault && 1 != (integer) $isDefault) {
+            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
+            return false;
+        }
+
+        return true;
     }
 }

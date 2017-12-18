@@ -53,6 +53,13 @@ class Attribution extends AbstractEntity
     protected $role;
 
     /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $isDefault = false;
+
+    /**
      * Get Id
      *
      * @return int
@@ -149,6 +156,29 @@ class Attribution extends AbstractEntity
     }
 
     /**
+     * Get IsDefault
+     *
+     * @return bool
+     */
+    public function getIsDefault()
+    {
+        return $this->isDefault;
+    }
+
+    /**
+     * Set IsDefault
+     *
+     * @param bool $isDefault
+     *
+     * @return $this
+     */
+    public function setIsDefault(bool $isDefault)
+    {
+        $this->isDefault = $isDefault;
+        return $this;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($mapped = false)
@@ -158,6 +188,7 @@ class Attribution extends AbstractEntity
         $data['user'] = !empty($data['user']) ? $data['user']->toArray() : null;
         $data['application'] = !empty($data['application']) ? $data['application']->toArray() : null;
         $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
+        $data['is_default'] = !empty($data['is_default']) ? $data['is_default'] : false;
 
         return $data;
     }
