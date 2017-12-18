@@ -213,4 +213,24 @@ class Attribution extends AbstractEntity
 
         return parent::hydrate($data);
     }
+
+    /**
+     * Get the Attribution Role localUsername
+     *
+     * @return null|string
+     */
+    public function fetchLocalUsername()
+    {
+        $localUsername = null;
+
+        $role = $this->getRole();
+        if ($role) {
+            $roleParts = explode(':', $role->getRole());
+            if (count($roleParts) === 3) {
+                $localUsername = $roleParts[2];
+            }
+        }
+
+        return $localUsername;
+    }
 }

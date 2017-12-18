@@ -73,9 +73,9 @@ class AttributionTest extends TestCase
 
         $this->assertEquals(
             [
-                'id' => null,
-                'role' => null,
-                'application' => null,
+                'id'             => null,
+                'role'           => null,
+                'application'    => null,
                 'user' => null,
                 'is_default' => false
             ],
@@ -183,6 +183,8 @@ class AttributionTest extends TestCase
                             ],
                             'is_default' => false
                         ]
+                    ],
+                    'current_attribution' => null
                     ]
                 ],
                 'is_default' => false
@@ -253,5 +255,40 @@ class AttributionTest extends TestCase
             true,
             $attribution->getIsDefault()
         );
+    }
+
+    /**
+     * @dataProvider dataFetchLocalUsername
+     */
+    public function testFetchLocalUsername($attribution, $localUsername)
+    {
+        $this->assertEquals($localUsername, $attribution->fetchLocalUsername());
+    }
+
+    public function dataFetchLocalUsername()
+    {
+        return [
+            0 => [
+                (new Attribution())
+                    ->setRole(
+                        (new Role())->setRole('Application:ADMIN:toto')
+                    ),
+                'toto'
+            ],
+            1 => [
+                (new Attribution())
+                    ->setRole(
+                        (new Role())->setRole('ADMIN')
+                    ),
+                null
+            ],
+            2 => [
+                (new Attribution())
+                    ->setRole(
+                        (new Role())
+                    ),
+                null
+            ]
+        ];
     }
 }

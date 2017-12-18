@@ -3,6 +3,7 @@
 namespace Fei\Service\Connect\Common\Token;
 
 use Fei\Entity\AbstractEntity;
+use Fei\Service\Connect\Common\Entity\Attribution;
 
 /**
  * Class TokenRequest
@@ -20,6 +21,11 @@ class TokenRequest extends AbstractEntity
      * @var string
      */
     protected $username;
+
+    /**
+     * @var integer|null
+     */
+    protected $attributionId;
 
     /**
      * @var string
@@ -71,6 +77,29 @@ class TokenRequest extends AbstractEntity
     {
         $this->username = $username;
 
+        return $this;
+    }
+
+    /**
+     * Get AttributionId
+     *
+     * @return int|null
+     */
+    public function getAttributionId()
+    {
+        return $this->attributionId;
+    }
+
+    /**
+     * Set AttributionId
+     *
+     * @param int|null $attributionId
+     *
+     * @return $this
+     */
+    public function setAttributionId($attributionId)
+    {
+        $this->attributionId = $attributionId;
         return $this;
     }
 
