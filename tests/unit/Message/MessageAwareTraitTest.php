@@ -17,13 +17,16 @@ class MessageAwareTraitTest extends TestCase
     {
         $message = $this->getMockBuilder(MessageInterface::class)->getMock();
 
-        $instance = new class {
-            use MessageAwareTrait;
-        };
+        $instance = new Instance();
 
         $instance->setMessage($message);
 
         $this->assertEquals($message, $instance->getMessage());
         $this->assertAttributeEquals($message, 'message', $instance);
     }
+}
+
+class Instance
+{
+    use MessageAwareTrait;
 }

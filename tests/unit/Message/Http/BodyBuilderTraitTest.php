@@ -2,7 +2,6 @@
 
 namespace Test\Fei\Service\Connect\Common\Message\Http;
 
-use Fei\Service\Connect\Common\Admin\Message\PingMessage;
 use Fei\Service\Connect\Common\Cryptography\Cryptography;
 use Fei\Service\Connect\Common\Cryptography\RsaKeyGen;
 use Fei\Service\Connect\Common\Cryptography\X509CertificateGen;
@@ -23,14 +22,7 @@ class BodyBuilderTraitTest extends TestCase
         $message = $this->getMockBuilder(MessageInterface::class)->getMock();
         $message->expects($this->once())->method('jsonSerialize')->willReturn('message');
 
-        $instance = new class {
-            use BodyBuilderTrait;
-
-            public function getHttpMessage()
-            {
-                return new Response();
-            }
-        };
+        $instance = new Instance();
 
         $instance->setMessage($message);
 
@@ -48,5 +40,15 @@ class BodyBuilderTraitTest extends TestCase
             )['data']
         );
         $this->assertEquals('text/plain', $instance->getHeaderLine('Content-Type'));
+    }
+}
+
+class Instance
+{
+    use BodyBuilderTrait;
+
+    public function getHttpMessage()
+    {
+        return new Response();
     }
 }

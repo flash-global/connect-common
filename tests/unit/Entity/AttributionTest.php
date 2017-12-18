@@ -185,7 +185,6 @@ class AttributionTest extends TestCase
                         ]
                     ],
                     'current_attribution' => null
-                    ]
                 ],
                 'is_default' => false
             ],
