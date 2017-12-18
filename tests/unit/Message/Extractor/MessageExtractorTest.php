@@ -91,8 +91,7 @@ class MessageExtractorTest extends TestCase
         $extractor = new MessageExtractor();
         $extractor->setHydrator(new MessageHydrator());
 
-        $this->expectException(get_class($exception));
-        $this->expectExceptionMessage($exception->getMessage());
+        $this->setExpectedException(get_class($exception), $exception->getMessage());
 
         $extractor->extract($data);
     }
@@ -129,8 +128,7 @@ class MessageExtractorTest extends TestCase
         $extractor = new MessageExtractor();
         $extractor->setHydrator(new MessageHydrator());
 
-        $this->expectException(get_class($exception));
-        $this->expectExceptionMessage($exception->getMessage());
+        $this->setExpectedException(get_class($exception), $exception->getMessage());
 
         $extractor->extract($data);
     }

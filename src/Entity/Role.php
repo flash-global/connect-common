@@ -139,4 +139,21 @@ class Role extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * Get the Role localUsername
+     *
+     * @return null|string
+     */
+    public function fetchLocalUsername()
+    {
+        $localUsername = null;
+
+        $roleParts = explode(':', $this->getRole());
+        if (count($roleParts) === 3) {
+            $localUsername = $roleParts[2];
+        }
+
+        return $localUsername;
+    }
 }

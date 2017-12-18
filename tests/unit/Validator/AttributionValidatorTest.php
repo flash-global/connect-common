@@ -39,7 +39,8 @@ class AttributionValidatorTest extends TestCase
         $attribution = (new Attribution())
             ->setUser($user)
             ->setApplication($application)
-            ->setRole($role);
+            ->setRole($role)
+            ->setIsDefault(true);
 
         $this->assertTrue($validator->validate($attribution));
         $this->assertEmpty($validator->getErrors());
@@ -49,8 +50,8 @@ class AttributionValidatorTest extends TestCase
     {
         $validator = new AttributionValidator();
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(
+        $this->setExpectedException(
+            Exception::class,
             'The Entity to validate must be an instance of ' . Attribution::class
         );
 
@@ -104,6 +105,45 @@ class AttributionValidatorTest extends TestCase
 
         $validator = new AttributionValidator();
         $this->assertTrue($validator->validateRole($role));
+        $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateIsDefault()
+    {
+        $validator = new AttributionValidator();
+        $this->assertFalse($validator->validateIsDefault("true"));
+        $this->assertRegExp('/^(is_default: Is default must be a boolean or 0 or 1)/', $validator->getErrorsAsString());
+
+        $validator = new AttributionValidator();
+        $this->assertFalse($validator->validateIsDefault("false"));
+        $this->assertRegExp('/^(is_default: Is default must be a boolean or 0 or 1)/', $validator->getErrorsAsString());
+
+        $validator = new AttributionValidator();
+        $this->assertFalse($validator->validateIsDefault('10'));
+        $this->assertRegExp('/^(is_default: Is default must be a boolean or 0 or 1)/', $validator->getErrorsAsString());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault(true));
+        $this->assertEmpty($validator->getErrors());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault(false));
+        $this->assertEmpty($validator->getErrors());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault(0));
+        $this->assertEmpty($validator->getErrors());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault(1));
+        $this->assertEmpty($validator->getErrors());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault('0'));
+        $this->assertEmpty($validator->getErrors());
+
+        $validator = new AttributionValidator();
+        $this->assertTrue($validator->validateIsDefault('1'));
         $this->assertEmpty($validator->getErrors());
     }
 }

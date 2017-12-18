@@ -2,7 +2,10 @@
 
 namespace Test\Fei\Service\Connect\Common\Validator;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\Validator\Exception;
+use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
 use Fei\Service\Connect\Common\Validator\UserValidator;
@@ -37,10 +40,7 @@ class UserValidatorTest extends TestCase
     {
         $validator = new UserValidator();
 
-        $this->expectException(Exception::class);
-        $this->expectExceptionMessage(
-            'The Entity to validate must be an instance of ' . User::class
-        );
+        $this->setExpectedException(Exception::class, 'The Entity to validate must be an instance of ' . User::class);
 
         $validator->validate(new Role());
     }
@@ -215,5 +215,82 @@ class UserValidatorTest extends TestCase
         $this->assertFalse($validator->validateLanguage('fr_FRA'));
         $this->assertFalse($validator->validateLanguage(null));
         $this->assertFalse($validator->validateLanguage(''));
+    }
+
+    public function testValidateDefaultAttribution()
+    {
+        $validator = new UserValidator();
+
+        $this->assertTrue($validator->validateDefaultAttribution(
+            new ArrayCollection([
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(1)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(1)
+                    )
+                    ->setIsDefault(true),
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(1)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(1)
+                    )
+                    ->setIsDefault(false),
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(2)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(1)
+                    )
+                    ->setIsDefault(true),
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(1)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(2)
+                    )
+                    ->setIsDefault(true)
+            ])
+        ));
+        $this->assertEmpty($validator->getErrors());
+
+        $this->assertFalse($validator->validateDefaultAttribution(
+            new ArrayCollection([
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(1)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(1)
+                    )
+                    ->setIsDefault(true),
+                (new Attribution())
+                    ->setApplication(
+                        (new Application())
+                            ->setId(1)
+                    )
+                    ->setUser(
+                        (new User())
+                            ->setId(1)
+                    )
+                    ->setIsDefault(true)
+            ])
+        ));
+        $this->assertEquals('It can\'t be more than one default attribution by application by user', $validator->getErrors()['attributions'][0]);
     }
 }

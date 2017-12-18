@@ -3,6 +3,7 @@
 namespace Test\Fei\Service\Connect\Common\Entity;
 
 use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\Token;
 use Fei\Service\Connect\Common\Entity\User;
 use PHPUnit\Framework\TestCase;
@@ -82,5 +83,25 @@ class TokenTest extends TestCase
 
         $this->assertEquals($application, $token->getApplication());
         $this->assertAttributeEquals($token->getApplication(), 'application', $token);
+    }
+
+    public function testAttributionAccessors()
+    {
+        $token = new Token();
+
+        $token->setAttribution(new Attribution());
+
+        $this->assertEquals(new Attribution(), $token->getAttribution());
+        $this->assertAttributeEquals($token->getAttribution(), 'attribution', $token);
+    }
+
+    public function testAttributionAccessorsNull()
+    {
+        $token = new Token();
+
+        $token->setAttribution(null);
+
+        $this->assertEquals(null, $token->getAttribution());
+        $this->assertAttributeEquals($token->getAttribution(), 'attribution', $token);
     }
 }

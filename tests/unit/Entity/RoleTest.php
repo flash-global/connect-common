@@ -41,4 +41,30 @@ class RoleTest extends TestCase
         $this->assertEquals(true, $role->getUserCreated());
         $this->assertAttributeEquals($role->getUserCreated(), 'userCreated', $role);
     }
+
+    /**
+     * @dataProvider dataFetchLocalUsername
+     */
+    public function testFetchLocalUsername($role, $localUsername)
+    {
+        $this->assertEquals($localUsername, $role->fetchLocalUsername());
+    }
+
+    public function dataFetchLocalUsername()
+    {
+        return [
+            0 => [
+                (new Role())->setRole('Application:ADMIN:toto'),
+                'toto'
+            ],
+            1 => [
+                (new Role())->setRole('ADMIN'),
+                null
+            ],
+            1 => [
+                (new Role()),
+                null
+            ]
+        ];
+    }
 }
