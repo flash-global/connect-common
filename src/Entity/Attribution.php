@@ -172,7 +172,7 @@ class Attribution extends AbstractEntity
      *
      * @return $this
      */
-    public function setIsDefault(bool $isDefault)
+    public function setIsDefault($isDefault)
     {
         $this->isDefault = $isDefault;
         return $this;

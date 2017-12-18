@@ -17,13 +17,16 @@ class MessageExtractorAwareTraitTest extends TestCase
     {
         $extractor = $this->getMockBuilder(MessageExtractor::class)->getMock();
 
-        $instance = new class {
-            use MessageExtractorAwareTrait;
-        };
+        $instance = new Instance();
 
         $instance->setMessageExtractor($extractor);
 
         $this->assertEquals($extractor, $instance->getMessageExtractor());
         $this->assertAttributeEquals($extractor, 'messageExtractor', $instance);
     }
+}
+
+class Instance
+{
+    use MessageExtractorAwareTrait;
 }
