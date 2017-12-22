@@ -348,5 +348,4 @@ class Application extends AbstractEntity
     {
         return isset($this->contexts[$key]) ? $this->contexts[$key] : null;
     }
-
 }
