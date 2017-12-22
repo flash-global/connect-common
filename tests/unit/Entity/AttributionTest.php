@@ -131,6 +131,7 @@ class AttributionTest extends TestCase
                     'allow_profile_association' => false,
                     'is_subscribed' => false,
                     'is_manageable' => false,
+                    'config' => '',
                     'contexts' => []
                 ],
                 'role' => [
@@ -173,6 +174,7 @@ class AttributionTest extends TestCase
                                 'allow_profile_association' => false,
                                 'is_subscribed' => false,
                                 'is_manageable' => false,
+                                'config' => '',
                                 'contexts' => []
                             ],
                             'role' => [
