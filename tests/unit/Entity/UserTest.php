@@ -477,6 +477,7 @@ class UserTest extends TestCase
                             'allow_profile_association' => false,
                             'is_subscribed' => false,
                             'is_manageable' => false,
+                            'config' => '',
                             'contexts' => []
                         ],
                         'role' => [
@@ -498,6 +499,7 @@ class UserTest extends TestCase
                             'allow_profile_association' => false,
                             'is_subscribed' => false,
                             'is_manageable' => false,
+                            'config' => '',
                             'contexts' => []
                         ],
                         'role' => [
@@ -520,6 +522,7 @@ class UserTest extends TestCase
                         'allow_profile_association' => false,
                         'is_subscribed' => false,
                         'is_manageable' => false,
+                        'config' => '',
                         'contexts' => []
                     ],
                     'role' => [
@@ -655,7 +658,7 @@ class UserTest extends TestCase
             new \DateTime($date),
             $user->getCreatedAt()
         );
-        
+
         $this->assertEquals(
             $currentAttribution,
             $user->getCurrentAttribution()
