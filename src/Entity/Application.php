@@ -82,7 +82,7 @@ class Application extends AbstractEntity
      *
      * @var string
      */
-    protected $config;
+    protected $config = '';
 
     /**
      * @Column(type="json_array")
