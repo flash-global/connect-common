@@ -55,9 +55,13 @@ class TokenTest extends TestCase
     {
         $token = new Token();
 
-        $token->setUser(new User());
 
-        $this->assertEquals(new User(), $token->getUser());
+        $user = new User();
+        $clonedUser = clone $user;
+
+        $token->setUser($user);
+
+        $this->assertEquals($clonedUser, $token->getUser());
         $this->assertAttributeEquals($token->getUser(), 'user', $token);
     }
 

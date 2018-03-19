@@ -31,9 +31,12 @@ class AttributionTest extends TestCase
     {
         $attribution = new Attribution();
 
-        $attribution->setUser(new User());
+        $user = new User();
+        $clonedUser = clone $user;
 
-        $this->assertEquals(new User(), $attribution->getUser());
+        $attribution->setUser($user);
+
+        $this->assertEquals($clonedUser, $attribution->getUser());
         $this->assertAttributeEquals($attribution->getUser(), 'user', $attribution);
     }
 
