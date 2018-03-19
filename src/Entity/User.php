@@ -68,7 +68,7 @@ class User extends AbstractEntity implements RoleInterface
     protected $lastName;
 
     /**
-     * @Column(type="string", nullable=true)
+     * @Column(type="string", nullable=true, unique=true)
      *
      * @var string
      */
