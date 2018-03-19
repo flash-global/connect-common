@@ -53,8 +53,7 @@ class AttributionValidator extends AbstractValidator
         $userValidator = new UserValidator();
         $response = $userValidator->validate($user);
 
-        if(!$response)
-        {
+        if (!$response) {
             $this->addError('user', 'User must be a valid instance of User class - ' . $userValidator->getErrorsAsString());
         }
 
@@ -74,8 +73,7 @@ class AttributionValidator extends AbstractValidator
         $applicationValidator = new ApplicationValidator();
         $response = $applicationValidator->validate($application);
 
-        if(!$response)
-        {
+        if (!$response) {
             $this->addError('application', 'Application must be a valid instance of Application class - ' . $applicationValidator->getErrorsAsString());
         }
 
@@ -95,8 +93,7 @@ class AttributionValidator extends AbstractValidator
         $roleValidator = new RoleValidator();
         $response = $roleValidator->validate($role);
 
-        if(!$response)
-        {
+        if (!$response) {
             $this->addError('role', 'Role must be a valid instance of Role class - ' . $roleValidator->getErrorsAsString());
         }
 
