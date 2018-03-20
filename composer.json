@@ -27,7 +27,8 @@
         "egulias/email-validator": "~2.1",
         "zendframework/zend-diactoros": "^1.4",
         "zendframework/zend-permissions-acl": "^2.6",
-        "phpseclib/phpseclib": "^2.0"
+        "phpseclib/phpseclib": "^2.0",
+        "league/fractal": "^0.17.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.3"
