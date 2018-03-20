@@ -1,6 +1,6 @@
 <?php
 
-namespace Fei\Service\Connect\Transformer;
+namespace Fei\Service\Connect\Common\Transformer;
 
 use Fei\Service\Connect\Common\Entity\User;
 use League\Fractal\TransformerAbstract;
