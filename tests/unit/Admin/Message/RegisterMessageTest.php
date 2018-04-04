@@ -15,10 +15,10 @@ class RegisterMessageTest extends TestCase
 {
     public function testAccessors()
     {
-        $this->testOneAccessors('entityID', 'http://127.0.0.1:8080');
-        $this->testOneAccessors('name', 'test');
-        $this->testOneAccessors('acs', 'http://127.0.0.1:8080/acs');
-        $this->testOneAccessors('logout', 'http://127.0.0.1:8080/logout');
+        $this->oneAccessors('entityID', 'http://127.0.0.1:8080');
+        $this->oneAccessors('name', 'test');
+        $this->oneAccessors('acs', 'http://127.0.0.1:8080/acs');
+        $this->oneAccessors('logout', 'http://127.0.0.1:8080/logout');
     }
 
     public function testJsonSerialize()
@@ -37,7 +37,7 @@ class RegisterMessageTest extends TestCase
         ], $message->jsonSerialize());
     }
 
-    protected function testOneAccessors($name, $expected)
+    protected function oneAccessors($name, $expected)
     {
         $setter = 'set' . ucfirst($name);
         $getter = 'get' . ucfirst($name);
