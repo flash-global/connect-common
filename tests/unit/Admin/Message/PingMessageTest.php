@@ -13,7 +13,7 @@ class PingMessageTest extends TestCase
 {
     public function testAccessors()
     {
-        $this->testOneAccessors('available', true);
+        $this->oneAccessors('available', true);
     }
 
     public function testJsonSerialize()
@@ -24,7 +24,7 @@ class PingMessageTest extends TestCase
         $this->assertEquals(['available' => true], $message->jsonSerialize());
     }
 
-    protected function testOneAccessors($name, $expected)
+    protected function oneAccessors($name, $expected)
     {
         $setter = 'set' . ucfirst($name);
         $getter = 'get' . ucfirst($name);

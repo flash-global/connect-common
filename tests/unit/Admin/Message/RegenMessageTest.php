@@ -14,7 +14,7 @@ class RegenMessageTest extends TestCase
 {
     public function testAccessors()
     {
-        $this->testOneAccessors('entityID', true);
+        $this->oneAccessors('entityID', true);
     }
 
     public function testJsonSerialize()
@@ -25,7 +25,7 @@ class RegenMessageTest extends TestCase
         $this->assertEquals(['entityID' => true], $message->jsonSerialize());
     }
 
-    protected function testOneAccessors($name, $expected)
+    protected function oneAccessors($name, $expected)
     {
         $setter = 'set' . ucfirst($name);
         $getter = 'get' . ucfirst($name);
