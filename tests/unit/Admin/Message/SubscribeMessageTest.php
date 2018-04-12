@@ -16,9 +16,9 @@ class SubscribeMessageTest extends TestCase
 {
     public function testAccessors()
     {
-        $this->testOneAccessors('entityID', 'http://127.0.0.1:8080');
-        $this->testOneAccessors('name', 'test');
-        $this->testOneAccessors('adminPathInfo', 'http://127.0.0.1:8080/admin.php');
+        $this->oneAccessors('entityID', 'http://127.0.0.1:8080');
+        $this->oneAccessors('name', 'test');
+        $this->oneAccessors('adminPathInfo', 'http://127.0.0.1:8080/admin.php');
     }
 
     public function testJsonSerialize()
@@ -35,7 +35,7 @@ class SubscribeMessageTest extends TestCase
         ], $message->jsonSerialize());
     }
 
-    protected function testOneAccessors($name, $expected)
+    protected function oneAccessors($name, $expected)
     {
         $setter = 'set' . ucfirst($name);
         $getter = 'get' . ucfirst($name);

@@ -55,7 +55,6 @@ class TokenTest extends TestCase
     {
         $token = new Token();
 
-
         $user = new User();
         $clonedUser = clone $user;
 
