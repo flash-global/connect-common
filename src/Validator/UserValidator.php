@@ -54,7 +54,6 @@ class UserValidator extends AbstractValidator
     /**
      * Validate password
      *
-     *
      * @param mixed $password
      *
      * @return bool
@@ -290,7 +289,9 @@ class UserValidator extends AbstractValidator
     {
         $defaultAttributionByApplication = [];
 
-        /** @var Attribution $attribution **/
+        /**
+ * @var Attribution $attribution
+**/
         foreach ($attributions as $attribution) {
             if ($attribution->getIsDefault()) {
                 $applicationId = $attribution->getApplication()->getId();

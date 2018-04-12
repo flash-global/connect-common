@@ -42,6 +42,7 @@ class MessageServerRequestFactory extends Base
 
     /**
      * {@inheritdoc}
+     *
      * @codeCoverageIgnore
      * _Reimplemented_ this static method due to the private visibility
      */
@@ -52,10 +53,12 @@ class MessageServerRequestFactory extends Base
         }
 
         if (! preg_match('#^(HTTP/)?(?P<version>[1-9]\d*(?:\.\d)?)$#', $server['SERVER_PROTOCOL'], $matches)) {
-            throw new UnexpectedValueException(sprintf(
-                'Unrecognized protocol version (%s)',
-                $server['SERVER_PROTOCOL']
-            ));
+            throw new UnexpectedValueException(
+                sprintf(
+                    'Unrecognized protocol version (%s)',
+                    $server['SERVER_PROTOCOL']
+                )
+            );
         }
 
         return $matches['version'];

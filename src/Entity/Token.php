@@ -11,7 +11,7 @@ use Fei\Entity\AbstractEntity;
  * @Table(
  *     name="tokens",
  *     uniqueConstraints={
- *         @UniqueConstraint(name="token_unique", columns={ "user_id", "token" })
+ * @UniqueConstraint(name="token_unique", columns={ "user_id", "token" })
  *     }
  * )
  *

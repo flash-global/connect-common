@@ -263,7 +263,7 @@ class Application extends AbstractEntity
     /**
      * Set isSubscribed
      *
-     * @param $isSubscribed
+     * @param  $isSubscribed
      * @return $this
      */
     public function setIsSubscribed($isSubscribed)

@@ -90,7 +90,7 @@ class Tokenizer
     /**
      * Validate a request token
      *
-     * @param TokenRequest $requestToken
+     * @param TokenRequest    $requestToken
      * @param resource|string $certificate
      *
      * @return bool

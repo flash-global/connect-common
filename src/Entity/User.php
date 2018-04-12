@@ -437,7 +437,9 @@ class User extends AbstractEntity implements RoleInterface
 
         $hasDefaultAttribution = false;
 
-        /** @var Attribution $attr */
+        /**
+ * @var Attribution $attr
+*/
         foreach ($attributions as $attr) {
             if ($hasDefaultAttribution) {
                 if ($attr->getIsDefault()) {
@@ -508,7 +510,9 @@ class User extends AbstractEntity implements RoleInterface
      */
     public function removeForeignServiceId($foreignServiceName)
     {
-        /** @var ForeignServiceId $foreignServiceId */
+        /**
+ * @var ForeignServiceId $foreignServiceId
+*/
         foreach ($this->foreignServicesIds as $key => $foreignServiceId) {
             if ($foreignServiceId->getName() === $foreignServiceName) {
                 $this->foreignServicesIds->remove($key);
@@ -633,7 +637,9 @@ class User extends AbstractEntity implements RoleInterface
         $currentAttribution = null;
         $foreignServicesIds = [];
 
-        /** @var Attribution $attribution */
+        /**
+ * @var Attribution $attribution
+*/
         foreach ($data['attributions'] as $attribution) {
             $attributions[] = [
                 'id' => $attribution->getId(),
@@ -657,7 +663,9 @@ class User extends AbstractEntity implements RoleInterface
             : $data['foreign_services_ids'];
         // @codeCoverageIgnoreEnd
 
-        /** @var ForeignServiceId $foreignServiceId */
+        /**
+ * @var ForeignServiceId $foreignServiceId
+*/
         if ($data['foreign_services_ids']) {
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [

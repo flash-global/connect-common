@@ -11,7 +11,7 @@ use Fei\Entity\AbstractEntity;
  * @Table(
  *     name="attributions",
  *     uniqueConstraints={
- *         @UniqueConstraint(name="attribution_unique", columns={ "user_id", "application_id", "role_id" })
+ * @UniqueConstraint(name="attribution_unique", columns={ "user_id", "application_id", "role_id" })
  *     }
  * )
  *
