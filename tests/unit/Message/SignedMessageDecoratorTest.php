@@ -25,8 +25,8 @@ class SignedMessageDecoratorTest extends TestCase
 
     public function testAccessors()
     {
-        $this->testOneAccessors('signature', '0fzefzefezf');
-        $this->testOneAccessors('certificate', 'rgererger');
+        $this->oneAccessors('signature', '0fzefzefezf');
+        $this->oneAccessors('certificate', 'rgererger');
     }
 
     public function testJsonSerialize()
@@ -76,7 +76,7 @@ class SignedMessageDecoratorTest extends TestCase
         $this->assertEquals($valid, true);
     }
 
-    protected function testOneAccessors($name, $expected)
+    protected function oneAccessors($name, $expected)
     {
         $setter = 'set' . ucfirst($name);
         $getter = 'get' . ucfirst($name);
