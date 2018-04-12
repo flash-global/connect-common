@@ -24,7 +24,7 @@
     "zendframework/zend-diactoros": "^1.4",
     "zendframework/zend-permissions-acl": "^2.6",
     "phpseclib/phpseclib": "^2.0",
-    "league/fractal": "^0.17.0"
+    "league/fractal": "^0.14.0"
   },
   "require-dev": {
     "codeception/codeception": "~2.4",
