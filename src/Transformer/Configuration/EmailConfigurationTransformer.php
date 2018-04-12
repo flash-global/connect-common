@@ -2,7 +2,6 @@
 
 namespace Fei\Service\Connect\Common\Transformer\Configuration;
 
-use Fei\Service\Connect\Common\Entity\Configuration\Configuration;
 use Fei\Service\Connect\Common\Entity\Configuration\ConfigurationInterface;
 use Fei\Service\Connect\Common\Entity\Configuration\EmailConfiguration;
 
@@ -36,7 +35,7 @@ class EmailConfigurationTransformer implements ConfigurationTransformerInterface
      *
      * @return EmailConfiguration
      */
-    public function extract(Configuration ...$configurations)
+    public function extract(array $configurations)
     {
         $emailConfiguration = new EmailConfiguration();
 
