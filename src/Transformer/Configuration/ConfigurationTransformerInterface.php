@@ -24,9 +24,9 @@ interface ConfigurationTransformerInterface
     /**
      * Transform a list of Configurations into a ConfigurationInterface
      *
-     * @param Configuration[] ...$configs
+     * @param Configuration[] $configs
      *
      * @return mixed
      */
-    public function extract(Configuration ...$configs);
+    public function extract(array $configs);
 }
