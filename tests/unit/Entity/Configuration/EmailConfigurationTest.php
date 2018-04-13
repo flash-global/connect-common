@@ -22,6 +22,16 @@ class EmailConfigurationTest extends TestCase
         $this->assertAttributeEquals($configuration->getEmailSender(), 'emailSender', $configuration);
     }
 
+    public function testEmailSenderNameAccessors()
+    {
+        $configuration = new EmailConfiguration();
+
+        $configuration->setEmailSenderName('Test');
+
+        $this->assertEquals('Test', $configuration->getEmailSenderName());
+        $this->assertAttributeEquals($configuration->getEmailSenderName(), 'emailSenderName', $configuration);
+    }
+
     public function testEmailSubjectPrefixAccessors()
     {
         $configuration = new EmailConfiguration();
