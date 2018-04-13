@@ -19,6 +19,11 @@ class EmailConfiguration extends AbstractEntity implements ConfigurationInterfac
     /**
      * @var string
      */
+    protected $emailSenderName;
+
+    /**
+     * @var string
+     */
     protected $emailSubjectPrefix;
 
     /**
@@ -46,6 +51,29 @@ class EmailConfiguration extends AbstractEntity implements ConfigurationInterfac
     public function setEmailSender(string $emailSender)
     {
         $this->emailSender = $emailSender;
+        return $this;
+    }
+
+    /**
+     * Get EmailSenderName
+     *
+     * @return string
+     */
+    public function getEmailSenderName()
+    {
+        return $this->emailSenderName;
+    }
+
+    /**
+     * Set EmailSenderName
+     *
+     * @param string $emailSenderName
+     *
+     * @return $this
+     */
+    public function setEmailSenderName(string $emailSenderName)
+    {
+        $this->emailSenderName = $emailSenderName;
         return $this;
     }
 

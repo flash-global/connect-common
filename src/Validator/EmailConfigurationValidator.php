@@ -35,6 +35,7 @@ class EmailConfigurationValidator extends AbstractValidator
         }
 
         $this->validateEmailSender($entity->getEmailSender());
+        $this->validateEmailSenderName($entity->getEmailSenderName());
         $this->validateEmailSubjectPrefix($entity->getEmailSubjectPrefix());
         $this->validateEmailBodySignature($entity->getEmailBodySignature());
 
@@ -63,6 +64,23 @@ class EmailConfigurationValidator extends AbstractValidator
                 $this->addError(EmailConfigurationTransformer::EMAIL_SENDER, 'Sender email must be an email address');
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate sender name
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function validateEmailSenderName($name)
+    {
+        if (mb_strlen($name, 'UTF-8') > 255) {
+            $this->addError(EmailConfigurationTransformer::EMAIL_SENDER_NAME, 'Sender name length has to be less or equal to 255');
+            return false;
         }
 
         return true;

@@ -17,18 +17,20 @@ class EmailConfigurationTransformerTest extends TestCase
     /**
      * @dataProvider dataTransform
      */
-    public function testTransform($senderEmail, $subjectPrefix, $bodySignature)
+    public function testTransform($senderEmail, $senderName, $subjectPrefix, $bodySignature)
     {
         $transformer = new EmailConfigurationTransformer();
 
         $configuration = (new EmailConfiguration())
             ->setEmailSender($senderEmail)
+            ->setEmailSenderName($senderName)
             ->setEmailSubjectPrefix($subjectPrefix)
             ->setEmailBodySignature($bodySignature);
 
         $this->assertEquals(
             [
                 EmailConfigurationTransformer::EMAIL_SENDER         => $senderEmail,
+                EmailConfigurationTransformer::EMAIL_SENDER_NAME    => $senderName,
                 EmailConfigurationTransformer::EMAIL_SUBJECT_PREFIX => $subjectPrefix,
                 EmailConfigurationTransformer::EMAIL_BODY_SIGNATURE => $bodySignature
             ],
@@ -41,25 +43,36 @@ class EmailConfigurationTransformerTest extends TestCase
         return [
             [
                 'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 'Body signature',
             ],
             [
                 '',
+                'Test',
                 'Subject prefix',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
                 '',
+                'Subject prefix',
+                'Body signature',
+            ],
+            [
+                'sender@test.fr',
+                'Test',
+                '',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 ''
             ],
             [
+                '',
                 '',
                 '',
                 ''
@@ -70,25 +83,31 @@ class EmailConfigurationTransformerTest extends TestCase
     /**
      * @dataProvider dataExtract
      */
-    public function testExtract($senderEmail, $subjectPrefix, $bodySignature)
+    public function testExtract($senderEmail, $senderName, $subjectPrefix, $bodySignature)
     {
         $transformer = new EmailConfigurationTransformer();
 
         $this->assertEquals(
             (new EmailConfiguration())
                 ->setEmailSender($senderEmail)
+                ->setEmailSenderName($senderName)
                 ->setEmailSubjectPrefix($subjectPrefix)
                 ->setEmailBodySignature($bodySignature),
             $transformer->extract(
-                (new Configuration())
-                    ->setKey(EmailConfigurationTransformer::EMAIL_SENDER)
-                    ->setValue($senderEmail),
-                (new Configuration())
-                    ->setKey(EmailConfigurationTransformer::EMAIL_SUBJECT_PREFIX)
-                    ->setValue($subjectPrefix),
-                (new Configuration())
-                    ->setKey(EmailConfigurationTransformer::EMAIL_BODY_SIGNATURE)
-                    ->setValue($bodySignature)
+                [
+                    (new Configuration())
+                        ->setKey(EmailConfigurationTransformer::EMAIL_SENDER)
+                        ->setValue($senderEmail),
+                    (new Configuration())
+                        ->setKey(EmailConfigurationTransformer::EMAIL_SENDER_NAME)
+                        ->setValue($senderName),
+                    (new Configuration())
+                        ->setKey(EmailConfigurationTransformer::EMAIL_SUBJECT_PREFIX)
+                        ->setValue($subjectPrefix),
+                    (new Configuration())
+                        ->setKey(EmailConfigurationTransformer::EMAIL_BODY_SIGNATURE)
+                        ->setValue($bodySignature)
+                ]
             )
         );
     }
@@ -98,25 +117,36 @@ class EmailConfigurationTransformerTest extends TestCase
         return [
             [
                 'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 'Body signature',
             ],
             [
                 '',
+                'Test',
                 'Subject prefix',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
                 '',
+                'Subject prefix',
+                'Body signature',
+            ],
+            [
+                'sender@test.fr',
+                'Test',
+                '',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 ''
             ],
             [
+                '',
                 '',
                 '',
                 ''

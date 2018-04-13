@@ -19,12 +19,13 @@ class EmailConfigurationValidatorTest extends TestCase
     /**
      * @dataProvider dataEmailConfigurationValidate
      */
-    public function testValidate($senderEmail, $subjectPrefix, $bodySignature)
+    public function testValidate($senderEmail, $senderName, $subjectPrefix, $bodySignature)
     {
         $validator = new EmailConfigurationValidator();
 
         $configuration = (new EmailConfiguration())
             ->setEmailSender($senderEmail)
+            ->setEmailSenderName($senderName)
             ->setEmailSubjectPrefix($subjectPrefix)
             ->setEmailBodySignature($bodySignature);
 
@@ -38,25 +39,36 @@ class EmailConfigurationValidatorTest extends TestCase
         return [
             [
                 'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 'Body signature'
             ],
             [
                 '',
+                'Test',
                 'Subject prefix',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
                 '',
+                'Subject prefix',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
+                'Test',
+                '',
+                'Body signature'
+            ],
+            [
+                'sender@test.fr',
+                'Test',
                 'Subject prefix',
                 ''
             ],
             [
+                '',
                 '',
                 '',
                 ''
@@ -67,12 +79,13 @@ class EmailConfigurationValidatorTest extends TestCase
     /**
      * @dataProvider dataEmailConfigurationNotValidate
      */
-    public function testNotValidate($senderEmail, $subjectPrefix, $bodySignature)
+    public function testNotValidate($senderEmail, $senderName, $subjectPrefix, $bodySignature)
     {
         $validator = new EmailConfigurationValidator();
 
         $configuration = (new EmailConfiguration())
             ->setEmailSender($senderEmail)
+            ->setEmailSenderName($senderName)
             ->setEmailSubjectPrefix($subjectPrefix)
             ->setEmailBodySignature($bodySignature);
 
@@ -86,16 +99,25 @@ class EmailConfigurationValidatorTest extends TestCase
         return [
             [
                 'sender',
+                'Test',
                 'Subject prefix',
                 'Body signature'
             ],
             [
+                'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
+                'Test',
+                'Subject prefix',
+                'Body signature'
+            ],
+            [
+                'sender@test.fr',
                 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
                 'Subject prefix',
                 'Body signature'
             ],
             [
                 'sender@test.fr',
+                'Test',
                 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?',
                 'Body signature'
             ],
@@ -145,6 +167,28 @@ class EmailConfigurationValidatorTest extends TestCase
         $validator = new EmailConfigurationValidator();
 
         $this->assertTrue($validator->validateEmailSender($senderEmail));
+        $this->assertEmpty($validator->getErrors());
+    }
+
+    public function testValidateSenderName()
+    {
+        $senderName = 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?';
+
+        $validator = new EmailConfigurationValidator();
+
+        $this->assertFalse($validator->validateEmailSenderName($senderName));
+        $this->assertEquals(
+            'Sender name length has to be less or equal to 255',
+            $validator->getErrors()[EmailConfigurationTransformer::EMAIL_SENDER_NAME][0]
+        );
+
+        // --------
+
+        $senderName = 'Test';
+
+        $validator = new EmailConfigurationValidator();
+
+        $this->assertTrue($validator->validateEmailSenderName($senderName));
         $this->assertEmpty($validator->getErrors());
     }
 
