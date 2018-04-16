@@ -243,6 +243,4 @@ class OAuth extends AbstractEntity
         $this->status = $status;
         return $this;
     }
-
-
 }

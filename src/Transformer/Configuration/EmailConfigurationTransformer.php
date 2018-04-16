@@ -42,7 +42,7 @@ class EmailConfigurationTransformer implements ConfigurationTransformerInterface
         $emailConfiguration = new EmailConfiguration();
 
         foreach ($configurations as $configuration) {
-            switch($configuration->getKey()) {
+            switch ($configuration->getKey()) {
                 case self::EMAIL_SENDER:
                     $emailConfiguration->setEmailSender($configuration->getValue());
                     break;
