@@ -8,4 +8,5 @@ namespace Fei\Service\Connect\Common\Entity\Configuration;
  * @package Fei\Service\Connect\Common\Entity\Configuration
  */
 interface ConfigurationInterface
-{}
+{
+}
