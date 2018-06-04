@@ -50,10 +50,8 @@ class AttributionValidatorTest extends TestCase
     {
         $validator = new AttributionValidator();
 
-        $this->setExpectedException(
-            Exception::class,
-            'The Entity to validate must be an instance of ' . Attribution::class
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The Entity to validate must be an instance of ' . Attribution::class);
 
         $validator->validate(new Role());
     }

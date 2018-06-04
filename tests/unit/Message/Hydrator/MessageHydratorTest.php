@@ -43,7 +43,8 @@ class MessageHydratorTest extends TestCase
             'error' => 'test'
         ];
 
-        $this->setExpectedException(\RuntimeException::class, 'Unable to found setter for "error" data key');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to found setter for "error" data key');
 
         $hydrator->hydrate($message, $data);
     }
