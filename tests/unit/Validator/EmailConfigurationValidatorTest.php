@@ -128,10 +128,8 @@ class EmailConfigurationValidatorTest extends TestCase
     {
         $validator = new EmailConfigurationValidator();
 
-        $this->setExpectedException(
-            Exception::class,
-            'The Entity to validate must be an instance of ' . EmailConfiguration::class
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The Entity to validate must be an instance of ' . EmailConfiguration::class);
 
         $validator->validate(new Role());
     }

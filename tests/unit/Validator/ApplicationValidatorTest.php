@@ -33,10 +33,8 @@ class ApplicationValidatorTest extends TestCase
     {
         $validator = new ApplicationValidator();
 
-        $this->setExpectedException(
-            Exception::class,
-            'The Entity to validate must be an instance of ' . Application::class
-        );
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The Entity to validate must be an instance of ' . Application::class);
 
         $validator->validate(new User());
     }

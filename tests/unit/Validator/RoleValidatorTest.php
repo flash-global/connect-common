@@ -31,7 +31,8 @@ class RoleValidatorTest extends TestCase
     {
         $validator = new RoleValidator();
 
-        $this->setExpectedException(Exception::class, 'The Entity to validate must be an instance of ' . Role::class);
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('The Entity to validate must be an instance of ' . Role::class);
 
         $validator->validate(new User());
     }
