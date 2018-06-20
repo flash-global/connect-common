@@ -9,16 +9,18 @@ use Fei\Entity\AbstractEntity;
  *
  * @Entity
  * @Table(
- *     name="attributions",
- *     uniqueConstraints={
- * @UniqueConstraint(name="attribution_unique", columns={ "user_id", "application_id", "role_id" })
- *     }
+ *     name="attributions"
  * )
  *
  * @package Fei\Service\Connect\Common\Entity
  */
 class Attribution extends AbstractEntity
 {
+    const USER        = 1;
+    const USER_GROUP  = 2;
+    const APP         = 1;
+    const APP_GROUP   = 2;
+
     /**
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -29,20 +31,16 @@ class Attribution extends AbstractEntity
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="User", inversedBy="attributions")
-     * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *
-     * @var User
+     * @var AbstractSource $source
+     * @ManyToOne(targetEntity="AbstractSource")
      */
-    protected $user;
+    protected $source;
 
     /**
-     * @ManyToOne(targetEntity="Application")
-     * @JoinColumn(name="application_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *
-     * @var Application
+     * @var AbstractTarget $target
+     * @ManyToOne(targetEntity="AbstractTarget")
      */
-    protected $application;
+    protected $target;
 
     /**
      * @ManyToOne(targetEntity="Role")
@@ -84,49 +82,38 @@ class Attribution extends AbstractEntity
     }
 
     /**
-     * Get User
-     *
-     * @return User
+     * @return AbstractSource
      */
-    public function getUser()
+    public function getSource()
     {
-        return $this->user;
+        return $this->source;
     }
 
     /**
-     * Set User
-     *
-     * @param User $user
-     *
-     * @return $this
+     * @param AbstractSource $source
+     * @return Attribution
      */
-    public function setUser(User $user)
+    public function setSource(AbstractSource $source)
     {
-        $this->user = $user;
-
+        $this->source = $source;
         return $this;
     }
 
     /**
-     * Get Application
-     *
-     * @return Application
+     * @return AbstractTarget
      */
-    public function getApplication()
+    public function getTarget()
     {
-        return $this->application;
+        return $this->target;
     }
 
     /**
-     * Set Application
-     *
-     * @param Application $application
-     *
-     * @return $this
+     * @param AbstractTarget $target
+     * @return Attribution
      */
-    public function setApplication(Application $application)
+    public function setTarget(AbstractTarget $target)
     {
-        $this->application = $application;
+        $this->target = $target;
 
         return $this;
     }

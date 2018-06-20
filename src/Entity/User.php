@@ -14,7 +14,7 @@ use Zend\Permissions\Acl\Role\RoleInterface;
  *
  * @package Fei\Service\Connect\Common\Entity
  */
-class User extends AbstractEntity implements RoleInterface
+class User extends AbstractSource implements RoleInterface
 {
     const USER_NAME = 'user_name';
     const REGISTER_TOKEN = 'register_token';
@@ -99,13 +99,6 @@ class User extends AbstractEntity implements RoleInterface
     protected $localUsername;
 
     /**
-     * @OneToMany(targetEntity="Attribution", mappedBy="user", cascade={"all"})
-     *
-     * @var ArrayCollection;
-     */
-    protected $attributions;
-
-    /**
      * @var Attribution;
      */
     protected $currentAttribution;
@@ -136,6 +129,14 @@ class User extends AbstractEntity implements RoleInterface
      */
     protected $language;
 
+
+    /**
+     * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
+     *
+     * @var ArrayCollection;
+     */
+    protected $attributions;
+
     /**
      * User constructor.
      *
@@ -143,7 +144,6 @@ class User extends AbstractEntity implements RoleInterface
      */
     public function __construct($data = null)
     {
-        $this->attributions = new ArrayCollection();
         $this->foreignServicesIds = new ArrayCollection();
         $this->setCreatedAt(new \DateTime());
         $this->setLanguage('en');
@@ -438,8 +438,8 @@ class User extends AbstractEntity implements RoleInterface
         $hasDefaultAttribution = false;
 
         /**
- * @var Attribution $attr
-*/
+         * @var Attribution $attr
+         */
         foreach ($attributions as $attr) {
             if ($hasDefaultAttribution) {
                 if ($attr->getIsDefault()) {
@@ -511,8 +511,8 @@ class User extends AbstractEntity implements RoleInterface
     public function removeForeignServiceId($foreignServiceName)
     {
         /**
- * @var ForeignServiceId $foreignServiceId
-*/
+         * @var ForeignServiceId $foreignServiceId
+         */
         foreach ($this->foreignServicesIds as $key => $foreignServiceId) {
             if ($foreignServiceId->getName() === $foreignServiceName) {
                 $this->foreignServicesIds->remove($key);
@@ -638,24 +638,32 @@ class User extends AbstractEntity implements RoleInterface
         $foreignServicesIds = [];
 
         /**
- * @var Attribution $attribution
-*/
+         * @var Attribution $attribution
+         */
         foreach ($data['attributions'] as $attribution) {
-            $attributions[] = [
+            $item = [
                 'id' => $attribution->getId(),
-                'application' => $attribution->getApplication()->toArray(),
                 'role' => $attribution->getRole()->toArray(),
                 'is_default' => $attribution->getIsDefault()
             ];
+
+            $target = $attribution->getTarget();
+            if ($target instanceof ApplicationGroup) {
+
+            } else {
+                $item['application'] = $attribution->getTarget()->toArray();
+            }
+
+            $attributions[] = $item;
         }
 
-        if ($data['current_attribution']) {
+        /*if ($data['current_attribution']) {
             $currentAttribution = [
                 'id' => $data['current_attribution']->getId(),
                 'application' => $data['current_attribution']->getApplication()->toArray(),
                 'role' => $data['current_attribution']->getRole()->toArray()
             ];
-        }
+        }*/
 
         // @codeCoverageIgnoreStart
         $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
@@ -664,8 +672,8 @@ class User extends AbstractEntity implements RoleInterface
         // @codeCoverageIgnoreEnd
 
         /**
- * @var ForeignServiceId $foreignServiceId
-*/
+         * @var ForeignServiceId $foreignServiceId
+         */
         if ($data['foreign_services_ids']) {
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [

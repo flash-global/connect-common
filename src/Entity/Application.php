@@ -12,7 +12,7 @@ use Fei\Entity\AbstractEntity;
  *
  * @package Fei\Service\Connect\Common\Entity
  */
-class Application extends AbstractEntity
+class Application extends AbstractTarget
 {
     const ALLOW_PROFILE_ASSOCIATIONS = 'allow_profile_association';
 
@@ -90,6 +90,12 @@ class Application extends AbstractEntity
      */
     protected $contexts = [];
 
+
+    /**
+     * Many Applications have Many Groups
+     * @ManyToMany(targetEntity="ApplicationGroup", mappedBy="application_groups")
+     */
+    protected $applicationGroups = [];
 
     /**
      * Get Id
@@ -348,4 +354,24 @@ class Application extends AbstractEntity
     {
         return isset($this->contexts[$key]) ? $this->contexts[$key] : null;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApplicationGroups()
+    {
+        return $this->applicationGroups;
+    }
+
+    /**
+     * @param mixed $applicationGroups
+     * @return Application
+     */
+    public function setApplicationGroups($applicationGroups)
+    {
+        $this->applicationGroups = $applicationGroups;
+        return $this;
+    }
+
+
 }
