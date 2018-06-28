@@ -288,10 +288,10 @@ class UserValidator extends AbstractValidator
     public function validateDefaultAttribution($attributions)
     {
         $defaultAttributionByApplication = [];
-
+        return true;
         /**
- * @var Attribution $attribution
-**/
+         * @var Attribution $attribution
+         **/
         foreach ($attributions as $attribution) {
             if ($attribution->getIsDefault()) {
                 $applicationId = $attribution->getApplication()->getId();
