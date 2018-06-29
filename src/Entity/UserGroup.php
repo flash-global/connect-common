@@ -32,12 +32,6 @@ class UserGroup extends AbstractSource
     protected $name;
 
     /**
-     * @Column(type="json_array")
-     * @var array
-     */
-    protected $contexts = [];
-
-    /**
      * Many Groups have Many Users.
      * @ManyToMany(targetEntity="User")
      * @JoinTable(name="user_groups_user",
@@ -91,45 +85,5 @@ class UserGroup extends AbstractSource
     {
         $this->name = $name;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getContexts()
-    {
-        return $this->contexts;
-    }
-
-    /**
-     * @param array $contexts
-     * @return UserGroup
-     */
-    public function setContexts($contexts, $erase = true)
-    {
-        if (!$erase) {
-            $this->contexts = array_merge($this->contexts, $contexts);
-        } else {
-            $this->contexts = $contexts;
-        }
-        return $this;
-    }
-
-    /**
-     * @param $key
-     * @param $value
-     */
-    public function addContext($key, $value)
-    {
-        $this->contexts[$key] = $value;
-    }
-
-    /**
-     * @param $key
-     * @return null
-     */
-    public function retrieveContext($key)
-    {
-        return isset($this->contexts[$key]) ? $this->contexts[$key] : null;
     }
 }
