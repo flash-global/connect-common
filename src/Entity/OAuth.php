@@ -62,14 +62,14 @@ class OAuth extends AbstractEntity
     protected $redirectUri;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $hostedDomain;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */

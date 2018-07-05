@@ -3,7 +3,7 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\AbstractEntity;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class UserGroup
@@ -16,15 +16,6 @@ use Fei\Entity\AbstractEntity;
 class UserGroup extends AbstractSource
 {
     /**
-     * @Id
-     * @GeneratedValue(strategy="AUTO")
-     * @Column(type="integer")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @Column(type="string", unique=true)
      *
      * @var string UserGroup name
@@ -33,40 +24,31 @@ class UserGroup extends AbstractSource
 
     /**
      * Many Groups have Many Users.
-     * @ManyToMany(targetEntity="User")
-     * @JoinTable(name="user_groups_user",
-     *      joinColumns={@JoinColumn(name="user_group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")}
-     *      )
+     *
+     * @ManyToMany(targetEntity="User", mappedBy="userGroups")
+     *
+     * @var Collection|User[]
      */
     protected $users;
 
     /**
-     * ApplicationGroup constructor.
+     * @ManyToOne(targetEntity="Role")
+     * @JoinColumn(name="default_role_id", onDelete="RESTRICT", nullable=false)
+     *
+     * @var Role
      */
-    public function __construct()
-    {
-        $this->users = new ArrayCollection();
-
-        parent::__construct();
-    }
+    protected $defaultRole;
 
     /**
-     * @return mixed
+     * UserGroup constructor.
+     *
+     * @param array $data
      */
-    public function getId()
+    public function __construct($data = null)
     {
-        return $this->id;
-    }
+        $this->setUsers(new ArrayCollection());
 
-    /**
-     * @param mixed $id
-     * @return UserGroup
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
+        parent::__construct($data);
     }
 
     /**
@@ -84,6 +66,86 @@ class UserGroup extends AbstractSource
     public function setName($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Get Users
+     *
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * Set Users
+     *
+     * @param Collection $users
+     *
+     * @return $this
+     */
+    public function setUsers(Collection $users)
+    {
+        $this->users = $users;
+
+        return $this;
+    }
+
+    /**
+     * Add users
+     *
+     * @param User ...$users
+     *
+     * @return $this
+     */
+    public function addUsers(User ...$users)
+    {
+        foreach ($users as $user) {
+            $this->getUsers()->add($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param User ...$users
+     *
+     * @return $this
+     */
+    public function removeUsers(User ...$users)
+    {
+        foreach ($users as $user) {
+            $this->getUsers()->removeElement($user);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get DefaultRole
+     *
+     * @return Role
+     */
+    public function getDefaultRole(): Role
+    {
+        return $this->defaultRole;
+    }
+
+    /**
+     * Set DefaultRole
+     *
+     * @param Role $defaultRole
+     *
+     * @return $this
+     */
+    public function setDefaultRole(Role $defaultRole)
+    {
+        $this->defaultRole = $defaultRole;
+
         return $this;
     }
 }

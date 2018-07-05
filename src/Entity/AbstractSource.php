@@ -18,6 +18,32 @@ abstract class AbstractSource extends AbstractEntity
      * @Id
      * @Column(type="integer")
      * @GeneratedValue(strategy="AUTO")
+     *
+     * @var int
      */
     protected $id;
+
+    /**
+     * Get Id
+     *
+     * @return mixed
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set Id
+     *
+     * @param mixed $id
+     *
+     * @return $this
+     */
+    public function setId(int $id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 }

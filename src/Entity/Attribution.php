@@ -9,18 +9,16 @@ use Fei\Entity\AbstractEntity;
  *
  * @Entity
  * @Table(
- *     name="attributions"
+ *     name="attributions",
+ *     uniqueConstraints={
+ *         @UniqueConstraint(name="attribution_unique", columns={ "source_id", "target_id", "role_id" })
+ *     }
  * )
  *
  * @package Fei\Service\Connect\Common\Entity
  */
 class Attribution extends AbstractEntity
 {
-    const USER        = 1;
-    const USER_GROUP  = 2;
-    const APP         = 1;
-    const APP_GROUP   = 2;
-
     /**
      * @Id
      * @GeneratedValue(strategy="AUTO")
@@ -31,31 +29,28 @@ class Attribution extends AbstractEntity
     protected $id;
 
     /**
-     * @var AbstractSource $source
      * @ManyToOne(targetEntity="AbstractSource")
+     * @JoinColumn(name="source_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var AbstractSource $source
      */
     protected $source;
 
     /**
-     * @var AbstractTarget $target
      * @ManyToOne(targetEntity="AbstractTarget")
+     * @JoinColumn(name="target_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var AbstractTarget $target
      */
     protected $target;
 
     /**
      * @ManyToOne(targetEntity="Role")
-     * @JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @JoinColumn(name="role_id", onDelete="CASCADE", nullable=false)
      *
      * @var Role
      */
     protected $role;
-
-    /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $isDefault = false;
 
     /**
      * Get Id
@@ -143,29 +138,6 @@ class Attribution extends AbstractEntity
     }
 
     /**
-     * Get IsDefault
-     *
-     * @return bool
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    /**
-     * Set IsDefault
-     *
-     * @param bool $isDefault
-     *
-     * @return $this
-     */
-    public function setIsDefault($isDefault)
-    {
-        $this->isDefault = $isDefault;
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function toArray($mapped = false)
@@ -175,7 +147,6 @@ class Attribution extends AbstractEntity
         $data['user'] = !empty($data['user']) ? $data['user']->toArray() : null;
         $data['application'] = !empty($data['application']) ? $data['application']->toArray() : null;
         $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
-        $data['is_default'] = !empty($data['is_default']) ? $data['is_default'] : false;
 
         return $data;
     }

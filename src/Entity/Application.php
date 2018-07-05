@@ -2,7 +2,8 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
-use Fei\Entity\AbstractEntity;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Application
@@ -18,15 +19,6 @@ class Application extends AbstractTarget
 
     const STATUS_ENABLED  = 1;
     const STATUS_DISABLED = 2;
-
-    /**
-     * @Id
-     * @GeneratedValue(strategy="AUTO")
-     * @Column(type="integer")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * @Column(type="string", unique=true)
@@ -50,18 +42,11 @@ class Application extends AbstractTarget
     protected $status = self::STATUS_ENABLED;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $logoUrl;
-
-    /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $allowProfileAssociation = false;
 
     /**
      * @Column(type="boolean")
@@ -90,35 +75,26 @@ class Application extends AbstractTarget
      */
     protected $contexts = [];
 
-
     /**
      * Many Applications have Many Groups
-     * @ManyToMany(targetEntity="ApplicationGroup", mappedBy="application_groups")
+     *
+     * @ManyToMany(targetEntity="ApplicationGroup", inversedBy="applications")
+     * @JoinTable(name="applications_has_groups")
+     *
+     * @var Collection|ApplicationGroup[]
      */
     protected $applicationGroups = [];
 
     /**
-     * Get Id
+     * Application constructor.
      *
-     * @return int
+     * @param array $data
      */
-    public function getId()
+    public function __construct($data = null)
     {
-        return $this->id;
-    }
+        $this->setApplicationGroups(new ArrayCollection());
 
-    /**
-     * Set Id
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
+        parent::__construct($data);
     }
 
     /**
@@ -233,30 +209,6 @@ class Application extends AbstractTarget
     }
 
     /**
-     * Get AllowProfileAssociation
-     *
-     * @return bool
-     */
-    public function getAllowProfileAssociation()
-    {
-        return $this->allowProfileAssociation;
-    }
-
-    /**
-     * Set AllowProfileAssociation
-     *
-     * @param bool $allowProfileAssociation
-     *
-     * @return $this
-     */
-    public function setAllowProfileAssociation($allowProfileAssociation)
-    {
-        $this->allowProfileAssociation = $allowProfileAssociation;
-
-        return $this;
-    }
-
-    /**
      * Get isSubscribed
      *
      * @return bool
@@ -356,22 +308,58 @@ class Application extends AbstractTarget
     }
 
     /**
-     * @return mixed
+     * Get ApplicationGroups
+     *
+     * @return Collection|ApplicationGroup[]
      */
-    public function getApplicationGroups()
+    public function getApplicationGroups(): Collection
     {
         return $this->applicationGroups;
     }
 
     /**
-     * @param mixed $applicationGroups
-     * @return Application
+     * Set ApplicationGroups
+     *
+     * @param Collection|ApplicationGroup[] $applicationGroups
+     *
+     * @return $this
      */
-    public function setApplicationGroups($applicationGroups)
+    public function setApplicationGroups(Collection $applicationGroups)
     {
         $this->applicationGroups = $applicationGroups;
+
         return $this;
     }
 
+    /**
+     * Add application groups
+     *
+     * @param ApplicationGroup ...$groups
+     *
+     * @return $this
+     */
+    public function addApplicationGroups(ApplicationGroup ...$groups)
+    {
+        foreach ($groups as $group) {
+            $this->getApplicationGroups()->add($group);
+        }
 
+        return $this;
+    }
+
+    /**
+     * Remove application groups
+     *
+     * @param ApplicationGroup ...$groups
+     *
+     * @return $this
+     */
+    public function removeApplicationGroups(ApplicationGroup ...$groups)
+    {
+        foreach ($groups as $group) {
+            $this->getApplicationGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
 }

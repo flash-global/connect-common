@@ -3,7 +3,7 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\AbstractEntity;
+use Doctrine\Common\Collections\Collection;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -24,15 +24,6 @@ class User extends AbstractSource implements RoleInterface
     const STATUS_ACTIVE = 2;
     const STATUS_SUSPENDED = 3;
     const STATUS_DELETED = 0;
-
-    /**
-     * @Id
-     * @GeneratedValue(strategy="AUTO")
-     * @Column(type="integer")
-     *
-     * @var int
-     */
-    protected $id;
 
     /**
      * @Column(type="datetime")
@@ -109,14 +100,14 @@ class User extends AbstractSource implements RoleInterface
     protected $foreignServicesIds;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
     protected $avatarUrl;
 
     /**
-     * @Column(type="string")
+     * @Column(type="string", nullable=true)
      *
      * @var string
      */
@@ -129,13 +120,20 @@ class User extends AbstractSource implements RoleInterface
      */
     protected $language;
 
-
     /**
      * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
      *
-     * @var ArrayCollection;
+     * @var ArrayCollection|Attribution[];
      */
     protected $attributions;
+
+    /**
+     * @ManyToMany(targetEntity="UserGroup", inversedBy="users")
+     * @JoinTable(name="users_has_groups")
+     *
+     * @var Collection|UserGroup[]
+     */
+    protected $userGroups;
 
     /**
      * User constructor.
@@ -144,34 +142,12 @@ class User extends AbstractSource implements RoleInterface
      */
     public function __construct($data = null)
     {
-        $this->foreignServicesIds = new ArrayCollection();
+        $this->setForeignServicesIds(new ArrayCollection());
+        $this->setUserGroups(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
         $this->setLanguage('en');
 
         parent::__construct($data);
-    }
-
-    /**
-     * Get Id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set Id
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-        return $this;
     }
 
     /**
@@ -628,6 +604,72 @@ class User extends AbstractSource implements RoleInterface
     }
 
     /**
+     * Get UserGroups
+     *
+     * @return Collection|UserGroup[]
+     */
+    public function getUserGroups(): Collection
+    {
+        return $this->userGroups;
+    }
+
+    /**
+     * Set UserGroups
+     *
+     * @param Collection|UserGroup[] $userGroups
+     *
+     * @return $this
+     */
+    public function setUserGroups(Collection $userGroups)
+    {
+        $this->userGroups = $userGroups;
+
+        return $this;
+    }
+
+    /**
+     * Add user group
+     *
+     * @param UserGroup ...$groups
+     *
+     * @return $this
+     */
+    public function addUserGroups(UserGroup ...$groups)
+    {
+        foreach ($groups as $group) {
+            $this->getUserGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove user group
+     *
+     * @param UserGroup ...$groups
+     *
+     * @return User
+     */
+    public function removeUserGroups(UserGroup ...$groups)
+    {
+        foreach ($groups as $group) {
+            $this->getUserGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the string identifier of the Role
+     *
+     * @return string
+     */
+    public function getRoleId()
+    {
+        return $this->getCurrentRole();
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function toArray($mapped = false)
@@ -703,7 +745,7 @@ class User extends AbstractSource implements RoleInterface
             foreach ($data['attributions'] as $attribution) {
                 $attributions->add(
                     (new Attribution($attribution))
-                        ->setUser($this)
+                        ->setSource($this)
                 );
             }
         }
@@ -720,7 +762,7 @@ class User extends AbstractSource implements RoleInterface
 
         if (!empty($data['current_attribution'])) {
             $currentAttribution = (new Attribution($data['current_attribution']))
-                ->setUser($this);
+                ->setSource($this);
         }
 
         $data['foreign_services_ids'] = $foreignServicesIds;
@@ -728,15 +770,5 @@ class User extends AbstractSource implements RoleInterface
         $data['current_attribution'] = $currentAttribution;
 
         return parent::hydrate($data);
-    }
-
-    /**
-     * Returns the string identifier of the Role
-     *
-     * @return string
-     */
-    public function getRoleId()
-    {
-        return $this->getCurrentRole();
     }
 }

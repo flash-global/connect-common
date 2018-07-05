@@ -3,7 +3,7 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\AbstractEntity;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class ApplicationGroup
@@ -16,15 +16,6 @@ use Fei\Entity\AbstractEntity;
 class ApplicationGroup extends AbstractTarget
 {
     /**
-     * @Id
-     * @GeneratedValue(strategy="AUTO")
-     * @Column(type="integer")
-     *
-     * @var int
-     */
-    protected $id;
-
-    /**
      * @Column(type="string", unique=true)
      *
      * @var string ApplicationGroup name
@@ -33,48 +24,22 @@ class ApplicationGroup extends AbstractTarget
 
     /**
      * Many Groups have Many Applications.
-     * @ManyToMany(targetEntity="Application")
-     * @JoinTable(name="application_groups_applications",
-     *      joinColumns={@JoinColumn(name="application_group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@JoinColumn(name="application_id", referencedColumnName="id")}
-     *      )
+     * @ManyToMany(targetEntity="Application", mappedBy="applicationGroups")
+     *
+     * @var Collection|Application[]
      */
     protected $applications;
 
-
     /**
      * ApplicationGroup constructor.
-     */
-    public function __construct()
-    {
-        $this->applications = new ArrayCollection();
-
-        parent::__construct();
-    }
-
-
-    /**
-     * Get Id
      *
-     * @return int
+     * @param array $data
      */
-    public function getId()
+    public function __construct($data = null)
     {
-        return $this->id;
-    }
+        $this->setApplications(new ArrayCollection());
 
-    /**
-     * Set Id
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
+        parent::__construct($data);
     }
 
     /**
@@ -102,25 +67,58 @@ class ApplicationGroup extends AbstractTarget
     }
 
     /**
-     * @return ArrayCollection
+     * Get Applications
+     *
+     * @return Collection|Application[]
      */
-    public function getApplications()
+    public function getApplications(): Collection
     {
         return $this->applications;
     }
 
     /**
-     * @param ArrayCollection $applications
+     * Set Applications
+     *
+     * @param Collection|Application[] $applications
+     *
      * @return $this
      */
-    public function setApplications(ArrayCollection $applications)
+    public function setApplications(Collection $applications)
     {
         $this->applications = $applications;
+
         return $this;
     }
 
-    public function addApplication(Application $application)
+    /**
+     * Add applications
+     *
+     * @param Application ...$applications
+     *
+     * @return $this
+     */
+    public function addApplications(Application ...$applications)
     {
-        $this->applications->add($application);
+        foreach ($applications as $application) {
+            $this->getApplications()->add($application);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove applications
+     *
+     * @param Application ...$applications
+     *
+     * @return $this
+     */
+    public function removeApplications(Application ...$applications)
+    {
+        foreach ($applications as $application) {
+            $this->getApplications()->removeElement($application);
+        }
+
+        return $this;
     }
 }
