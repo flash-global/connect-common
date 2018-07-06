@@ -4,6 +4,7 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class UserGroup
@@ -38,6 +39,13 @@ class UserGroup extends AbstractSource
      * @var Role
      */
     protected $defaultRole;
+
+    /**
+     * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
+     *
+     * @var ArrayCollection|Attribution[];
+     */
+    protected $attributions;
 
     /**
      * UserGroup constructor.
@@ -147,5 +155,25 @@ class UserGroup extends AbstractSource
         $this->defaultRole = $defaultRole;
 
         return $this;
+    }
+
+    /**
+     * @param bool $mapped
+     * @return array
+     */
+    public function toArray($mapped = false)
+    {
+        $array = parent::toArray($mapped);
+        $transformer = new UserMinimalTransformer();
+
+        $users = [];
+        if (!$this->getUsers()->isEmpty()) {
+            foreach ($this->getUsers() as $user) {
+                $users[] = $transformer->transform($user);
+            }
+        }
+
+        $array['users'] = $users;
+        return $array;
     }
 }
