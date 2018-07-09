@@ -4,6 +4,8 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
@@ -158,22 +160,65 @@ class UserGroup extends AbstractSource
     }
 
     /**
+     * @return ArrayCollection|Attribution[]
+     */
+    public function getAttributions()
+    {
+        return $this->attributions;
+    }
+
+    /**
+     * @param ArrayCollection|Attribution[] $attributions
+     * @return UserGroup
+     */
+    public function setAttributions($attributions)
+    {
+        $this->attributions = $attributions;
+        return $this;
+    }
+
+
+
+    /**
      * @param bool $mapped
      * @return array
      */
     public function toArray($mapped = false)
     {
         $array = parent::toArray($mapped);
-        $transformer = new UserMinimalTransformer();
 
         $users = [];
         if (!$this->getUsers()->isEmpty()) {
+            $userTransformer = new UserMinimalTransformer();
             foreach ($this->getUsers() as $user) {
-                $users[] = $transformer->transform($user);
+                $users[] = $userTransformer->transform($user);
+            }
+        }
+
+        $applications = [];
+        $applicationGroups = [];
+        if (!$this->getAttributions()->isEmpty()) {
+            $applicationTransformer = new ApplicationMinimalTransformer();
+            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+            foreach ($this->getAttributions() as $attrib) {
+                $target = $attrib->getTarget();
+                $idrole = $attrib->getRole()->getId();
+                if ($target instanceof Application) {
+                    $application = $applicationTransformer->transform($target);
+                    $application['idrole'] = $idrole;
+                    $applications[] = $application;
+                } elseif ($target instanceof ApplicationGroup) {
+                    $applicationGroup = $applicationGroupTransformer->transform($target);
+                    $applicationGroup['idrole'] = $idrole;
+                    $applicationGroups[] = $applicationGroup;
+                }
             }
         }
 
         $array['users'] = $users;
+        $array['applications'] = $applications;
+        $array['applicationGroups'] = $applicationGroups;
+
         return $array;
     }
 }

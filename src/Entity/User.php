@@ -142,6 +142,7 @@ class User extends AbstractSource implements RoleInterface
      */
     public function __construct($data = null)
     {
+        $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
@@ -409,6 +410,9 @@ class User extends AbstractSource implements RoleInterface
      */
     public function setAttributions(ArrayCollection $attributions)
     {
+        if (is_null($this->attributions)) {
+            $this->attributions = new ArrayCollection();
+        }
         $this->attributions->clear();
 
         $hasDefaultAttribution = false;
