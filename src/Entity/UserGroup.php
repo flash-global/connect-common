@@ -140,7 +140,7 @@ class UserGroup extends AbstractSource
      *
      * @return Role
      */
-    public function getDefaultRole(): Role
+    public function getDefaultRole()
     {
         return $this->defaultRole;
     }
@@ -197,7 +197,7 @@ class UserGroup extends AbstractSource
 
         $applications = [];
         $applicationGroups = [];
-        if (!$this->getAttributions()->isEmpty()) {
+        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
             $applicationTransformer = new ApplicationMinimalTransformer();
             $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
             foreach ($this->getAttributions() as $attrib) {

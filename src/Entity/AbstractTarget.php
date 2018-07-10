@@ -35,7 +35,7 @@ abstract class AbstractTarget extends AbstractEntity
      *
      * @return mixed
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
