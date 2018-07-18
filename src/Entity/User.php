@@ -4,6 +4,8 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -679,29 +681,30 @@ class User extends AbstractSource implements RoleInterface
     public function toArray($mapped = false)
     {
         $data = parent::toArray($mapped);
-        $attributions = [];
-        $currentAttribution = null;
         $foreignServicesIds = [];
 
-        /**
-         * @var Attribution $attribution
-         */
-        foreach ($data['attributions'] as $attribution) {
-            $item = [
-                'id' => $attribution->getId(),
-                'role' => $attribution->getRole()->toArray(),
-                'is_default' => $attribution->getIsDefault()
-            ];
-
-            $target = $attribution->getTarget();
-            if ($target instanceof ApplicationGroup) {
-
-            } else {
-                $item['application'] = $attribution->getTarget()->toArray();
+        $applications = [];
+        $applicationGroups = [];
+        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
+            $applicationTransformer = new ApplicationMinimalTransformer();
+            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+            foreach ($this->getAttributions() as $attrib) {
+                $target = $attrib->getTarget();
+                $idrole = $attrib->getRole()->getId();
+                if ($target instanceof Application) {
+                    $application = $applicationTransformer->transform($target);
+                    $application['idrole'] = $idrole;
+                    $applications[] = $application;
+                } elseif ($target instanceof ApplicationGroup) {
+                    $applicationGroup = $applicationGroupTransformer->transform($target);
+                    $applicationGroup['idrole'] = $idrole;
+                    $applicationGroups[] = $applicationGroup;
+                }
             }
-
-            $attributions[] = $item;
         }
+
+        $data['applications'] = $applications;
+        $data['applicationGroups'] = $applicationGroups;
 
         /*if ($data['current_attribution']) {
             $currentAttribution = [
@@ -729,8 +732,6 @@ class User extends AbstractSource implements RoleInterface
             }
         }
 
-        $data['attributions'] = $attributions;
-        $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
 
         return $data;
