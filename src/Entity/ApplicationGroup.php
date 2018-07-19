@@ -32,12 +32,6 @@ class ApplicationGroup extends AbstractTarget
      */
     protected $applications;
 
-    /**
-     * @OneToMany(targetEntity="Attribution", mappedBy="target", cascade={"all"})
-     *
-     * @var ArrayCollection|Attribution[];
-     */
-    protected $attributions;
 
     /**
      * ApplicationGroup constructor.
@@ -128,25 +122,6 @@ class ApplicationGroup extends AbstractTarget
             $this->getApplications()->removeElement($application);
         }
 
-        return $this;
-    }
-
-
-    /**
-     * @return ArrayCollection|Attribution[]
-     */
-    public function getAttributions()
-    {
-        return $this->attributions;
-    }
-
-    /**
-     * @param ArrayCollection|Attribution[] $attributions
-     * @return $this
-     */
-    public function setAttributions($attributions)
-    {
-        $this->attributions = $attributions;
         return $this;
     }
 

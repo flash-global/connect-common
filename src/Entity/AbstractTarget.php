@@ -2,6 +2,7 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\AbstractEntity;
 
 /**
@@ -29,6 +30,13 @@ abstract class AbstractTarget extends AbstractEntity
      * @var bool
      */
     protected $allowProfileAssociation = false;
+
+    /**
+     * @OneToMany(targetEntity="Attribution", mappedBy="target", cascade={"all"})
+     *
+     * @var ArrayCollection|Attribution[];
+     */
+    protected $attributions;
 
     /**
      * Get Id
@@ -75,6 +83,24 @@ abstract class AbstractTarget extends AbstractEntity
     {
         $this->allowProfileAssociation = $allowProfileAssociation;
 
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|Attribution[]
+     */
+    public function getAttributions()
+    {
+        return $this->attributions;
+    }
+
+    /**
+     * @param ArrayCollection|Attribution[] $attributions
+     * @return $this
+     */
+    public function setAttributions($attributions)
+    {
+        $this->attributions = $attributions;
         return $this;
     }
 }
