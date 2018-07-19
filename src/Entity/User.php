@@ -123,13 +123,6 @@ class User extends AbstractSource implements RoleInterface
     protected $language;
 
     /**
-     * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
-     *
-     * @var ArrayCollection|Attribution[];
-     */
-    protected $attributions;
-
-    /**
      * @ManyToMany(targetEntity="UserGroup", inversedBy="users")
      * @JoinTable(name="users_has_groups")
      *
@@ -144,7 +137,6 @@ class User extends AbstractSource implements RoleInterface
      */
     public function __construct($data = null)
     {
-        $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
@@ -394,53 +386,6 @@ class User extends AbstractSource implements RoleInterface
     }
 
     /**
-     * Get Attributions
-     *
-     * @return ArrayCollection
-     */
-    public function getAttributions()
-    {
-        return $this->attributions;
-    }
-
-    /**
-     * Set Attributions
-     *
-     * @param ArrayCollection $attributions
-     *
-     * @return $this
-     */
-    public function setAttributions(ArrayCollection $attributions)
-    {
-        if (is_null($this->attributions)) {
-            $this->attributions = new ArrayCollection();
-        }
-        $this->attributions->clear();
-
-        $hasDefaultAttribution = false;
-
-        /**
-         * @var Attribution $attr
-         */
-        foreach ($attributions as $attr) {
-            if ($hasDefaultAttribution) {
-                if ($attr->getIsDefault()) {
-                    $attr->setIsDefault(false);
-                }
-            } else {
-                if ($attr->getIsDefault()) {
-                    $hasDefaultAttribution = true;
-                }
-            }
-
-            $attr->setUser($this);
-            $this->attributions->add($attr);
-        }
-
-        return $this;
-    }
-
-    /**
      * Get CurrentAttribution
      *
      * @return Attribution
@@ -472,11 +417,9 @@ class User extends AbstractSource implements RoleInterface
      */
     public function addForeignServiceId(ForeignServiceId $foreignServiceId)
     {
-        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
-        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->add($foreignServiceId);
 
@@ -523,11 +466,9 @@ class User extends AbstractSource implements RoleInterface
      */
     public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
     {
-        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
-        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->clear();
 
@@ -681,49 +622,41 @@ class User extends AbstractSource implements RoleInterface
     public function toArray($mapped = false)
     {
         $data = parent::toArray($mapped);
+
         $foreignServicesIds = [];
+        $userGroups = [];
 
-        $applications = [];
-        $applicationGroups = [];
-        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
-            $applicationTransformer = new ApplicationMinimalTransformer();
-            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
-            foreach ($this->getAttributions() as $attrib) {
-                $target = $attrib->getTarget();
-                $idrole = $attrib->getRole()->getId();
-                if ($target instanceof Application) {
-                    $application = $applicationTransformer->transform($target);
-                    $application['idrole'] = $idrole;
-                    $applications[] = $application;
-                } elseif ($target instanceof ApplicationGroup) {
-                    $applicationGroup = $applicationGroupTransformer->transform($target);
-                    $applicationGroup['idrole'] = $idrole;
-                    $applicationGroups[] = $applicationGroup;
+        $applicationTransformer = new ApplicationMinimalTransformer();
+        $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+
+        $serializeAttribution =
+            function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
+                $item = [
+                    'id' => $attribution->getId(),
+                    'role' => $attribution->getRole()->toArray()
+                ];
+
+                $target = $attribution->getTarget();
+
+                if ($target instanceof ApplicationGroup) {
+                    $item['application_group'] = $applicationGroupTransformer->transform($target);
+                } elseif ($target instanceof Application) {
+                    $item['application'] = $applicationTransformer->transform($target);
                 }
-            }
-        }
 
-        $data['applications'] = $applications;
-        $data['applicationGroups'] = $applicationGroups;
+                return $item;
+            };
 
-        /*if ($data['current_attribution']) {
-            $currentAttribution = [
-                'id' => $data['current_attribution']->getId(),
-                'application' => $data['current_attribution']->getApplication()->toArray(),
-                'role' => $data['current_attribution']->getRole()->toArray()
-            ];
-        }*/
+        $attributions = $data['attributions'] instanceof Collection
+            ? array_map($serializeAttribution, $data['attributions']->toArray())
+            : [];
 
-        // @codeCoverageIgnoreStart
-        $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
-            ? new ArrayCollection()
-            : $data['foreign_services_ids'];
-        // @codeCoverageIgnoreEnd
+        $currentAttribution = $data['current_attribution'] ? $serializeAttribution($data['current_attribution']) : null;
 
-        /**
-         * @var ForeignServiceId $foreignServiceId
-         */
-        if ($data['foreign_services_ids']) {
+        $data['foreign_services_ids'] = is_null($data['foreign_services_ids']) ? [] : $data['foreign_services_ids'];
+
+        if (!empty($data['foreign_services_ids'])) {
+            /** @var ForeignServiceId $foreignServiceId */
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [
                     'name' => $foreignServiceId->getName(),
@@ -732,7 +665,21 @@ class User extends AbstractSource implements RoleInterface
             }
         }
 
+        if (!empty($data['user_groups'])) {
+            /** @var UserGroup $userGroup */
+            foreach ($data['user_groups'] as $userGroup) {
+                $userGroups[] = [
+                    'id' => $userGroup->getId(),
+                    'name' => $userGroup->getName(),
+                    'default_role' => $userGroup->getDefaultRole()
+                ];
+            }
+        }
+
+        $data['attributions'] = $attributions;
+        $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
+        $data['user_groups'] = $userGroups;
 
         return $data;
     }

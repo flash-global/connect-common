@@ -5,7 +5,9 @@ namespace Fei\Service\Connect\Common\Validator;
 use Fei\Entity\EntityInterface;
 use Fei\Entity\Validator\Exception;
 use Fei\Entity\Validator\AbstractValidator;
+use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\User;
 
 /**
  * Class AttributionValidator
@@ -31,50 +33,56 @@ class AttributionValidator extends AbstractValidator
             );
         }
 
-        $this->validateUser($entity->getUser());
-        $this->validateApplication($entity->getApplication());
+        $this->validateSource($entity->getSource());
+        $this->validateTarget($entity->getTarget());
         $this->validateRole($entity->getRole());
-        $this->validateIsDefault($entity->getIsDefault());
         $errors = $this->getErrors();
 
         return empty($errors);
     }
 
     /**
-     * Validate user
+     * Validate source
      *
-     * @param $user
+     * @param $source
      *
      * @return bool
      * @throws \Fei\Entity\Validator\Exception
      */
-    public function validateUser($user)
+    public function validateSource($source)
     {
-        $userValidator = new UserValidator();
-        $response = $userValidator->validate($user);
+        $validator = $source instanceof User ? new UserValidator() : new UserGroupValidator();
+        $response = $validator->validate($source);
 
         if (!$response) {
-            $this->addError('user', 'User must be a valid instance of User class - ' . $userValidator->getErrorsAsString());
+            $this->addError(
+                'user',
+                'User must be a valid instance of User class - ' . $validator->getErrorsAsString()
+            );
         }
 
         return $response;
     }
 
     /**
-     * Validate application
+     * Validate target
      *
-     * @param $application
+     * @param $target
      *
      * @return bool
      * @throws \Fei\Entity\Validator\Exception
      */
-    public function validateApplication($application)
+    public function validateTarget($target)
     {
-        $applicationValidator = new ApplicationValidator();
-        $response = $applicationValidator->validate($application);
+        $validator = $target instanceof Application ? new ApplicationValidator() : new ApplicationGroupValidator();
+        $response = $validator->validate($target);
 
         if (!$response) {
-            $this->addError('application', 'Application must be a valid instance of Application class - ' . $applicationValidator->getErrorsAsString());
+            $this->addError(
+                'application',
+                'Application must be a valid instance of Application class - ' .
+                    $validator->getErrorsAsString()
+            );
         }
 
         return $response;
@@ -94,24 +102,12 @@ class AttributionValidator extends AbstractValidator
         $response = $roleValidator->validate($role);
 
         if (!$response) {
-            $this->addError('role', 'Role must be a valid instance of Role class - ' . $roleValidator->getErrorsAsString());
+            $this->addError(
+                'role',
+                'Role must be a valid instance of Role class - ' . $roleValidator->getErrorsAsString()
+            );
         }
 
         return $response;
-    }
-
-    public function validateIsDefault($isDefault)
-    {
-        if (!is_bool($isDefault) && !is_numeric($isDefault)) {
-            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
-            return false;
-        }
-
-        if (0 != (integer) $isDefault && 1 != (integer) $isDefault) {
-            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
-            return false;
-        }
-
-        return true;
     }
 }

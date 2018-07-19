@@ -2,7 +2,6 @@
 
 namespace Test\Fei\Service\Connect\Common\Message;
 
-use Fei\Service\Connect\Common\Admin\Message\PingMessage;
 use Fei\Service\Connect\Common\Admin\Message\UserMessage;
 use Fei\Service\Connect\Common\Entity\User;
 use PHPUnit\Framework\TestCase;

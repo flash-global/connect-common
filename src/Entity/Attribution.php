@@ -144,8 +144,8 @@ class Attribution extends AbstractEntity
     {
         $data = parent::toArray($mapped);
 
-        $data['user'] = !empty($data['user']) ? $data['user']->toArray() : null;
-        $data['application'] = !empty($data['application']) ? $data['application']->toArray() : null;
+        $data['source'] = !empty($data['user']) ? $data['user']->toArray() : null;
+        $data['target'] = !empty($data['application']) ? $data['application']->toArray() : null;
         $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
 
         return $data;
@@ -161,12 +161,16 @@ class Attribution extends AbstractEntity
         }
 
         if (!empty($data['application'])) {
-            $data['application'] = new Application($data['application']);
+            $data['target'] = new Application($data['application']);
+        }
+
+        if (!empty($data['application_group'])) {
+            $data['target'] = new ApplicationGroup($data['application_group']);
         }
 
         if (!empty($data['user'])) {
-            $data['user'] = new User($data['user']);
-            $data['user']->getAttributions()->add($this);
+            $data['source'] = new User($data['user']);
+            $data['source']->getAttributions()->add($this);
         }
 
         return parent::hydrate($data);
