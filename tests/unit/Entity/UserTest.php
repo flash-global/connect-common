@@ -9,6 +9,7 @@ use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
+use Fei\Service\Connect\Common\Entity\UserGroup;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -318,14 +319,16 @@ class UserTest extends TestCase
                 'register_token' => null,
                 'current_role' => null,
                 'local_username' => null,
-                'attributions' => [],
+                'attributions' => new ArrayCollection(),
                 'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
                 'foreign_services_ids' => [],
-                'user_groups' => []
+                'user_groups' => new ArrayCollection(),
+                'applications' => [],
+                'applicationGroups' => []
             ],
             $user->toArray()
         );
@@ -351,6 +354,7 @@ class UserTest extends TestCase
                     ->setLabel('role test 1')
             );
 
+
         $user
             ->setForeignServicesIds(
                 new ArrayCollection([
@@ -369,10 +373,9 @@ class UserTest extends TestCase
                         ->setId(2)
                         ->setSource($user)
                         ->setTarget(
-                            (new Application())
+                            (new ApplicationGroup())
                                 ->setId(2)
-                                ->setName('application test 2')
-                                ->setLogoUrl('test2')
+                                ->setName('application group test')
                         )
                         ->setRole(
                             (new Role())
@@ -401,7 +404,7 @@ class UserTest extends TestCase
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
-                'user_groups' => [],
+                'user_groups' => new ArrayCollection(),
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',
@@ -436,16 +439,9 @@ class UserTest extends TestCase
                     ],
                     [
                         'id' => 2,
-                        'application' => [
+                        'applicationGroup' => [
                             'id' => 2,
-                            'name' => 'application test 2',
-                            'url' => null,
-                            'status' => Application::STATUS_ENABLED,
-                            'logo_url' => 'test2',
-                            'allow_profile_association' => false,
-                            'is_subscribed' => false,
-                            'is_manageable' => false,
-                            'config' => '',
+                            'name' => 'application group test',
                             'contexts' => []
                         ],
                         'role' => [
@@ -456,6 +452,8 @@ class UserTest extends TestCase
                         ]
                     ]
                 ],
+                'applications' => [],
+                'applicationGroups' => [],
                 'current_attribution' => [
                     'id' => 1,
                     'application' => [
@@ -632,5 +630,19 @@ class UserTest extends TestCase
             $currentAttribution,
             $user->getCurrentAttribution()
         );
+    }
+
+    public function testUserGroups()
+    {
+        $user      = (new User());
+        $userGroup = (new UserGroup())->setId(23);
+
+        $user->addUserGroups($userGroup);
+
+        $this->assertEquals(23, $user->getUserGroups()->toArray()[0]->getId());
+
+        $user->removeUserGroups($userGroup);
+
+        $this->assertEmpty($user->getUserGroups()->toArray());
     }
 }
