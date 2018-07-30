@@ -133,7 +133,6 @@ class ApplicationGroup extends AbstractTarget
     {
         $array = parent::toArray($mapped);
 
-
         $users = [];
         $userGroups = [];
         if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {

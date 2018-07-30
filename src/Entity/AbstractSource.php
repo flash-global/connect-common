@@ -3,8 +3,9 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Fei\Entity\AbstractEntity;
+use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 
 /**
  * Class AbstractSource
@@ -57,66 +58,50 @@ abstract class AbstractSource extends AbstractEntity
     }
 
     /**
-     * User constructor.
-     *
-     * @param array $data
+     * @return ArrayCollection|Attribution[]
      */
-    public function __construct($data = null)
-    {
-        $this->setAttributions(new ArrayCollection());
-
-        parent::__construct($data);
-    }
-
-    /**
-     * Get Attributions
-     *
-     * @return ArrayCollection
-     */
-    public function getAttributions(): Collection
+    public function getAttributions()
     {
         return $this->attributions;
     }
 
     /**
-     * Set Attributions
-     *
-     * @param ArrayCollection $attributions
-     *
+     * @param ArrayCollection|Attribution[] $attributions
      * @return $this
      */
-    public function setAttributions(ArrayCollection $attributions)
+    public function setAttributions($attributions)
     {
-        if (!isset($this->attributions)) {
-            $this->attributions = new ArrayCollection();
-        }
-
-        $this->getAttributions()->clear();
-
-        /**
-         * @var Attribution $attr
-         */
-        foreach ($attributions as $attr) {
-            $attr->setSource($this);
-            $this->getAttributions()->add($attr);
-        }
-
+        $this->attributions = $attributions;
         return $this;
     }
 
-    /**
-     * Add application groups
-     *
-     * @param Attribution[] $attributions
-     *
-     * @return $this
-     */
-    public function addAttributions(Attribution ...$attributions)
+    public function toArray($mapped = false)
     {
-        foreach ($attributions as $attribution) {
-            $this->getAttributions()->add($attribution);
+        $array = parent::toArray($mapped);
+
+        $applications = [];
+        $applicationGroups = [];
+        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
+            $applicationTransformer = new ApplicationMinimalTransformer();
+            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+            foreach ($this->getAttributions() as $attrib) {
+                $target = $attrib->getTarget();
+                $idrole = $attrib->getRole()->getId();
+                if ($target instanceof Application) {
+                    $application = $applicationTransformer->transform($target);
+                    $application['idrole'] = $idrole;
+                    $applications[] = $application;
+                } elseif ($target instanceof ApplicationGroup) {
+                    $applicationGroup = $applicationGroupTransformer->transform($target);
+                    $applicationGroup['idrole'] = $idrole;
+                    $applicationGroups[] = $applicationGroup;
+                }
+            }
         }
 
-        return $this;
+        $array['applications'] = $applications;
+        $array['applicationGroups'] = $applicationGroups;
+
+        return $array;
     }
 }

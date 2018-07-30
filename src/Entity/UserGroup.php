@@ -43,6 +43,13 @@ class UserGroup extends AbstractSource
     protected $defaultRole;
 
     /**
+     * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
+     *
+     * @var ArrayCollection|Attribution[];
+     */
+    protected $attributions;
+
+    /**
      * UserGroup constructor.
      *
      * @param array $data
@@ -151,6 +158,26 @@ class UserGroup extends AbstractSource
 
         return $this;
     }
+
+    /**
+     * @return ArrayCollection|Attribution[]
+     */
+    public function getAttributions()
+    {
+        return $this->attributions;
+    }
+
+    /**
+     * @param ArrayCollection|Attribution[] $attributions
+     * @return UserGroup
+     */
+    public function setAttributions($attributions)
+    {
+        $this->attributions = $attributions;
+        return $this;
+    }
+
+
 
     /**
      * @param bool $mapped

@@ -66,10 +66,10 @@ class AttributionTest extends TestCase
 
         $this->assertEquals(
             [
-                'id'             => null,
-                'role'           => null,
+                'id'        => null,
+                'role'      => null,
                 'target'    => null,
-                'source' => null
+                'source'    => null
             ],
             $attribution->toArray()
         );
@@ -114,7 +114,7 @@ class AttributionTest extends TestCase
         $this->assertEquals(
             [
                 'id' => 1,
-                'application' => [
+                'target' => [
                     'id' => 1,
                     'name' => 'application 1',
                     'url' => null,
@@ -124,7 +124,10 @@ class AttributionTest extends TestCase
                     'is_subscribed' => false,
                     'is_manageable' => false,
                     'config' => '',
-                    'contexts' => []
+                    'attributions' => null,
+                    'contexts' => [],
+                    'users' => [],
+                    'userGroups' => []
                 ],
                 'role' => [
                     'id' => 1,
@@ -132,7 +135,7 @@ class AttributionTest extends TestCase
                     'label' => 'role 1',
                     'user_created' => false
                 ],
-                'user' => [
+                'source' => [
                     'id' => 1,
                     'user_name' => 'user test',
                     'first_name' => 'toto',
@@ -148,12 +151,12 @@ class AttributionTest extends TestCase
                     'mini_avatar_url' => null,
                     'language' => 'en',
                     'role_id' => null,
-                    'foreign_services_ids' => [
+                    /*'foreign_services_ids' => [
                         [
                             'name' => 'google',
                             'id'   => 'id_google'
                         ]
-                    ],
+                    ],*/
                     'attributions' => [
                         [
                             'id' => 1,
@@ -177,10 +180,8 @@ class AttributionTest extends TestCase
                             ],
                             'is_default' => false
                         ]
-                    ],
-                    'current_attribution' => null
-                ],
-                'is_default' => false
+                    ]
+                ]
             ],
             $attribution->toArray()
         );

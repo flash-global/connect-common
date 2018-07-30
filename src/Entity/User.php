@@ -137,6 +137,7 @@ class User extends AbstractSource implements RoleInterface
      */
     public function __construct($data = null)
     {
+        $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
@@ -417,9 +418,11 @@ class User extends AbstractSource implements RoleInterface
      */
     public function addForeignServiceId(ForeignServiceId $foreignServiceId)
     {
+        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
+        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->add($foreignServiceId);
 
@@ -466,9 +469,11 @@ class User extends AbstractSource implements RoleInterface
      */
     public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
     {
+        // @codeCoverageIgnoreStart
         if (is_null($this->foreignServicesIds)) {
             $this->foreignServicesIds = new ArrayCollection();
         }
+        // @codeCoverageIgnoreEnd
 
         $this->foreignServicesIds->clear();
 
@@ -622,41 +627,26 @@ class User extends AbstractSource implements RoleInterface
     public function toArray($mapped = false)
     {
         $data = parent::toArray($mapped);
-
         $foreignServicesIds = [];
-        $userGroups = [];
 
-        $applicationTransformer = new ApplicationMinimalTransformer();
-        $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+        /*if ($data['current_attribution']) {
+            $currentAttribution = [
+                'id' => $data['current_attribution']->getId(),
+                'application' => $data['current_attribution']->getApplication()->toArray(),
+                'role' => $data['current_attribution']->getRole()->toArray()
+            ];
+        }*/
 
-        $serializeAttribution =
-            function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
-                $item = [
-                    'id' => $attribution->getId(),
-                    'role' => $attribution->getRole()->toArray()
-                ];
+        // @codeCoverageIgnoreStart
+        $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
+            ? new ArrayCollection()
+            : $data['foreign_services_ids'];
+        // @codeCoverageIgnoreEnd
 
-                $target = $attribution->getTarget();
-
-                if ($target instanceof ApplicationGroup) {
-                    $item['application_group'] = $applicationGroupTransformer->transform($target);
-                } elseif ($target instanceof Application) {
-                    $item['application'] = $applicationTransformer->transform($target);
-                }
-
-                return $item;
-            };
-
-        $attributions = $data['attributions'] instanceof Collection
-            ? array_map($serializeAttribution, $data['attributions']->toArray())
-            : [];
-
-        $currentAttribution = $data['current_attribution'] ? $serializeAttribution($data['current_attribution']) : null;
-
-        $data['foreign_services_ids'] = is_null($data['foreign_services_ids']) ? [] : $data['foreign_services_ids'];
-
-        if (!empty($data['foreign_services_ids'])) {
-            /** @var ForeignServiceId $foreignServiceId */
+        /**
+         * @var ForeignServiceId $foreignServiceId
+         */
+        if ($data['foreign_services_ids']) {
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [
                     'name' => $foreignServiceId->getName(),
@@ -665,21 +655,7 @@ class User extends AbstractSource implements RoleInterface
             }
         }
 
-        if (!empty($data['user_groups'])) {
-            /** @var UserGroup $userGroup */
-            foreach ($data['user_groups'] as $userGroup) {
-                $userGroups[] = [
-                    'id' => $userGroup->getId(),
-                    'name' => $userGroup->getName(),
-                    'default_role' => $userGroup->getDefaultRole()
-                ];
-            }
-        }
-
-        $data['attributions'] = $attributions;
-        $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
-        $data['user_groups'] = $userGroups;
 
         return $data;
     }

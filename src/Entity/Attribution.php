@@ -3,6 +3,7 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Fei\Entity\AbstractEntity;
+use Test\Fei\Service\Connect\Common\Entity\UserGroupTest;
 
 /**
  * Class Attribution
@@ -144,10 +145,20 @@ class Attribution extends AbstractEntity
     {
         $data = parent::toArray($mapped);
 
-        $data['source'] = !empty($data['user']) ? $data['user']->toArray() : null;
-        $data['target'] = !empty($data['application']) ? $data['application']->toArray() : null;
-        $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
+        if (!empty($data['source'])) {
+            if ($data['source'] instanceof User || $data['source'] instanceof UserGroup) {
+                $data['source'] = $data['source']->toArray();
+            }
+        }
 
+        if (!empty($data['target'])) {
+            if ($data['target'] instanceof Application || $data['target'] instanceof ApplicationGroup) {
+                $data['target'] = $data['target']->toArray();
+            }
+        }
+
+        $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
+codecept_debug($data);
         return $data;
     }
 
@@ -161,16 +172,12 @@ class Attribution extends AbstractEntity
         }
 
         if (!empty($data['application'])) {
-            $data['target'] = new Application($data['application']);
-        }
-
-        if (!empty($data['application_group'])) {
-            $data['target'] = new ApplicationGroup($data['application_group']);
+            $data['application'] = new Application($data['application']);
         }
 
         if (!empty($data['user'])) {
-            $data['source'] = new User($data['user']);
-            $data['source']->getAttributions()->add($this);
+            $data['user'] = new User($data['user']);
+            $data['user']->getAttributions()->add($this);
         }
 
         return parent::hydrate($data);
