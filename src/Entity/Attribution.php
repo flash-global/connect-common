@@ -158,7 +158,7 @@ class Attribution extends AbstractEntity
         }
 
         $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
-codecept_debug($data);
+
         return $data;
     }
 
