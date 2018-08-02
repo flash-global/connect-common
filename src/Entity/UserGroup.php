@@ -195,29 +195,7 @@ class UserGroup extends AbstractSource
             }
         }
 
-        $applications = [];
-        $applicationGroups = [];
-        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
-            $applicationTransformer = new ApplicationMinimalTransformer();
-            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
-            foreach ($this->getAttributions() as $attrib) {
-                $target = $attrib->getTarget();
-                $idrole = $attrib->getRole()->getId();
-                if ($target instanceof Application) {
-                    $application = $applicationTransformer->transform($target);
-                    $application['idrole'] = $idrole;
-                    $applications[] = $application;
-                } elseif ($target instanceof ApplicationGroup) {
-                    $applicationGroup = $applicationGroupTransformer->transform($target);
-                    $applicationGroup['idrole'] = $idrole;
-                    $applicationGroups[] = $applicationGroup;
-                }
-            }
-        }
-
         $array['users'] = $users;
-        $array['applications'] = $applications;
-        $array['applicationGroups'] = $applicationGroups;
 
         return $array;
     }
