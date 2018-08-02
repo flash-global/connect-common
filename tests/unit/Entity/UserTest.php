@@ -129,6 +129,16 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getLanguage(), 'language', $user);
     }
 
+    public function testApiTokenAccessors()
+    {
+        $user = new User();
+
+        $user->setApiToken('7636T389023978123120312938172362137812371823');
+
+        $this->assertEquals('7636T389023978123120312938172362137812371823', $user->getLanguage());
+        $this->assertAttributeEquals($user->getLanguage(), 'apiToken', $user);
+    }
+
     public function testAttributionsAccessors()
     {
         $user = new User();
