@@ -17,8 +17,6 @@ use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
  */
 class Application extends AbstractTarget
 {
-    const ALLOW_PROFILE_ASSOCIATIONS = 'allow_profile_association';
-
     const STATUS_ENABLED  = 1;
     const STATUS_DISABLED = 2;
 

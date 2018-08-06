@@ -4,8 +4,6 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -123,7 +121,7 @@ class User extends AbstractSource implements RoleInterface
     protected $language;
 
     /**
-     * @Column(type="string"
+     * @Column(type="string")
      *
      * @var string
      */
