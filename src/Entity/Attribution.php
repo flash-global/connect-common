@@ -172,16 +172,21 @@ class Attribution extends AbstractEntity
         }
 
         if (!empty($data['application'])) {
-            $data['application'] = new Application($data['application']);
+            $data['target'] = new Application($data['application']);
+        }
+
+        if (!empty($data['application_group'])) {
+            $data['target'] = new ApplicationGroup($data['application_group']);
         }
 
         if (!empty($data['user'])) {
-            $data['user'] = new User($data['user']);
-            $data['user']->getAttributions()->add($this);
+            $data['source'] = new User($data['user']);
+            $data['source']->getAttributions()->add($this);
         }
 
         return parent::hydrate($data);
     }
+
 
     /**
      * Get the Attribution Role localUsername

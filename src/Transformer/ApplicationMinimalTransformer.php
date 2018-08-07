@@ -24,6 +24,12 @@ class ApplicationMinimalTransformer extends TransformerAbstract
             'url' => $application->getUrl(),
             'name' => $application->getName(),
             'status' => $application->getStatus(),
+            'logo_url' => $application->getLogoUrl(),
+            'allow_profile_association' => $application->getAllowProfileAssociation(),
+            'is_subscribed' => $application->getIsSubscribed(),
+            'is_manageable' => $application->getIsManageable(),
+            'config' => $application->getConfig(),
+            'contexts' => $application->getContexts()
         ];
     }
 }

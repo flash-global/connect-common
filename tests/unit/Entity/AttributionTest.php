@@ -127,7 +127,9 @@ class AttributionTest extends TestCase
                     'attributions' => null,
                     'contexts' => [],
                     'users' => [],
-                    'userGroups' => []
+                    'userGroups' => [
+                    ],
+                    'application_groups' => new ArrayCollection(),
                 ],
                 'role' => [
                     'id' => 1,
@@ -151,12 +153,30 @@ class AttributionTest extends TestCase
                     'mini_avatar_url' => null,
                     'language' => 'en',
                     'role_id' => null,
-                    /*'foreign_services_ids' => [
+                    'foreign_services_ids' => [
                         [
                             'name' => 'google',
                             'id'   => 'id_google'
                         ]
-                    ],*/
+                    ],
+                    'current_attribution' => null,
+                    'user_groups' => [],
+                    'applications' => [
+                        0 => [
+                            'id' => 1,
+                            'name' => 'application 1',
+                            'url' => null,
+                            'status' => Application::STATUS_ENABLED,
+                            'logo_url' => 'test',
+                            'allow_profile_association' => false,
+                            'is_subscribed' => false,
+                            'is_manageable' => false,
+                            'config' => '',
+                            'contexts' => [],
+                            'idrole' => 1,
+                        ]
+                    ],
+                    'applicationGroups' => [],
                     'attributions' => [
                         [
                             'id' => 1,
@@ -178,7 +198,6 @@ class AttributionTest extends TestCase
                                 'label' => 'role 1',
                                 'user_created' => false
                             ],
-                            'is_default' => false
                         ]
                     ]
                 ]
@@ -240,6 +259,7 @@ class AttributionTest extends TestCase
                 ->setId(1)
                 ->setUserName('user test')
                 ->setPassword('toto')
+                ->setCreatedAt(new \DateTime('2016-11-18T17:01:06+01:00'))
                 ->setAttributions(new ArrayCollection([$attribution])),
             $attribution->getSource()
         );

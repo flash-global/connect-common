@@ -319,14 +319,14 @@ class UserTest extends TestCase
                 'register_token' => null,
                 'current_role' => null,
                 'local_username' => null,
-                'attributions' => new ArrayCollection(),
+                'attributions' => [],
                 'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
                 'foreign_services_ids' => [],
-                'user_groups' => new ArrayCollection(),
+                'user_groups' => [],
                 'applications' => [],
                 'applicationGroups' => []
             ],
@@ -354,6 +354,8 @@ class UserTest extends TestCase
                     ->setLabel('role test 1')
             );
 
+        $userGroups = new ArrayCollection();
+        $userGroups->add((new UserGroup())->setId(25));
 
         $user
             ->setForeignServicesIds(
@@ -366,6 +368,7 @@ class UserTest extends TestCase
                         ->setId('456')
                 ])
             )
+            ->setUserGroups($userGroups)
             ->setAttributions(
                 new ArrayCollection([
                     $currentAttribution,
@@ -404,7 +407,13 @@ class UserTest extends TestCase
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
-                'user_groups' => new ArrayCollection(),
+                'user_groups' => [
+                    0 => [
+                        'id' => 25,
+                        'name' => null,
+                        'default_role' => null
+                    ]
+                ],
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',
@@ -439,21 +448,40 @@ class UserTest extends TestCase
                     ],
                     [
                         'id' => 2,
-                        'applicationGroup' => [
+                        'application_group' => [
                             'id' => 2,
                             'name' => 'application group test',
-                            'contexts' => []
                         ],
                         'role' => [
                             'id' => 2,
                             'role' => 'role test 2',
                             'label' => 'role test 2',
-                            'user_created' => false
+                            'user_created' => false,
                         ]
                     ]
                 ],
-                'applications' => [],
-                'applicationGroups' => [],
+                'applications' => [
+                    [
+                        'id' => 1,
+                        'name' => 'application test 1',
+                        'url' => null,
+                        'status' => Application::STATUS_ENABLED,
+                        'logo_url' => 'test1',
+                        'allow_profile_association' => false,
+                        'is_subscribed' => false,
+                        'is_manageable' => false,
+                        'config' => '',
+                        'contexts' => [],
+                        'idrole' => 1
+                    ]
+                ],
+                'applicationGroups' => [
+                    [
+                        'id' => 2,
+                        'name' => 'application group test',
+                        'idrole' => 2
+                    ]
+                ],
                 'current_attribution' => [
                     'id' => 1,
                     'application' => [
@@ -472,9 +500,9 @@ class UserTest extends TestCase
                         'id' => 1,
                         'role' => 'role test 1',
                         'label' => 'role test 1',
-                        'user_created' => false
+                        'user_created' => false,
                     ]
-                ]
+                ],
             ],
             $user->toArray()
         );
