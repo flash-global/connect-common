@@ -86,14 +86,6 @@ class Application extends AbstractTarget
 
 
     /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $allowProfileAssociation = false;
-
-
-    /**
      * Many Applications have Many Groups
      *
      * @ManyToMany(targetEntity="ApplicationGroup", inversedBy="applications")
