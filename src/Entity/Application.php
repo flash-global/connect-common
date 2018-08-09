@@ -30,6 +30,13 @@ class Application extends AbstractTarget
     protected $name;
 
     /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $allowProfileAssociation = false;
+
+    /**
      * @Column(type="string", unique=true)
      *
      * @var string
