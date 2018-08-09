@@ -27,13 +27,6 @@ abstract class AbstractTarget extends AbstractEntity
     protected $id;
 
     /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $allowProfileAssociation = false;
-
-    /**
      * @OneToMany(targetEntity="Attribution", mappedBy="target", cascade={"all"})
      *
      * @var ArrayCollection|Attribution[];
