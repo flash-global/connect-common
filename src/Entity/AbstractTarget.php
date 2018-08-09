@@ -27,13 +27,6 @@ abstract class AbstractTarget extends AbstractEntity
     protected $id;
 
     /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $allowProfileAssociation = false;
-
-    /**
      * @OneToMany(targetEntity="Attribution", mappedBy="target", cascade={"all"})
      *
      * @var ArrayCollection|Attribution[];
@@ -60,30 +53,6 @@ abstract class AbstractTarget extends AbstractEntity
     public function setId(int $id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Get AllowProfileAssociation
-     *
-     * @return bool
-     */
-    public function getAllowProfileAssociation()
-    {
-        return $this->allowProfileAssociation;
-    }
-
-    /**
-     * Set AllowProfileAssociation
-     *
-     * @param bool $allowProfileAssociation
-     *
-     * @return $this
-     */
-    public function setAllowProfileAssociation($allowProfileAssociation)
-    {
-        $this->allowProfileAssociation = $allowProfileAssociation;
 
         return $this;
     }

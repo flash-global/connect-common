@@ -77,6 +77,15 @@ class Application extends AbstractTarget
      */
     protected $contexts = [];
 
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $allowProfileAssociation = false;
+
+
     /**
      * Many Applications have Many Groups
      *
@@ -361,6 +370,30 @@ class Application extends AbstractTarget
         foreach ($groups as $group) {
             $this->getApplicationGroups()->removeElement($group);
         }
+
+        return $this;
+    }
+
+    /**
+     * Get AllowProfileAssociation
+     *
+     * @return bool
+     */
+    public function getAllowProfileAssociation()
+    {
+        return $this->allowProfileAssociation;
+    }
+
+    /**
+     * Set AllowProfileAssociation
+     *
+     * @param bool $allowProfileAssociation
+     *
+     * @return $this
+     */
+    public function setAllowProfileAssociation($allowProfileAssociation)
+    {
+        $this->allowProfileAssociation = $allowProfileAssociation;
 
         return $this;
     }
