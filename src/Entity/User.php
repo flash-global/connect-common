@@ -131,6 +131,13 @@ class User extends AbstractSource implements RoleInterface
     protected $userGroups;
 
     /**
+     * @OneToMany(targetEntity="DefaultRole", mappedBy="user")
+     *
+     * @var Collection|DefaultRole[]
+     */
+    protected  $defaultRoles;
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -140,6 +147,7 @@ class User extends AbstractSource implements RoleInterface
         $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
+        $this->setDefaultRoles(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
         $this->setLanguage('en');
 
@@ -606,6 +614,62 @@ class User extends AbstractSource implements RoleInterface
     {
         foreach ($groups as $group) {
             $this->getUserGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get DefaultRoles
+     *
+     * @return Collection|DefaultRole[]
+     */
+    public function getDefaultRoles(): Collection
+    {
+        return $this->defaultRoles;
+    }
+
+    /**
+     * Set DefaultRoles
+     *
+     * @param Collection|DefaultRole[] $defaultRoles
+     *
+     * @return $this
+     */
+    public function setDefaultRoles(Collection $defaultRoles)
+    {
+        $this->defaultRoles = $defaultRoles;
+
+        return $this;
+    }
+
+    /**
+     * Add default role.
+     *
+     * @param DefaultRole ...$roles
+     *
+     * @return $this
+     */
+    public function addDefaultRoles(DefaultRole ...$roles)
+    {
+        foreach ($roles as $role) {
+            $this->getDefaultRoles()->add($role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove default role.
+     *
+     * @param DefaultRole ...$roles
+     *
+     * @return User
+     */
+    public function removeDefaultRoles(DefaultRole ...$roles)
+    {
+        foreach ($roles as $role) {
+            $this->getDefaultRoles()->removeElement($role);
         }
 
         return $this;
