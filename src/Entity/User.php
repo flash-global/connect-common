@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\DefaultRoleMinimalTransformer;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -697,6 +698,7 @@ class User extends AbstractSource implements RoleInterface
 
         $applicationTransformer = new ApplicationMinimalTransformer();
         $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+        $defaultRoleMinimalTransformer = new DefaultRoleMinimalTransformer();
 
         $serializeAttribution =
             function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
@@ -750,6 +752,14 @@ class User extends AbstractSource implements RoleInterface
                 ];
             }
         }
+
+        $serialiazeDefaultRoles = function(DefaultRole $role) use ($defaultRoleMinimalTransformer) {
+            return $defaultRoleMinimalTransformer->transform($role);
+        };
+
+        $data['default_roles'] = $data['default_roles'] instanceof Collection
+            ? array_map($serialiazeDefaultRoles, $data['default_roles']->toArray())
+            : [];
 
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;

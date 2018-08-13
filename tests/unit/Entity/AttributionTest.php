@@ -5,6 +5,7 @@ namespace Test\Fei\Service\Connect\Common\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\DefaultRole;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
@@ -77,6 +78,13 @@ class AttributionTest extends TestCase
 
     public function testToArray()
     {
+        $defaultRoles = new ArrayCollection();
+        $defaultRoles->add((new DefaultRole())
+            ->setRole((new Role)->setId(1))
+            ->setApplication((new Application())->setId(1))
+            ->setUser((new user)->setId(1))
+        );
+
         $attribution = (new Attribution())
             ->setId(1)
             ->setSource(
@@ -94,6 +102,7 @@ class AttributionTest extends TestCase
                                 ->setId('id_google')
                         ])
                     )
+                ->setDefaultRoles($defaultRoles)
             )
             ->setTarget(
                 (new Application())
@@ -199,7 +208,14 @@ class AttributionTest extends TestCase
                                 'user_created' => false
                             ],
                         ]
-                    ]
+                    ],
+                    'default_roles' => [
+                        [
+                            'application' => 1,
+                            'role' => 1,
+                            'user' => 1,
+                        ]
+                    ],
                 ]
             ],
             $attribution->toArray()

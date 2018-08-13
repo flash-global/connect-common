@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\DefaultRole;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
@@ -320,6 +321,7 @@ class UserTest extends TestCase
                 'current_role' => null,
                 'local_username' => null,
                 'attributions' => [],
+                'default_roles' => [],
                 'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
@@ -357,6 +359,13 @@ class UserTest extends TestCase
         $userGroups = new ArrayCollection();
         $userGroups->add((new UserGroup())->setId(25));
 
+        $defaultRoles = new ArrayCollection();
+        $defaultRoles->add((new DefaultRole())
+            ->setRole((new Role)->setId(1))
+            ->setApplication((new Application())->setId(1))
+            ->setUser((new user)->setId(1))
+        );
+
         $user
             ->setForeignServicesIds(
                 new ArrayCollection([
@@ -369,6 +378,7 @@ class UserTest extends TestCase
                 ])
             )
             ->setUserGroups($userGroups)
+            ->setDefaultRoles($defaultRoles)
             ->setAttributions(
                 new ArrayCollection([
                     $currentAttribution,
@@ -458,6 +468,13 @@ class UserTest extends TestCase
                             'label' => 'role test 2',
                             'user_created' => false,
                         ]
+                    ]
+                ],
+                'default_roles' => [
+                    [
+                        'application' => 1,
+                        'role' => 1,
+                        'user' => 1,
                     ]
                 ],
                 'applications' => [
