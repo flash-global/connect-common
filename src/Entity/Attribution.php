@@ -3,7 +3,6 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Fei\Entity\AbstractEntity;
-use Test\Fei\Service\Connect\Common\Entity\UserGroupTest;
 
 /**
  * Class Attribution
@@ -141,30 +140,6 @@ class Attribution extends AbstractEntity
     /**
      * {@inheritdoc}
      */
-    public function toArray($mapped = false)
-    {
-        $data = parent::toArray($mapped);
-
-        if (!empty($data['source'])) {
-            if ($data['source'] instanceof User || $data['source'] instanceof UserGroup) {
-                $data['source'] = $data['source']->toArray();
-            }
-        }
-
-        if (!empty($data['target'])) {
-            if ($data['target'] instanceof Application || $data['target'] instanceof ApplicationGroup) {
-                $data['target'] = $data['target']->toArray();
-            }
-        }
-
-        $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
-
-        return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hydrate($data)
     {
         if (!empty($data['role'])) {
@@ -177,11 +152,6 @@ class Attribution extends AbstractEntity
 
         if (!empty($data['application_group'])) {
             $data['target'] = new ApplicationGroup($data['application_group']);
-        }
-
-        if (!empty($data['user'])) {
-            $data['source'] = new User($data['user']);
-            $data['source']->getAttributions()->add($this);
         }
 
         return parent::hydrate($data);

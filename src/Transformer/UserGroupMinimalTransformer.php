@@ -21,7 +21,7 @@ class UserGroupMinimalTransformer extends TransformerAbstract
         return [
             'id' => $userGroup->getId(),
             'name' => $userGroup->getName(),
-            'defaultRole' => $userGroup->getDefaultRole()
+            'default_role' => $userGroup->getDefaultRole()->toArray()
         ];
     }
 }

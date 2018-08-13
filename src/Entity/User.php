@@ -136,7 +136,7 @@ class User extends AbstractSource implements RoleInterface
      *
      * @var Collection|DefaultRole[]
      */
-    protected  $defaultRoles;
+    protected $defaultRoles;
 
     /**
      * User constructor.
@@ -145,7 +145,6 @@ class User extends AbstractSource implements RoleInterface
      */
     public function __construct($data = null)
     {
-        $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
         $this->setDefaultRoles(new ArrayCollection());
@@ -421,19 +420,15 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Add ForeignServiceId
      *
-     * @param ForeignServiceId $foreignServiceId
+     * @param ForeignServiceId ...$foreignServiceId
      *
      * @return $this
      */
-    public function addForeignServiceId(ForeignServiceId $foreignServiceId)
+    public function addForeignServiceId(ForeignServiceId ...$foreignServiceId)
     {
-        // @codeCoverageIgnoreStart
-        if (is_null($this->foreignServicesIds)) {
-            $this->foreignServicesIds = new ArrayCollection();
+        foreach ($foreignServiceId as $item) {
+            $this->getForeignServicesIds()->add($item);
         }
-        // @codeCoverageIgnoreEnd
-
-        $this->foreignServicesIds->add($foreignServiceId);
 
         return $this;
     }
@@ -472,23 +467,13 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Set ForeignServicesIds
      *
-     * @param ArrayCollection $foreignServicesIds
+     * @param Collection $foreignServicesIds
      *
      * @return User
      */
-    public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
+    public function setForeignServicesIds(Collection $foreignServicesIds)
     {
-        // @codeCoverageIgnoreStart
-        if (is_null($this->foreignServicesIds)) {
-            $this->foreignServicesIds = new ArrayCollection();
-        }
-        // @codeCoverageIgnoreEnd
-
-        $this->foreignServicesIds->clear();
-
-        foreach ($foreignServicesIds as $foreignServiceId) {
-            $this->addForeignServiceId($foreignServiceId);
-        }
+        $this->foreignServicesIds = $foreignServicesIds;
 
         return $this;
     }
@@ -724,16 +709,10 @@ class User extends AbstractSource implements RoleInterface
 
         $currentAttribution = $data['current_attribution'] ? $serializeAttribution($data['current_attribution']) : null;
 
-        // @codeCoverageIgnoreStart
-        $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
-            ? new ArrayCollection()
-            : $data['foreign_services_ids'];
-        // @codeCoverageIgnoreEnd
+        $data['foreign_services_ids'] = is_null($data['foreign_services_ids']) ? [] : $data['foreign_services_ids'];
 
-        /**
-         * @var ForeignServiceId $foreignServiceId
-         */
-        if ($data['foreign_services_ids']) {
+        if (!empty($data['foreign_services_ids'])) {
+            /** @var ForeignServiceId $foreignServiceId */
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [
                     'name' => $foreignServiceId->getName(),
@@ -745,21 +724,17 @@ class User extends AbstractSource implements RoleInterface
         if (!empty($data['user_groups'])) {
             /** @var UserGroup $userGroup */
             foreach ($data['user_groups'] as $userGroup) {
-                $userGroups[] = [
-                    'id' => $userGroup->getId(),
-                    'name' => $userGroup->getName(),
-                    'default_role' => $userGroup->getDefaultRole()
-                ];
+                $group = $userGroup->toArray();
+                unset($group['users']);
+                $userGroups[] = $group;
             }
         }
 
-        $serialiazeDefaultRoles = function(DefaultRole $role) use ($defaultRoleMinimalTransformer) {
+        $serializeDefaultRoles = function (DefaultRole $role) use ($defaultRoleMinimalTransformer) {
             return $defaultRoleMinimalTransformer->transform($role);
         };
 
-        $data['default_roles'] = $data['default_roles'] instanceof Collection
-            ? array_map($serialiazeDefaultRoles, $data['default_roles']->toArray())
-            : [];
+        $data['default_roles'] = array_map($serializeDefaultRoles, $data['default_roles']->toArray());
 
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
@@ -776,6 +751,7 @@ class User extends AbstractSource implements RoleInterface
     {
         $attributions = new ArrayCollection();
         $foreignServicesIds = new ArrayCollection();
+        $userGroups = new ArrayCollection();
         $currentAttribution = null;
 
         if (!empty($data['attributions'])) {
@@ -802,9 +778,18 @@ class User extends AbstractSource implements RoleInterface
                 ->setSource($this);
         }
 
+        if (!empty($data['user_groups'])) {
+            foreach ($data['user_groups'] as $userGroup) {
+                $group = new UserGroup($userGroup);
+                $group->getUsers()->add($this);
+                $userGroups->add($group);
+            }
+        }
+
         $data['foreign_services_ids'] = $foreignServicesIds;
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
+        $data['user_groups'] = $userGroups;
 
         return parent::hydrate($data);
     }

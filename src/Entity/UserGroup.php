@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class UserGroup
@@ -160,16 +159,55 @@ class UserGroup extends AbstractSource
     {
         $array = parent::toArray($mapped);
 
-        $users = [];
-        if (!$this->getUsers()->isEmpty()) {
-            $userTransformer = new UserMinimalTransformer();
-            foreach ($this->getUsers() as $user) {
-                $users[] = $userTransformer->transform($user);
+        $applicationTransformer = new ApplicationMinimalTransformer();
+        $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+
+        $serializeAttribution =
+            function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
+                $item = [
+                    'id' => $attribution->getId(),
+                    'role' => $attribution->getRole()->toArray()
+                ];
+
+                $target = $attribution->getTarget();
+
+                if ($target instanceof ApplicationGroup) {
+                    $item['application_group'] = $applicationGroupTransformer->transform($target);
+                } elseif ($target instanceof Application) {
+                    $item['application'] = $applicationTransformer->transform($target);
+                }
+
+                return $item;
+            };
+
+        $array['attributions'] = array_map($serializeAttribution, $array['attributions']->toArray());
+
+        $array['default_role'] = $array['default_role'] instanceof Role ? $array['default_role']->toArray() : null;
+
+        return $array;
+    }
+
+    /**
+     * {@inherited}
+     */
+    public function hydrate($data)
+    {
+        $attributions = new ArrayCollection();
+
+        if (!empty($data['attributions'])) {
+            foreach ($data['attributions'] as $attribution) {
+                $attributions->add(
+                    (new Attribution($attribution))->setSource($this)
+                );
             }
         }
 
-        $array['users'] = $users;
+        if (!empty($data['default_role'])) {
+            $data['default_role'] = new Role($data['default_role']);
+        }
 
-        return $array;
+        $data['attributions'] = $attributions;
+
+        return parent::hydrate($data);
     }
 }

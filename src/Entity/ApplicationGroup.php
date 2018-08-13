@@ -4,8 +4,6 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Fei\Service\Connect\Common\Transformer\UserGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class ApplicationGroup
@@ -31,7 +29,6 @@ class ApplicationGroup extends AbstractTarget
      * @var Collection|Application[]
      */
     protected $applications;
-
 
     /**
      * ApplicationGroup constructor.
@@ -123,16 +120,5 @@ class ApplicationGroup extends AbstractTarget
         }
 
         return $this;
-    }
-
-    /**
-     * @param bool $mapped
-     * @return array
-     */
-    public function toArray($mapped = false)
-    {
-        $array = parent::toArray($mapped);
-
-        return $array;
     }
 }

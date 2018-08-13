@@ -4,8 +4,6 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Fei\Service\Connect\Common\Transformer\UserGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class Application
@@ -83,7 +81,6 @@ class Application extends AbstractTarget
      * @var array
      */
     protected $contexts = [];
-
 
     /**
      * Many Applications have Many Groups
@@ -395,13 +392,5 @@ class Application extends AbstractTarget
         $this->allowProfileAssociation = $allowProfileAssociation;
 
         return $this;
-    }
-
-
-    public function toArray($mapped = false)
-    {
-        $array = parent::toArray($mapped);
-
-        return $array;
     }
 }

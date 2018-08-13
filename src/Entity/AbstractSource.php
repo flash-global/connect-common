@@ -3,9 +3,8 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Fei\Entity\AbstractEntity;
-use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 
 /**
  * Class AbstractSource
@@ -29,7 +28,7 @@ abstract class AbstractSource extends AbstractEntity
     /**
      * @OneToMany(targetEntity="Attribution", mappedBy="source", cascade={"all"})
      *
-     * @var ArrayCollection|Attribution[];
+     * @var Collection|Attribution[];
      */
     protected $attributions;
 
@@ -58,7 +57,47 @@ abstract class AbstractSource extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection|Attribution[]
+     * User constructor.
+     *
+     * @param array $data
+     */
+    public function __construct($data = null)
+    {
+        $this->setAttributions(new ArrayCollection());
+
+        parent::__construct($data);
+    }
+
+    /**
+     * Set Attributions
+     *
+     * @param Collection $attributions
+     *
+     * @return $this
+     */
+    public function setAttributions(Collection $attributions)
+    {
+        if (!isset($this->attributions)) {
+            $this->attributions = new ArrayCollection();
+        }
+
+        $this->getAttributions()->clear();
+
+        /**
+         * @var Attribution $attr
+         */
+        foreach ($attributions as $attr) {
+            $attr->setSource($this);
+            $this->getAttributions()->add($attr);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get Attributions
+     *
+     * @return Collection|Attribution[]
      */
     public function getAttributions()
     {
@@ -66,42 +105,18 @@ abstract class AbstractSource extends AbstractEntity
     }
 
     /**
-     * @param ArrayCollection|Attribution[] $attributions
+     * Add application groups
+     *
+     * @param Attribution[] $attributions
+     *
      * @return $this
      */
-    public function setAttributions($attributions)
+    public function addAttributions(Attribution ...$attributions)
     {
-        $this->attributions = $attributions;
-        return $this;
-    }
-
-    public function toArray($mapped = false)
-    {
-        $array = parent::toArray($mapped);
-
-        $applications = [];
-        $applicationGroups = [];
-        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
-            $applicationTransformer = new ApplicationMinimalTransformer();
-            $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
-            foreach ($this->getAttributions() as $attrib) {
-                $target = $attrib->getTarget();
-                $idrole = $attrib->getRole()->getId();
-                if ($target instanceof Application) {
-                    $application = $applicationTransformer->transform($target);
-                    $application['idrole'] = $idrole;
-                    $applications[] = $application;
-                } elseif ($target instanceof ApplicationGroup) {
-                    $applicationGroup = $applicationGroupTransformer->transform($target);
-                    $applicationGroup['idrole'] = $idrole;
-                    $applicationGroups[] = $applicationGroup;
-                }
-            }
+        foreach ($attributions as $attribution) {
+            $this->getAttributions()->add($attribution);
         }
 
-        $array['applications'] = $applications;
-        $array['applicationGroups'] = $applicationGroups;
-
-        return $array;
+        return $this;
     }
 }
