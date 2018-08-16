@@ -33,6 +33,18 @@ abstract class AbstractSource extends AbstractEntity
     protected $attributions;
 
     /**
+     * User constructor.
+     *
+     * @param array $data
+     */
+    public function __construct($data = null)
+    {
+        $this->setAttributions(new ArrayCollection());
+
+        parent::__construct($data);
+    }
+
+    /**
      * Get Id
      *
      * @return mixed
@@ -49,23 +61,11 @@ abstract class AbstractSource extends AbstractEntity
      *
      * @return $this
      */
-    public function setId(int $id)
+    public function setId(int $id = null)
     {
         $this->id = $id;
 
         return $this;
-    }
-
-    /**
-     * User constructor.
-     *
-     * @param array $data
-     */
-    public function __construct($data = null)
-    {
-        $this->setAttributions(new ArrayCollection());
-
-        parent::__construct($data);
     }
 
     /**

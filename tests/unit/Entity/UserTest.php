@@ -267,7 +267,6 @@ class UserTest extends TestCase
         );
     }
 
-
     public function testAttributionAccessors()
     {
         $user = new User();

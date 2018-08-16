@@ -3,7 +3,6 @@
 namespace Test\Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\EntitySet;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
@@ -70,7 +69,6 @@ class UserGroupTest extends TestCase
 
         $this->assertEquals($coll, $group->getAttributions());
     }
-
 
     public function testToArray()
     {

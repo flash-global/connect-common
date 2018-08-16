@@ -2,8 +2,11 @@
 
 namespace Test\Fei\Service\Connect\Common\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
+use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\Role;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -35,5 +38,27 @@ class ApplicationGroupTest extends TestCase
         $applicationGroup->removeApplications($application);
 
         $this->assertEmpty($applicationGroup->getApplications()->toArray());
+    }
+
+
+    public function testAttributionsAccessors()
+    {
+        $group = new ApplicationGroup();
+        $attribution = (new Attribution())
+            ->setTarget($group)
+            ->setTarget(new Application())
+            ->setRole(new Role())
+        ;
+
+        $coll = new ArrayCollection();
+        $coll->add($attribution);
+
+        $group->setAttributions($coll);
+
+        $this->assertEquals($coll, $group->getAttributions());
+
+        $group->addAttributions(new Attribution());
+
+        $this->assertEquals(2, $group->getAttributions()->count());
     }
 }

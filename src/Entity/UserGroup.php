@@ -202,7 +202,7 @@ class UserGroup extends AbstractSource
             }
         }
 
-        if (!empty($data['default_role'])) {
+        if (!empty($data['default_role']) && is_array($data['default_role'])) {
             $data['default_role'] = new Role($data['default_role']);
         }
 
