@@ -98,6 +98,7 @@ class AttributionTest extends TestCase
                     ->setFirstName('toto')
                     ->setLastName('toto')
                     ->setEmail('toto@toto.com')
+                    ->setApiToken('suchtoken')
                     ->setForeignServicesIds(
                         new ArrayCollection([
                             (new ForeignServiceId())
@@ -156,6 +157,7 @@ class AttributionTest extends TestCase
                     'current_role' => null,
                     'local_username' => null,
                     'avatar_url' => null,
+                    'api_token' => 'suchtoken',
                     'mini_avatar_url' => null,
                     'language' => 'en',
                     'role_id' => null,
