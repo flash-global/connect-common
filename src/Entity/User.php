@@ -137,6 +137,13 @@ class User extends AbstractEntity implements RoleInterface
     protected $language;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $apiToken;
+
+    /**
      * User constructor.
      *
      * @param array $data
@@ -410,6 +417,26 @@ class User extends AbstractEntity implements RoleInterface
     public function setLocalUsername($localUsername)
     {
         $this->localUsername = $localUsername;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiToken()
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param string $apiToken
+     *
+     * @return User
+     */
+    public function setApiToken($apiToken)
+    {
+        $this->apiToken = $apiToken;
 
         return $this;
     }
