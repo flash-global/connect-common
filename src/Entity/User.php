@@ -734,8 +734,6 @@ class User extends AbstractSource implements RoleInterface
             return $defaultRoleMinimalTransformer->transform($role);
         };
 
-        $data['default_roles'] = array_map($serializeDefaultRoles, $data['default_roles']->toArray());
-
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
@@ -790,6 +788,9 @@ class User extends AbstractSource implements RoleInterface
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
         $data['user_groups'] = $userGroups;
+
+        // Since we can't hydrate the default roles back, avoid issues by setting to an empty collection.
+        $data['default_roles'] = new ArrayCollection();
 
         return parent::hydrate($data);
     }

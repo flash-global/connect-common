@@ -7,7 +7,6 @@ use Fei\Entity\Validator\AbstractValidator;
 use Fei\Entity\Validator\Exception;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Role;
-use Fei\Service\Connect\Common\Entity\UserGroup;
 
 /**
  * Class ApplicationGroupValidator
