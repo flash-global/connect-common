@@ -461,6 +461,10 @@ class User extends AbstractSource implements RoleInterface
      */
     public function getForeignServicesIds()
     {
+        if (is_null($this->foreignServicesIds)) {
+            $this->foreignServicesIds = new ArrayCollection();
+        }
+
         return $this->foreignServicesIds;
     }
 
