@@ -393,4 +393,25 @@ class Application extends AbstractTarget
 
         return $this;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hydrate($data)
+    {
+        $applicationGroups = new ArrayCollection();
+
+        if (!empty($data['application_groups'])) {
+            foreach ($data['application_groups'] as $group) {
+                $applicationGroups->add(
+                    (new ApplicationGroup($group))
+                        ->addApplications($this)
+                );
+            }
+        }
+
+        $data['application_groups'] = $applicationGroups;
+
+        return parent::hydrate($data);
+    }
 }

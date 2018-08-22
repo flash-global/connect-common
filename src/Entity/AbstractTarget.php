@@ -119,4 +119,25 @@ abstract class AbstractTarget extends AbstractEntity
 
         return $this;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function hydrate($data) {
+
+        $attributions = new ArrayCollection();
+
+        if (!empty($data['attributions'])) {
+            foreach ($data['attributions'] as $attribution) {
+                $attributions->add(
+                    (new Attribution($attribution))
+                        ->setTarget($this)
+                );
+            }
+        }
+
+        $data['attributions'] = $attributions;
+
+        return parent::hydrate($data);
+    }
 }

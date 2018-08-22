@@ -177,4 +177,18 @@ class Attribution extends AbstractEntity
 
         return $localUsername;
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray($mapped = false)
+    {
+        $data = parent::toArray($mapped);
+
+        $data['source'] = $this->getSource()->toArray();
+        $data['target'] = $this->getTarget()->toArray();
+        $data['role'] = $this->getRole()->toArray();
+
+        return $data;
+    }
 }
