@@ -76,6 +76,25 @@ class AttributionTest extends TestCase
         );
     }
 
+    public function testToArray()
+    {
+        $attribution = (new Attribution())
+            ->setSource(new User())
+            ->setTarget(new Application())
+            ->setRole(new Role())
+        ;
+
+        $this->assertEquals(
+            [
+                'id'        => null,
+                'role'      => $attribution->getRole()->toArray(),
+                'target'    => $attribution->getTarget()->toArray(),
+                'source'    => $attribution->getSource()->toArray()
+            ],
+            $attribution->toArray()
+        );
+    }
+
     public function testHydrateEmpty()
     {
         $attribution = new Attribution([]);

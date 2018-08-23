@@ -185,9 +185,17 @@ class Attribution extends AbstractEntity
     {
         $data = parent::toArray($mapped);
 
-        $data['source'] = $this->getSource()->toArray();
-        $data['target'] = $this->getTarget()->toArray();
-        $data['role'] = $this->getRole()->toArray();
+        if (!is_null($this->getSource())) {
+            $data['source'] = $this->getSource()->toArray();
+        }
+
+        if (!is_null($this->getTarget())) {
+            $data['target'] = $this->getTarget()->toArray();
+        }
+
+        if (!is_null($this->getRole())) {
+            $data['role'] = $this->getRole()->toArray();
+        }
 
         return $data;
     }

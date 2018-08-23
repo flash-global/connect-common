@@ -372,7 +372,7 @@ class UserTest extends TestCase
                 'current_role' => null,
                 'local_username' => null,
                 'attributions' => [],
-                'default_roles' => [],
+                'default_roles' => new ArrayCollection(),
                 'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
@@ -521,13 +521,7 @@ class UserTest extends TestCase
                         ]
                     ]
                 ],
-                'default_roles' => [
-                    [
-                        'application' => 1,
-                        'role' => 1,
-                        'user' => 1,
-                    ]
-                ],
+                'default_roles' => $defaultRoles,
                 'current_attribution' => [
                     'id' => 1,
                     'application' => [
