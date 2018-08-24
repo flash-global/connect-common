@@ -124,6 +124,13 @@ class User extends AbstractSource implements RoleInterface
     protected $language;
 
     /**
+     * @Column(type="string")
+     *
+     * @var string
+     */
+    protected $apiToken;
+
+    /**
      * @ManyToMany(targetEntity="UserGroup", inversedBy="users")
      * @JoinTable(name="users_has_groups")
      *
@@ -393,6 +400,26 @@ class User extends AbstractSource implements RoleInterface
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getApiToken()
+    {
+        return $this->apiToken;
+    }
+
+    /**
+     * @param mixed $apiToken
+     * @return User
+     */
+    public function setApiToken($apiToken)
+    {
+        $this->apiToken = $apiToken;
+        return $this;
+    }
+
+
 
     /**
      * Get CurrentAttribution

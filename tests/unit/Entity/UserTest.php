@@ -131,6 +131,16 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getLanguage(), 'language', $user);
     }
 
+    public function testApiTokenAccessors()
+    {
+        $user = new User();
+
+        $user->setApiToken('7636T389023978123120312938172362137812371823');
+
+        $this->assertEquals('7636T389023978123120312938172362137812371823', $user->getApiToken());
+        $this->assertAttributeEquals($user->getApiToken(), 'apiToken', $user);
+    }
+
     public function testStatusAccessors()
     {
         $user = new User();
@@ -379,7 +389,8 @@ class UserTest extends TestCase
                 'language' => 'en',
                 'role_id' => null,
                 'foreign_services_ids' => [],
-                'user_groups' => []
+                'user_groups' => [],
+                'api_token' => null
             ],
             $user->toArray()
         );
@@ -543,6 +554,7 @@ class UserTest extends TestCase
                         'user_created' => false,
                     ]
                 ],
+                'api_token' => null
             ],
             $user->toArray()
         );
