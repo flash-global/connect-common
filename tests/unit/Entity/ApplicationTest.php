@@ -3,6 +3,8 @@
 namespace Test\Fei\Service\Connect\Common\Entity;
 
 use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\ApplicationGroup;
+use Fei\Service\Connect\Common\Entity\Attribution;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -131,5 +133,34 @@ class ApplicationTest extends TestCase
         $application->setConfig($config);
 
         $this->assertEquals($config, $application->getConfig());
+    }
+
+    public function testApplicationGroups()
+    {
+        $application      = (new Application());
+        $applicationGroup = (new ApplicationGroup())->setId(23);
+
+        $application->addApplicationGroups($applicationGroup);
+
+        $this->assertEquals(23, $application->getApplicationGroups()->toArray()[0]->getId());
+
+        $application->removeApplicationGroups($applicationGroup);
+
+        $this->assertEmpty($application->getApplicationGroups()->toArray());
+    }
+
+    public function testHydrate()
+    {
+        $app = new Application();
+
+        $app->hydrate(
+            [
+                'attributions' => [[]],
+                'application_groups' => [[]]
+            ]
+        );
+
+        $this->assertEquals($app, $app->getAttributions()[0]->getTarget());
+        $this->assertEquals($app, $app->getApplicationGroups()[0]->getApplications()[0]);
     }
 }

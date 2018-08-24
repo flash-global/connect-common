@@ -5,7 +5,11 @@ namespace Fei\Service\Connect\Common\Validator;
 use Fei\Entity\EntityInterface;
 use Fei\Entity\Validator\Exception;
 use Fei\Entity\Validator\AbstractValidator;
+use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\User;
+use Fei\Service\Connect\Common\Entity\UserGroup;
 
 /**
  * Class AttributionValidator
@@ -31,54 +35,71 @@ class AttributionValidator extends AbstractValidator
             );
         }
 
-        $this->validateUser($entity->getUser());
-        $this->validateApplication($entity->getApplication());
+        $this->validateSource($entity->getSource());
+        $this->validateTarget($entity->getTarget());
         $this->validateRole($entity->getRole());
-        $this->validateIsDefault($entity->getIsDefault());
         $errors = $this->getErrors();
 
         return empty($errors);
     }
 
     /**
-     * Validate user
+     * Validate source
      *
-     * @param $user
+     * @param $source
      *
      * @return bool
      * @throws \Fei\Entity\Validator\Exception
      */
-    public function validateUser($user)
+    public function validateSource($source)
     {
-        $userValidator = new UserValidator();
-        $response = $userValidator->validate($user);
+        if ($source instanceof User) {
+            $validator = new UserValidator();
+            $response = $validator->validate($source);
+        } elseif ($source instanceof UserGroup) {
+            $validator = new UserGroupValidator();
+            $response = $validator->validate($source);
+        } else {
+            $this->addError('source', 'Source must be a valid instance of User or UserGroup');
+            return false;
+        }
 
         if (!$response) {
-            $this->addError('user', 'User must be a valid instance of User class - ' . $userValidator->getErrorsAsString());
+            $this->addError('source', 'Source must be a valid instance of User or UserGroup class - ' . $validator->getErrorsAsString());
         }
 
         return $response;
     }
+
 
     /**
-     * Validate application
+     * Validate target
      *
-     * @param $application
+     * @param $target
      *
      * @return bool
      * @throws \Fei\Entity\Validator\Exception
      */
-    public function validateApplication($application)
+    public function validateTarget($target)
     {
-        $applicationValidator = new ApplicationValidator();
-        $response = $applicationValidator->validate($application);
+        if ($target instanceof Application) {
+            $validator = new ApplicationValidator();
+            $response = $validator->validate($target);
+        } elseif ($target instanceof ApplicationGroup) {
+            $validator = new ApplicationGroupValidator();
+            $response = $validator->validate($target);
+        } else {
+            $this->addError('target', 'Target must be a valid instance of Application or ApplicationGroup');
+            return false;
+        }
 
         if (!$response) {
-            $this->addError('application', 'Application must be a valid instance of Application class - ' . $applicationValidator->getErrorsAsString());
+            $this->addError('target', 'Target must be a valid instance of Application or ApplicationGroup class - ' . $validator->getErrorsAsString());
         }
 
         return $response;
     }
+
 
     /**
      * Validate role
@@ -98,20 +119,5 @@ class AttributionValidator extends AbstractValidator
         }
 
         return $response;
-    }
-
-    public function validateIsDefault($isDefault)
-    {
-        if (!is_bool($isDefault) && !is_numeric($isDefault)) {
-            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
-            return false;
-        }
-
-        if (0 != (integer) $isDefault && 1 != (integer) $isDefault) {
-            $this->addError('is_default', 'Is default must be a boolean or 0 or 1');
-            return false;
-        }
-
-        return true;
     }
 }
