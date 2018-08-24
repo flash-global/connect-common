@@ -734,10 +734,6 @@ class User extends AbstractSource implements RoleInterface
             }
         }
 
-        $serializeDefaultRoles = function (DefaultRole $role) use ($defaultRoleMinimalTransformer) {
-            return $defaultRoleMinimalTransformer->transform($role);
-        };
-
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
