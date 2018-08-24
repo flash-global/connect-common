@@ -123,8 +123,8 @@ abstract class AbstractTarget extends AbstractEntity
     /**
      * @inheritdoc
      */
-    public function hydrate($data) {
-
+    public function hydrate($data)
+    {
         $attributions = new ArrayCollection();
 
         if (!empty($data['attributions'])) {
