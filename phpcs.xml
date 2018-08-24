@@ -4,6 +4,7 @@
 
   <!-- display progress -->
   <arg value="p"/>
+  <arg value="n"/>
   <arg name="colors"/>
 
   <!-- inherit rules from: -->
@@ -11,5 +12,7 @@
     <exclude name="Generic.Files.LineLength"/>
   </rule>
 
-  <file>app/src</file>
+  <file>src</file>
+  <exclude-pattern>*/tests/*</exclude-pattern>
+  <exclude-pattern>*/vendor/*</exclude-pattern>
 </ruleset>
