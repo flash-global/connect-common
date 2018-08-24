@@ -3,7 +3,6 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Fei\Entity\AbstractEntity;
-use Test\Fei\Service\Connect\Common\Entity\UserGroupTest;
 
 /**
  * Class Attribution
@@ -141,30 +140,6 @@ class Attribution extends AbstractEntity
     /**
      * {@inheritdoc}
      */
-    public function toArray($mapped = false)
-    {
-        $data = parent::toArray($mapped);
-
-        if (!empty($data['source'])) {
-            if ($data['source'] instanceof User || $data['source'] instanceof UserGroup) {
-                $data['source'] = $data['source']->toArray();
-            }
-        }
-
-        if (!empty($data['target'])) {
-            if ($data['target'] instanceof Application || $data['target'] instanceof ApplicationGroup) {
-                $data['target'] = $data['target']->toArray();
-            }
-        }
-
-        $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
-
-        return $data;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function hydrate($data)
     {
         if (!empty($data['role'])) {
@@ -172,16 +147,16 @@ class Attribution extends AbstractEntity
         }
 
         if (!empty($data['application'])) {
-            $data['application'] = new Application($data['application']);
+            $data['target'] = new Application($data['application']);
         }
 
-        if (!empty($data['user'])) {
-            $data['user'] = new User($data['user']);
-            $data['user']->getAttributions()->add($this);
+        if (!empty($data['application_group'])) {
+            $data['target'] = new ApplicationGroup($data['application_group']);
         }
 
         return parent::hydrate($data);
     }
+
 
     /**
      * Get the Attribution Role localUsername
@@ -201,5 +176,27 @@ class Attribution extends AbstractEntity
         }
 
         return $localUsername;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray($mapped = false)
+    {
+        $data = parent::toArray($mapped);
+
+        if (!is_null($this->getSource())) {
+            $data['source'] = $this->getSource()->toArray();
+        }
+
+        if (!is_null($this->getTarget())) {
+            $data['target'] = $this->getTarget()->toArray();
+        }
+
+        if (!is_null($this->getRole())) {
+            $data['role'] = $this->getRole()->toArray();
+        }
+
+        return $data;
     }
 }

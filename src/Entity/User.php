@@ -4,6 +4,9 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
+use Fei\Service\Connect\Common\Transformer\DefaultRoleMinimalTransformer;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -136,15 +139,22 @@ class User extends AbstractSource implements RoleInterface
     protected $userGroups;
 
     /**
+     * @OneToMany(targetEntity="DefaultRole", mappedBy="user")
+     *
+     * @var Collection|DefaultRole[]
+     */
+    protected $defaultRoles;
+
+    /**
      * User constructor.
      *
      * @param array $data
      */
     public function __construct($data = null)
     {
-        $this->setAttributions(new ArrayCollection());
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
+        $this->setDefaultRoles(new ArrayCollection());
         $this->setCreatedAt(new \DateTime());
         $this->setLanguage('en');
 
@@ -437,19 +447,15 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Add ForeignServiceId
      *
-     * @param ForeignServiceId $foreignServiceId
+     * @param ForeignServiceId ...$foreignServiceId
      *
      * @return $this
      */
-    public function addForeignServiceId(ForeignServiceId $foreignServiceId)
+    public function addForeignServiceId(ForeignServiceId ...$foreignServiceId)
     {
-        // @codeCoverageIgnoreStart
-        if (is_null($this->foreignServicesIds)) {
-            $this->foreignServicesIds = new ArrayCollection();
+        foreach ($foreignServiceId as $item) {
+            $this->getForeignServicesIds()->add($item);
         }
-        // @codeCoverageIgnoreEnd
-
-        $this->foreignServicesIds->add($foreignServiceId);
 
         return $this;
     }
@@ -482,29 +488,23 @@ class User extends AbstractSource implements RoleInterface
      */
     public function getForeignServicesIds()
     {
+        if (is_null($this->foreignServicesIds)) {
+            $this->foreignServicesIds = new ArrayCollection();
+        }
+
         return $this->foreignServicesIds;
     }
 
     /**
      * Set ForeignServicesIds
      *
-     * @param ArrayCollection $foreignServicesIds
+     * @param Collection $foreignServicesIds
      *
      * @return User
      */
-    public function setForeignServicesIds(ArrayCollection $foreignServicesIds)
+    public function setForeignServicesIds(Collection $foreignServicesIds)
     {
-        // @codeCoverageIgnoreStart
-        if (is_null($this->foreignServicesIds)) {
-            $this->foreignServicesIds = new ArrayCollection();
-        }
-        // @codeCoverageIgnoreEnd
-
-        $this->foreignServicesIds->clear();
-
-        foreach ($foreignServicesIds as $foreignServiceId) {
-            $this->addForeignServiceId($foreignServiceId);
-        }
+        $this->foreignServicesIds = $foreignServicesIds;
 
         return $this;
     }
@@ -637,6 +637,62 @@ class User extends AbstractSource implements RoleInterface
     }
 
     /**
+     * Get DefaultRoles
+     *
+     * @return Collection|DefaultRole[]
+     */
+    public function getDefaultRoles(): Collection
+    {
+        return $this->defaultRoles;
+    }
+
+    /**
+     * Set DefaultRoles
+     *
+     * @param Collection|DefaultRole[] $defaultRoles
+     *
+     * @return $this
+     */
+    public function setDefaultRoles(Collection $defaultRoles)
+    {
+        $this->defaultRoles = $defaultRoles;
+
+        return $this;
+    }
+
+    /**
+     * Add default role.
+     *
+     * @param DefaultRole ...$roles
+     *
+     * @return $this
+     */
+    public function addDefaultRoles(DefaultRole ...$roles)
+    {
+        foreach ($roles as $role) {
+            $this->getDefaultRoles()->add($role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove default role.
+     *
+     * @param DefaultRole ...$roles
+     *
+     * @return User
+     */
+    public function removeDefaultRoles(DefaultRole ...$roles)
+    {
+        foreach ($roles as $role) {
+            $this->getDefaultRoles()->removeElement($role);
+        }
+
+        return $this;
+    }
+
+    /**
      * Returns the string identifier of the Role
      *
      * @return string
@@ -652,26 +708,42 @@ class User extends AbstractSource implements RoleInterface
     public function toArray($mapped = false)
     {
         $data = parent::toArray($mapped);
+
         $foreignServicesIds = [];
+        $userGroups = [];
 
-        /*if ($data['current_attribution']) {
-            $currentAttribution = [
-                'id' => $data['current_attribution']->getId(),
-                'application' => $data['current_attribution']->getApplication()->toArray(),
-                'role' => $data['current_attribution']->getRole()->toArray()
-            ];
-        }*/
+        $applicationTransformer = new ApplicationMinimalTransformer();
+        $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
+        $defaultRoleMinimalTransformer = new DefaultRoleMinimalTransformer();
 
-        // @codeCoverageIgnoreStart
-        $data['foreign_services_ids'] = is_null($data['foreign_services_ids'])
-            ? new ArrayCollection()
-            : $data['foreign_services_ids'];
-        // @codeCoverageIgnoreEnd
+        $serializeAttribution =
+            function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
+                $item = [
+                    'id' => $attribution->getId(),
+                    'role' => $attribution->getRole()->toArray()
+                ];
 
-        /**
-         * @var ForeignServiceId $foreignServiceId
-         */
-        if ($data['foreign_services_ids']) {
+                $target = $attribution->getTarget();
+
+                if ($target instanceof ApplicationGroup) {
+                    $item['application_group'] = $applicationGroupTransformer->transform($target);
+                } elseif ($target instanceof Application) {
+                    $item['application'] = $applicationTransformer->transform($target);
+                }
+
+                return $item;
+            };
+
+        $attributions = $data['attributions'] instanceof Collection
+            ? array_map($serializeAttribution, $data['attributions']->toArray())
+            : [];
+
+        $currentAttribution = $data['current_attribution'] ? $serializeAttribution($data['current_attribution']) : null;
+
+        $data['foreign_services_ids'] = is_null($data['foreign_services_ids']) ? [] : $data['foreign_services_ids'];
+
+        if (!empty($data['foreign_services_ids'])) {
+            /** @var ForeignServiceId $foreignServiceId */
             foreach ($data['foreign_services_ids'] as $foreignServiceId) {
                 $foreignServicesIds[] = [
                     'name' => $foreignServiceId->getName(),
@@ -680,7 +752,19 @@ class User extends AbstractSource implements RoleInterface
             }
         }
 
+        if (!empty($data['user_groups'])) {
+            /** @var UserGroup $userGroup */
+            foreach ($data['user_groups'] as $userGroup) {
+                $group = $userGroup->toArray();
+                unset($group['users']);
+                $userGroups[] = $group;
+            }
+        }
+
+        $data['attributions'] = $attributions;
+        $data['current_attribution'] = $currentAttribution;
         $data['foreign_services_ids'] = $foreignServicesIds;
+        $data['user_groups'] = $userGroups;
 
         return $data;
     }
@@ -692,6 +776,7 @@ class User extends AbstractSource implements RoleInterface
     {
         $attributions = new ArrayCollection();
         $foreignServicesIds = new ArrayCollection();
+        $userGroups = new ArrayCollection();
         $currentAttribution = null;
 
         if (!empty($data['attributions'])) {
@@ -718,9 +803,21 @@ class User extends AbstractSource implements RoleInterface
                 ->setSource($this);
         }
 
+        if (!empty($data['user_groups'])) {
+            foreach ($data['user_groups'] as $userGroup) {
+                $group = new UserGroup($userGroup);
+                $group->getUsers()->add($this);
+                $userGroups->add($group);
+            }
+        }
+
         $data['foreign_services_ids'] = $foreignServicesIds;
         $data['attributions'] = $attributions;
         $data['current_attribution'] = $currentAttribution;
+        $data['user_groups'] = $userGroups;
+
+        // Since we can't hydrate the default roles back, avoid issues by setting to an empty collection.
+        $data['default_roles'] = new ArrayCollection();
 
         return parent::hydrate($data);
     }

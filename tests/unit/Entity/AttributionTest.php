@@ -5,6 +5,7 @@ namespace Test\Fei\Service\Connect\Common\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\DefaultRole;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
@@ -78,110 +79,17 @@ class AttributionTest extends TestCase
     public function testToArray()
     {
         $attribution = (new Attribution())
-            ->setId(1)
-            ->setSource(
-                (new User())
-                    ->setId(1)
-                    ->setUserName('user test')
-                    ->setPassword('toto')
-                    ->setFirstName('toto')
-                    ->setLastName('toto')
-                    ->setEmail('toto@toto.com')
-                    ->setForeignServicesIds(
-                        new ArrayCollection([
-                            (new ForeignServiceId())
-                                ->setName('google')
-                                ->setId('id_google')
-                        ])
-                    )
-            )
-            ->setTarget(
-                (new Application())
-                    ->setId(1)
-                    ->setName('application 1')
-                    ->setLogoUrl('test')
-            )
-            ->setRole(
-                (new Role())
-                    ->setId(1)
-                    ->setRole('role 1')
-                    ->setLabel('role 1')
-            )
-            ;
-
-        $attribution->getSource()->getAttributions()->add($attribution);
+            ->setSource(new User())
+            ->setTarget(new Application())
+            ->setRole(new Role())
+        ;
 
         $this->assertEquals(
             [
-                'id' => 1,
-                'target' => [
-                    'id' => 1,
-                    'name' => 'application 1',
-                    'url' => null,
-                    'status' => Application::STATUS_ENABLED,
-                    'logo_url' => 'test',
-                    'allow_profile_association' => false,
-                    'is_subscribed' => false,
-                    'is_manageable' => false,
-                    'config' => '',
-                    'attributions' => null,
-                    'contexts' => [],
-                    'users' => [],
-                    'userGroups' => []
-                ],
-                'role' => [
-                    'id' => 1,
-                    'role' => 'role 1',
-                    'label' => 'role 1',
-                    'user_created' => false
-                ],
-                'source' => [
-                    'id' => 1,
-                    'user_name' => 'user test',
-                    'first_name' => 'toto',
-                    'last_name' => 'toto',
-                    'email' => 'toto@toto.com',
-                    'password' => 'toto',
-                    'created_at' => $attribution->getSource()->getCreatedAt()->format(\DateTime::RFC3339),
-                    'status' => User::STATUS_PENDING,
-                    'register_token' => null,
-                    'current_role' => null,
-                    'local_username' => null,
-                    'avatar_url' => null,
-                    'mini_avatar_url' => null,
-                    'language' => 'en',
-                    'role_id' => null,
-                    /*'foreign_services_ids' => [
-                        [
-                            'name' => 'google',
-                            'id'   => 'id_google'
-                        ]
-                    ],*/
-                    'attributions' => [
-                        [
-                            'id' => 1,
-                            'application' => [
-                                'id' => 1,
-                                'name' => 'application 1',
-                                'url' => null,
-                                'status' => Application::STATUS_ENABLED,
-                                'logo_url' => 'test',
-                                'allow_profile_association' => false,
-                                'is_subscribed' => false,
-                                'is_manageable' => false,
-                                'config' => '',
-                                'contexts' => []
-                            ],
-                            'role' => [
-                                'id' => 1,
-                                'role' => 'role 1',
-                                'label' => 'role 1',
-                                'user_created' => false
-                            ],
-                            'is_default' => false
-                        ]
-                    ]
-                ]
+                'id'        => null,
+                'role'      => $attribution->getRole()->toArray(),
+                'target'    => $attribution->getTarget()->toArray(),
+                'source'    => $attribution->getSource()->toArray()
             ],
             $attribution->toArray()
         );
@@ -240,6 +148,7 @@ class AttributionTest extends TestCase
                 ->setId(1)
                 ->setUserName('user test')
                 ->setPassword('toto')
+                ->setCreatedAt(new \DateTime('2016-11-18T17:01:06+01:00'))
                 ->setAttributions(new ArrayCollection([$attribution])),
             $attribution->getSource()
         );

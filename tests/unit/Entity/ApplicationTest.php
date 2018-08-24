@@ -2,13 +2,9 @@
 
 namespace Test\Fei\Service\Connect\Common\Entity;
 
-use Fei\Entity\EntitySet;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
-use Fei\Service\Connect\Common\Entity\Role;
-use Fei\Service\Connect\Common\Entity\User;
-use Fei\Service\Connect\Common\Entity\UserGroup;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -153,30 +149,18 @@ class ApplicationTest extends TestCase
         $this->assertEmpty($application->getApplicationGroups()->toArray());
     }
 
-    public function testToArray()
+    public function testHydrate()
     {
-        $application      = (new Application());
-        $attribution = (new Attribution())
-            ->setSource(new User())
-            ->setRole((new Role())->setId(23))
-            ->setTarget($application);
+        $app = new Application();
 
-        $attribution2 = (new Attribution())
-            ->setSource(new UserGroup())
-            ->setRole((new Role())->setId(23))
-            ->setTarget($application);
+        $app->hydrate(
+            [
+                'attributions' => [[]],
+                'application_groups' => [[]]
+            ]
+        );
 
-
-        $entitySet = new EntitySet();
-        $entitySet->append($attribution);
-        $entitySet->append($attribution2);
-
-        $application->setAttributions($entitySet);
-
-        $array = $application->toArray();
-
-        $this->assertNotEmpty($array['users']);
-        $this->assertNotEmpty($array['userGroups']);
+        $this->assertEquals($app, $app->getAttributions()[0]->getTarget());
+        $this->assertEquals($app, $app->getApplicationGroups()[0]->getApplications()[0]);
     }
-
 }

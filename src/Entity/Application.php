@@ -4,8 +4,6 @@ namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Fei\Service\Connect\Common\Transformer\UserGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class Application
@@ -26,6 +24,13 @@ class Application extends AbstractTarget
      * @var string Application name
      */
     protected $name;
+
+    /**
+     * @Column(type="boolean")
+     *
+     * @var bool
+     */
+    protected $allowProfileAssociation = false;
 
     /**
      * @Column(type="string", unique=true)
@@ -363,11 +368,48 @@ class Application extends AbstractTarget
         return $this;
     }
 
-
-    public function toArray($mapped = false)
+    /**
+     * Get AllowProfileAssociation
+     *
+     * @return bool
+     */
+    public function getAllowProfileAssociation()
     {
-        $array = parent::toArray($mapped);
+        return $this->allowProfileAssociation;
+    }
 
-        return $array;
+    /**
+     * Set AllowProfileAssociation
+     *
+     * @param bool $allowProfileAssociation
+     *
+     * @return $this
+     */
+    public function setAllowProfileAssociation($allowProfileAssociation)
+    {
+        $this->allowProfileAssociation = $allowProfileAssociation;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hydrate($data)
+    {
+        $applicationGroups = new ArrayCollection();
+
+        if (!empty($data['application_groups'])) {
+            foreach ($data['application_groups'] as $group) {
+                $applicationGroups->add(
+                    (new ApplicationGroup($group))
+                        ->addApplications($this)
+                );
+            }
+        }
+
+        $data['application_groups'] = $applicationGroups;
+
+        return parent::hydrate($data);
     }
 }

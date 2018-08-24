@@ -7,7 +7,6 @@ use Fei\Entity\Validator\AbstractValidator;
 use Fei\Entity\Validator\Exception;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Role;
-use Fei\Service\Connect\Common\Entity\UserGroup;
 
 /**
  * Class ApplicationGroupValidator
@@ -49,17 +48,17 @@ class ApplicationGroupValidator extends AbstractValidator
     public function validateName($label)
     {
         if (empty($label)) {
-            $this->addError('label', 'Label cannot be empty');
+            $this->addError('name', 'Name cannot be empty');
             return false;
         }
 
         if (!is_string($label)) {
-            $this->addError('label', 'Label must be a string');
+            $this->addError('name', 'Name must be a string');
             return false;
         }
 
         if (mb_strlen($label, 'UTF-8') > 255) {
-            $this->addError('label', 'Label length has to be less or equal to 255');
+            $this->addError('name', 'Name length has to be less or equal to 255');
             return false;
         }
 

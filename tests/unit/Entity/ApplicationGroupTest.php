@@ -2,13 +2,11 @@
 
 namespace Test\Fei\Service\Connect\Common\Entity;
 
-use Fei\Entity\EntitySet;
+use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\Role;
-use Fei\Service\Connect\Common\Entity\User;
-use Fei\Service\Connect\Common\Entity\UserGroup;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -43,29 +41,24 @@ class ApplicationGroupTest extends TestCase
     }
 
 
-    public function testToArray()
+    public function testAttributionsAccessors()
     {
-        $applicationGroup = (new ApplicationGroup());
+        $group = new ApplicationGroup();
         $attribution = (new Attribution())
-            ->setSource(new User())
-            ->setRole((new Role())->setId(23))
-            ->setTarget($applicationGroup);
+            ->setTarget($group)
+            ->setTarget(new Application())
+            ->setRole(new Role())
+        ;
 
-        $attribution2 = (new Attribution())
-            ->setSource(new UserGroup())
-            ->setRole((new Role())->setId(23))
-            ->setTarget($applicationGroup);
+        $coll = new ArrayCollection();
+        $coll->add($attribution);
 
+        $group->setAttributions($coll);
 
-        $entitySet = new EntitySet();
-        $entitySet->append($attribution);
-        $entitySet->append($attribution2);
+        $this->assertEquals($coll, $group->getAttributions());
 
-        $applicationGroup->setAttributions($entitySet);
+        $group->addAttributions(new Attribution());
 
-        $array = $applicationGroup->toArray();
-
-        $this->assertNotEmpty($array['users']);
-        $this->assertNotEmpty($array['userGroups']);
+        $this->assertEquals(2, $group->getAttributions()->count());
     }
 }

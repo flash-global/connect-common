@@ -3,7 +3,6 @@
 namespace Test\Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Fei\Entity\EntitySet;
 use Fei\Service\Connect\Common\Entity\Application;
 use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
@@ -71,7 +70,6 @@ class UserGroupTest extends TestCase
         $this->assertEquals($coll, $group->getAttributions());
     }
 
-
     public function testToArray()
     {
         $userGroup = (new UserGroup());
@@ -87,7 +85,6 @@ class UserGroupTest extends TestCase
 
         $user = (new User());
 
-
         $attributions = new ArrayCollection();
         $attributions->add($attribution);
         $attributions->add($attribution2);
@@ -101,7 +98,98 @@ class UserGroupTest extends TestCase
         $array = $userGroup->toArray();
 
         $this->assertNotEmpty($array['users']);
-        $this->assertNotEmpty($array['applications']);
-        $this->assertNotEmpty($array['applicationGroups']);
+    }
+
+    public function testHydrate()
+    {
+        $data = [
+            'id' => 1,
+            'name' => 'Group 1',
+            'default_role' => [
+                'id' => 1,
+                'role' => 'USER'
+            ],
+            'attributions' => [
+                [
+                    'id' => 1,
+                    'application' => [
+                        'id' => 1,
+                        'name' => 'application test 1',
+                        'url' => null,
+                        'status' => Application::STATUS_ENABLED,
+                        'logo_url' => 'test1',
+                        'allow_profile_association' => false,
+                        'is_subscribed' => false,
+                        'is_manageable' => false,
+                        'config' => '',
+                        'contexts' => []
+                    ],
+                    'role' => [
+                        'id' => 1,
+                        'role' => 'role test 1',
+                        'label' => 'role test 1',
+                        'user_created' => false
+                    ]
+                ],
+                [
+                    'id' => 2,
+                    'application_group' => [
+                        'id' => 2,
+                        'name' => 'application group test',
+                    ],
+                    'role' => [
+                        'id' => 2,
+                        'role' => 'role test 2',
+                        'label' => 'role test 2',
+                        'user_created' => false,
+                    ]
+                ]
+            ]
+        ];
+
+        $usersGroup = (new UserGroup())
+            ->setId(1)
+            ->setName('Group 1')
+            ->setDefaultRole(
+                (new Role())
+                    ->setId(1)
+                    ->setRole('USER')
+            );
+
+        $attributions = new ArrayCollection([
+            (new Attribution())
+                ->setId(1)
+                ->setSource($usersGroup)
+                ->setTarget(
+                    (new Application())
+                        ->setId(1)
+                        ->setName('application test 1')
+                        ->setLogoUrl('test1')
+                )
+                ->setRole(
+                    (new Role())
+                        ->setId(1)
+                        ->setRole('role test 1')
+                        ->setLabel('role test 1')
+                ),
+            (new Attribution())
+                ->setId(2)
+                ->setSource($usersGroup)
+                ->setTarget(
+                    (new ApplicationGroup())
+                        ->setId(2)
+                        ->setName('application group test')
+                )
+                ->setRole(
+                    (new Role())
+                        ->setId(2)
+                        ->setRole('role test 2')
+                        ->setLabel('role test 2')
+                )
+        ]);
+
+        $usersGroup->setAttributions($attributions);
+
+        $this->assertEquals($usersGroup, new UserGroup($data));
     }
 }

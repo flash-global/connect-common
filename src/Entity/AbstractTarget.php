@@ -3,9 +3,8 @@
 namespace Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Fei\Entity\AbstractEntity;
-use Fei\Service\Connect\Common\Transformer\UserGroupMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\UserMinimalTransformer;
 
 /**
  * Class AbstractTarget
@@ -27,18 +26,23 @@ abstract class AbstractTarget extends AbstractEntity
     protected $id;
 
     /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $allowProfileAssociation = false;
-
-    /**
      * @OneToMany(targetEntity="Attribution", mappedBy="target", cascade={"all"})
      *
-     * @var ArrayCollection|Attribution[];
+     * @var Collection|Attribution[];
      */
     protected $attributions;
+
+    /**
+     * User constructor.
+     *
+     * @param array $data
+     */
+    public function __construct($data = null)
+    {
+        $this->setAttributions(new ArrayCollection());
+
+        parent::__construct($data);
+    }
 
     /**
      * Get Id
@@ -65,31 +69,35 @@ abstract class AbstractTarget extends AbstractEntity
     }
 
     /**
-     * Get AllowProfileAssociation
+     * Set Attributions
      *
-     * @return bool
-     */
-    public function getAllowProfileAssociation()
-    {
-        return $this->allowProfileAssociation;
-    }
-
-    /**
-     * Set AllowProfileAssociation
-     *
-     * @param bool $allowProfileAssociation
+     * @param Collection $attributions
      *
      * @return $this
      */
-    public function setAllowProfileAssociation($allowProfileAssociation)
+    public function setAttributions(Collection $attributions)
     {
-        $this->allowProfileAssociation = $allowProfileAssociation;
+        if (!isset($this->attributions)) {
+            $this->attributions = new ArrayCollection();
+        }
+
+        $this->getAttributions()->clear();
+
+        /**
+         * @var Attribution $attr
+         */
+        foreach ($attributions as $attr) {
+            $attr->setTarget($this);
+            $this->getAttributions()->add($attr);
+        }
 
         return $this;
     }
 
     /**
-     * @return ArrayCollection|Attribution[]
+     * Get Attributions
+     *
+     * @return Collection|Attribution[]
      */
     public function getAttributions()
     {
@@ -97,42 +105,39 @@ abstract class AbstractTarget extends AbstractEntity
     }
 
     /**
-     * @param ArrayCollection|Attribution[] $attributions
+     * Add application groups
+     *
+     * @param Attribution[] $attributions
+     *
      * @return $this
      */
-    public function setAttributions($attributions)
+    public function addAttributions(Attribution ...$attributions)
     {
-        $this->attributions = $attributions;
+        foreach ($attributions as $attribution) {
+            $this->getAttributions()->add($attribution);
+        }
+
         return $this;
     }
 
-    public function toArray($mapped = false)
-    {
-        $array = parent::toArray($mapped);
+    /**
+     * @inheritdoc
+     */
+    public function hydrate($data) {
 
-        $users = [];
-        $userGroups = [];
-        if (!is_null($this->getAttributions()) && !$this->getAttributions()->isEmpty()) {
-            $userMinimalTransformer = new UserMinimalTransformer();
-            $applicationGroupTransformer = new UserGroupMinimalTransformer();
-            foreach ($this->getAttributions() as $attrib) {
-                $source = $attrib->getSource();
-                $idrole = $attrib->getRole()->getId();
-                if ($source instanceof User) {
-                    $user = $userMinimalTransformer->transform($source);
-                    $user['idrole'] = $idrole;
-                    $users[] = $user;
-                } elseif ($source instanceof UserGroup) {
-                    $userGroup = $applicationGroupTransformer->transform($source);
-                    $userGroup['idrole'] = $idrole;
-                    $userGroups[] = $userGroup;
-                }
+        $attributions = new ArrayCollection();
+
+        if (!empty($data['attributions'])) {
+            foreach ($data['attributions'] as $attribution) {
+                $attributions->add(
+                    (new Attribution($attribution))
+                        ->setTarget($this)
+                );
             }
         }
 
-        $array['users'] = $users;
-        $array['userGroups'] = $userGroups;
+        $data['attributions'] = $attributions;
 
-        return $array;
+        return parent::hydrate($data);
     }
 }
