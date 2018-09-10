@@ -3,11 +3,15 @@
 namespace Test\Fei\Service\Connect\Common\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Fei\Service\Connect\Common\Entity\Application;
+use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
+use Fei\Service\Connect\Common\Entity\DefaultRole;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
+use Fei\Service\Connect\Common\Entity\UserGroup;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -127,6 +131,44 @@ class UserTest extends TestCase
         $this->assertAttributeEquals($user->getLanguage(), 'language', $user);
     }
 
+    public function testApiTokenAccessors()
+    {
+        $user = new User();
+
+        $user->setApiToken('7636T389023978123120312938172362137812371823');
+
+        $this->assertEquals('7636T389023978123120312938172362137812371823', $user->getApiToken());
+        $this->assertAttributeEquals($user->getApiToken(), 'apiToken', $user);
+    }
+
+    public function testStatusAccessors()
+    {
+        $user = new User();
+        $user->setStatus(User::STATUS_DELETED);
+
+        $this->assertEquals(User::STATUS_DELETED, $user->getStatus());
+        $this->assertAttributeEquals($user->getStatus(), 'status', $user);
+    }
+
+    public function testForeignServiceId()
+    {
+        $user = new User();
+
+        $this->assertInstanceOf(Collection::class, $user->getForeignServicesIds());
+        $this->assertEquals(0, $user->getForeignServicesIds()->count());
+
+        $foreignServices = new ArrayCollection();
+        $foreignServices->add(new ForeignServiceId());
+
+        $user->setForeignServicesIds($foreignServices);
+
+        $this->assertEquals(1, $user->getForeignServicesIds()->count());
+
+        $user->addForeignServiceId(new ForeignServiceId());
+
+        $this->assertEquals(2, $user->getForeignServicesIds()->count());
+    }
+
     public function testAttributionsAccessors()
     {
         $user = new User();
@@ -178,61 +220,10 @@ class UserTest extends TestCase
 
         $this->assertEquals($attributions, $user->getAttributions());
         $this->assertAttributeEquals($user->getAttributions(), 'attributions', $user);
-    }
 
-    public function testAttributionsDefaultAccessors()
-    {
-        $user = new User();
+        $user->addAttributions(new Attribution());
 
-        $attributions = new ArrayCollection([
-            0 => new Attribution([
-                'application' => [
-                    'id' => 1,
-                    'name' => 'application 1'
-                ],
-                'role' => [
-                    'id' => 1,
-                    'role' => 'role 1',
-                    'label' => 'role 1'
-                ],
-                'user' => [
-                    'id' => 1,
-                    'user_name' => 'user test',
-                    'password' => 'toto',
-                    'created_at' => '2016-11-18T17:01:06+01:00',
-                    'status' => User::STATUS_PENDING,
-                    'register_token' => null,
-                ],
-                'is_default' => true
-            ]),
-            1 => new Attribution([
-                'application' => [
-                    'id' => 1,
-                    'name' => 'application 1'
-                ],
-                'role' => [
-                    'id' => 2,
-                    'role' => 'role 2',
-                    'label' => 'role 2'
-                ],
-                'user' => [
-                    'id' => 1,
-                    'user_name' => 'user test',
-                    'password' => 'toto',
-                    'created_at' => '2016-11-18T17:01:06+01:00',
-                    'status' => User::STATUS_PENDING,
-                    'register_token' => null,
-                ],
-                'is_default' => true
-            ])
-        ]);
-
-        $user->setAttributions($attributions);
-
-        $attributions[1]->setIsDefault(false);
-
-        $this->assertEquals($attributions, $user->getAttributions());
-        $this->assertAttributeEquals($user->getAttributions(), 'attributions', $user);
+        $this->assertEquals(3, $user->getAttributions()->count());
     }
 
     public function testForeignServicesIdsAccessors()
@@ -286,7 +277,6 @@ class UserTest extends TestCase
         );
     }
 
-
     public function testAttributionAccessors()
     {
         $user = new User();
@@ -294,8 +284,8 @@ class UserTest extends TestCase
         $user->setAttributions(
             new ArrayCollection([
                 (new Attribution())
-                    ->setUser($user)
-                    ->setApplication(
+                    ->setSource($user)
+                    ->setTarget(
                         (new Application())
                             ->setName('application test 1')
                     )
@@ -309,8 +299,8 @@ class UserTest extends TestCase
         $this->assertEquals(
             new ArrayCollection([
                 (new Attribution())
-                    ->setUser($user)
-                    ->setApplication(
+                    ->setSource($user)
+                    ->setTarget(
                         (new Application())
                             ->setName('application test 1')
                     )
@@ -326,8 +316,8 @@ class UserTest extends TestCase
         $user->setAttributions(
             new ArrayCollection([
                 (new Attribution())
-                    ->setUser($user)
-                    ->setApplication(
+                    ->setSource($user)
+                    ->setTarget(
                         (new Application())
                             ->setName('application test 2')
                     )
@@ -341,8 +331,8 @@ class UserTest extends TestCase
         $this->assertEquals(
             new ArrayCollection([
                 (new Attribution())
-                    ->setUser($user)
-                    ->setApplication(
+                    ->setSource($user)
+                    ->setTarget(
                         (new Application())
                             ->setName('application test 2')
                     )
@@ -353,6 +343,25 @@ class UserTest extends TestCase
             ]),
             $user->getAttributions()
         );
+    }
+
+    public function testDefaultRolesAccessors()
+    {
+        $user = new User();
+
+        $this->assertEquals(0, $user->getDefaultRoles()->count());
+
+        $user->setDefaultRoles(new ArrayCollection([new DefaultRole()]));
+        $this->assertEquals(1, $user->getDefaultRoles()->count());
+
+        $defaultRole = new DefaultRole();
+        $user->addDefaultRoles($defaultRole);
+
+        $this->assertEquals(2, $user->getDefaultRoles()->count());
+
+        $user->removeDefaultRoles($defaultRole);
+
+        $this->assertEquals(1, $user->getDefaultRoles()->count());
     }
 
     public function testToArrayEmpty()
@@ -374,12 +383,15 @@ class UserTest extends TestCase
                 'local_username' => null,
                 'api_token' => null,
                 'attributions' => [],
+                'default_roles' => new ArrayCollection(),
                 'current_attribution' => null,
                 'avatar_url' => null,
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
-                'foreign_services_ids' => []
+                'foreign_services_ids' => [],
+                'user_groups' => [],
+                'api_token' => null
             ],
             $user->toArray()
         );
@@ -391,8 +403,8 @@ class UserTest extends TestCase
 
         $currentAttribution = (new Attribution())
             ->setId(1)
-            ->setUser($user)
-            ->setApplication(
+            ->setSource($user)
+            ->setTarget(
                 (new Application())
                     ->setId(1)
                     ->setName('application test 1')
@@ -405,6 +417,17 @@ class UserTest extends TestCase
                     ->setLabel('role test 1')
             );
 
+        $userGroups = new ArrayCollection();
+        $userGroups->add((new UserGroup())->setId(25));
+
+        $defaultRoles = new ArrayCollection();
+        $defaultRoles->add(
+            (new DefaultRole())
+                ->setRole((new Role)->setId(1))
+                ->setApplication((new Application())->setId(1))
+                ->setUser((new user)->setId(1))
+        );
+
         $user
             ->setForeignServicesIds(
                 new ArrayCollection([
@@ -416,17 +439,18 @@ class UserTest extends TestCase
                         ->setId('456')
                 ])
             )
+            ->setUserGroups($userGroups)
+            ->setDefaultRoles($defaultRoles)
             ->setAttributions(
                 new ArrayCollection([
                     $currentAttribution,
                     (new Attribution())
                         ->setId(2)
-                        ->setUser($user)
-                        ->setApplication(
-                            (new Application())
+                        ->setSource($user)
+                        ->setTarget(
+                            (new ApplicationGroup())
                                 ->setId(2)
-                                ->setName('application test 2')
-                                ->setLogoUrl('test2')
+                                ->setName('application group test')
                         )
                         ->setRole(
                             (new Role())
@@ -434,7 +458,6 @@ class UserTest extends TestCase
                                 ->setRole('role test 2')
                                 ->setLabel('role test 2')
                         )
-                    ->setIsDefault(true)
                 ])
             )
             ->setCurrentAttribution($currentAttribution);
@@ -457,6 +480,14 @@ class UserTest extends TestCase
                 'mini_avatar_url' => null,
                 'language' => 'en',
                 'role_id' => null,
+                'user_groups' => [
+                    0 => [
+                        'id' => 25,
+                        'name' => null,
+                        'default_role' => null,
+                        'attributions' => []
+                    ]
+                ],
                 'foreign_services_ids' => [
                     [
                         'name' => 'google',
@@ -487,32 +518,23 @@ class UserTest extends TestCase
                             'role' => 'role test 1',
                             'label' => 'role test 1',
                             'user_created' => false
-                        ],
-                        'is_default' => false
+                        ]
                     ],
                     [
                         'id' => 2,
-                        'application' => [
+                        'application_group' => [
                             'id' => 2,
-                            'name' => 'application test 2',
-                            'url' => null,
-                            'status' => Application::STATUS_ENABLED,
-                            'logo_url' => 'test2',
-                            'allow_profile_association' => false,
-                            'is_subscribed' => false,
-                            'is_manageable' => false,
-                            'config' => '',
-                            'contexts' => []
+                            'name' => 'application group test',
                         ],
                         'role' => [
                             'id' => 2,
                             'role' => 'role test 2',
                             'label' => 'role test 2',
-                            'user_created' => false
-                        ],
-                        'is_default' => true
+                            'user_created' => false,
+                        ]
                     ]
                 ],
+                'default_roles' => $defaultRoles,
                 'current_attribution' => [
                     'id' => 1,
                     'application' => [
@@ -531,9 +553,10 @@ class UserTest extends TestCase
                         'id' => 1,
                         'role' => 'role test 1',
                         'label' => 'role test 1',
-                        'user_created' => false
+                        'user_created' => false,
                     ]
-                ]
+                ],
+                'api_token' => null
             ],
             $user->toArray()
         );
@@ -595,6 +618,17 @@ class UserTest extends TestCase
                         'id' => 2,
                         'role' => 'role test 2'
                     ]
+                ],
+                [
+                    'id' => 3,
+                    'application_group' => [
+                        'id' => 1,
+                        'name' => 'application group test 2'
+                    ],
+                    'role' => [
+                        'id' => 3,
+                        'role' => 'role test 3'
+                    ]
                 ]
             ],
             'current_attribution' => [
@@ -607,18 +641,36 @@ class UserTest extends TestCase
                     'id' => 1,
                     'role' => 'role test 1'
                 ]
+            ],
+            'user_groups' => [
+                [
+                    'id' => 1,
+                    'name' => 'group 1',
+                    'default_role' => [
+                        'id' => 1,
+                        'role' => 'USER'
+                    ]
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'group 2',
+                    'default_role' => [
+                        'id' => 2,
+                        'role' => 'ADMIN'
+                    ]
+                ]
             ]
         ]);
 
         $currentAttribution = (new Attribution())
             ->setId(1)
-            ->setUser($user)
+            ->setSource($user)
             ->setRole(
                 (new Role())
                     ->setId(1)
                     ->setRole('role test 1')
             )
-            ->setApplication(
+            ->setTarget(
                 (new Application())
                     ->setId(1)
                     ->setName('application test 1')
@@ -629,16 +681,29 @@ class UserTest extends TestCase
                 $currentAttribution,
                 (new Attribution())
                     ->setId(2)
-                    ->setUser($user)
+                    ->setSource($user)
                     ->setRole(
                         (new Role())
                             ->setId(2)
                             ->setRole('role test 2')
                     )
-                    ->setApplication(
+                    ->setTarget(
                         (new Application())
                             ->setId(2)
                             ->setName('application test 2')
+                    ),
+                (new Attribution())
+                    ->setId(3)
+                    ->setSource($user)
+                    ->setRole(
+                        (new Role())
+                            ->setId(3)
+                            ->setRole('role test 3')
+                    )
+                    ->setTarget(
+                        (new ApplicationGroup())
+                            ->setId(1)
+                            ->setName('application group test 2')
                     )
             ]),
             $user->getAttributions()
@@ -665,5 +730,44 @@ class UserTest extends TestCase
             $currentAttribution,
             $user->getCurrentAttribution()
         );
+
+        $group1 = (new UserGroup())
+            ->setId(1)
+            ->setName('group 1')
+            ->setDefaultRole(
+                (new Role())
+                    ->setId(1)
+                    ->setRole('USER')
+            );
+        $group1->getUsers()->add($user);
+
+        $group2 = (new UserGroup())
+            ->setId(2)
+            ->setName('group 2')
+            ->setDefaultRole(
+                (new Role())
+                    ->setId(2)
+                    ->setRole('ADMIN')
+            );
+        $group2->getUsers()->add($user);
+
+        $this->assertEquals(
+            new ArrayCollection([$group1, $group2]),
+            $user->getUserGroups()
+        );
+    }
+
+    public function testUserGroups()
+    {
+        $user      = (new User());
+        $userGroup = (new UserGroup())->setId(23);
+
+        $user->addUserGroups($userGroup);
+
+        $this->assertEquals(23, $user->getUserGroups()->toArray()[0]->getId());
+
+        $user->removeUserGroups($userGroup);
+
+        $this->assertEmpty($user->getUserGroups()->toArray());
     }
 }

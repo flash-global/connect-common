@@ -45,7 +45,6 @@ class UserValidator extends AbstractValidator
         $this->validateAvatarUrl($entity->getAvatarUrl());
         $this->validateAvatarUrl($entity->getMiniAvatarUrl());
         $this->validateLanguage($entity->getLanguage());
-        $this->validateDefaultAttribution($entity->getAttributions());
         $errors = $this->getErrors();
 
         return empty($errors);
@@ -280,34 +279,6 @@ class UserValidator extends AbstractValidator
         if (!preg_match('/^[a-z]{2}(_[A-Z]{2})?$/', $language)) {
             $this->addError('language', 'Lang has to be a locale formatted string (en or en_GB)');
             return false;
-        }
-
-        return true;
-    }
-
-    public function validateDefaultAttribution($attributions)
-    {
-        $defaultAttributionByApplication = [];
-
-        /**
- * @var Attribution $attribution
-**/
-        foreach ($attributions as $attribution) {
-            if ($attribution->getIsDefault()) {
-                $applicationId = $attribution->getApplication()->getId();
-                $userId        = $attribution->getUser()->getId();
-
-                if (array_key_exists($applicationId, $defaultAttributionByApplication)) {
-                    if (array_key_exists($userId, $defaultAttributionByApplication[$applicationId])) {
-                        $this->addError('attributions', 'It can\'t be more than one default attribution by application by user');
-                        return false;
-                    } else {
-                        $defaultAttributionByApplication[$applicationId][$userId] = 1;
-                    }
-                } else {
-                    $defaultAttributionByApplication[$applicationId][$userId] = 1;
-                }
-            }
         }
 
         return true;

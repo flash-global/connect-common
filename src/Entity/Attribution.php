@@ -11,7 +11,7 @@ use Fei\Entity\AbstractEntity;
  * @Table(
  *     name="attributions",
  *     uniqueConstraints={
- * @UniqueConstraint(name="attribution_unique", columns={ "user_id", "application_id", "role_id" })
+ *         @UniqueConstraint(name="attribution_unique", columns={ "source_id", "target_id", "role_id" })
  *     }
  * )
  *
@@ -29,35 +29,28 @@ class Attribution extends AbstractEntity
     protected $id;
 
     /**
-     * @ManyToOne(targetEntity="User", inversedBy="attributions")
-     * @JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ManyToOne(targetEntity="AbstractSource")
+     * @JoinColumn(name="source_id", onDelete="CASCADE", nullable=false)
      *
-     * @var User
+     * @var AbstractSource $source
      */
-    protected $user;
+    protected $source;
 
     /**
-     * @ManyToOne(targetEntity="Application")
-     * @JoinColumn(name="application_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @ManyToOne(targetEntity="AbstractTarget")
+     * @JoinColumn(name="target_id", onDelete="CASCADE", nullable=false)
      *
-     * @var Application
+     * @var AbstractTarget $target
      */
-    protected $application;
+    protected $target;
 
     /**
      * @ManyToOne(targetEntity="Role")
-     * @JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
+     * @JoinColumn(name="role_id", onDelete="CASCADE", nullable=false)
      *
      * @var Role
      */
     protected $role;
-
-    /**
-     * @Column(type="boolean")
-     *
-     * @var bool
-     */
-    protected $isDefault = false;
 
     /**
      * Get Id
@@ -84,49 +77,38 @@ class Attribution extends AbstractEntity
     }
 
     /**
-     * Get User
-     *
-     * @return User
+     * @return AbstractSource
      */
-    public function getUser()
+    public function getSource()
     {
-        return $this->user;
+        return $this->source;
     }
 
     /**
-     * Set User
-     *
-     * @param User $user
-     *
-     * @return $this
+     * @param AbstractSource $source
+     * @return Attribution
      */
-    public function setUser(User $user)
+    public function setSource(AbstractSource $source)
     {
-        $this->user = $user;
-
+        $this->source = $source;
         return $this;
     }
 
     /**
-     * Get Application
-     *
-     * @return Application
+     * @return AbstractTarget
      */
-    public function getApplication()
+    public function getTarget()
     {
-        return $this->application;
+        return $this->target;
     }
 
     /**
-     * Set Application
-     *
-     * @param Application $application
-     *
-     * @return $this
+     * @param AbstractTarget $target
+     * @return Attribution
      */
-    public function setApplication(Application $application)
+    public function setTarget(AbstractTarget $target)
     {
-        $this->application = $application;
+        $this->target = $target;
 
         return $this;
     }
@@ -156,44 +138,6 @@ class Attribution extends AbstractEntity
     }
 
     /**
-     * Get IsDefault
-     *
-     * @return bool
-     */
-    public function getIsDefault()
-    {
-        return $this->isDefault;
-    }
-
-    /**
-     * Set IsDefault
-     *
-     * @param bool $isDefault
-     *
-     * @return $this
-     */
-    public function setIsDefault($isDefault)
-    {
-        $this->isDefault = $isDefault;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function toArray($mapped = false)
-    {
-        $data = parent::toArray($mapped);
-
-        $data['user'] = !empty($data['user']) ? $data['user']->toArray() : null;
-        $data['application'] = !empty($data['application']) ? $data['application']->toArray() : null;
-        $data['role'] = !empty($data['role']) ? $data['role']->toArray() : null;
-        $data['is_default'] = !empty($data['is_default']) ? $data['is_default'] : false;
-
-        return $data;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function hydrate($data)
@@ -203,16 +147,16 @@ class Attribution extends AbstractEntity
         }
 
         if (!empty($data['application'])) {
-            $data['application'] = new Application($data['application']);
+            $data['target'] = new Application($data['application']);
         }
 
-        if (!empty($data['user'])) {
-            $data['user'] = new User($data['user']);
-            $data['user']->getAttributions()->add($this);
+        if (!empty($data['application_group'])) {
+            $data['target'] = new ApplicationGroup($data['application_group']);
         }
 
         return parent::hydrate($data);
     }
+
 
     /**
      * Get the Attribution Role localUsername
@@ -232,5 +176,27 @@ class Attribution extends AbstractEntity
         }
 
         return $localUsername;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray($mapped = false)
+    {
+        $data = parent::toArray($mapped);
+
+        if (!is_null($this->getSource())) {
+            $data['source'] = $this->getSource()->toArray();
+        }
+
+        if (!is_null($this->getTarget())) {
+            $data['target'] = $this->getTarget()->toArray();
+        }
+
+        if (!is_null($this->getRole())) {
+            $data['role'] = $this->getRole()->toArray();
+        }
+
+        return $data;
     }
 }

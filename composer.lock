@@ -413,7 +413,7 @@
                     "role": "Developer"
                 },
                 {
-                    "name": "Hans-Jürgen Petrich",
+                    "name": "Hans-J??rgen Petrich",
                     "email": "petrich@tronic-media.com",
                     "role": "Developer"
                 },
@@ -1295,7 +1295,7 @@
             ],
             "authors": [
                 {
-                    "name": "Alexandre Salomé",
+                    "name": "Alexandre Salom??",
                     "email": "alexandre.salome@gmail.com",
                     "homepage": "http://alexandre-salome.fr"
                 },
@@ -1592,7 +1592,7 @@
                     "email": "igor@wiedler.ch"
                 },
                 {
-                    "name": "Robert Schönthal",
+                    "name": "Robert Sch??nthal",
                     "email": "seroscho@googlemail.com"
                 }
             ],
@@ -3559,7 +3559,7 @@
             ],
             "authors": [
                 {
-                    "name": "Jean-François Simon",
+                    "name": "Jean-Fran??ois Simon",
                     "email": "jeanfrancois.simon@sensiolabs.com"
                 },
                 {
