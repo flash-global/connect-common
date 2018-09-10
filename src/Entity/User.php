@@ -124,8 +124,6 @@ class User extends AbstractSource implements RoleInterface
     protected $language;
 
     /**
-     * @Column(type="string")
-     *
      * @var string
      */
     protected $apiToken;
