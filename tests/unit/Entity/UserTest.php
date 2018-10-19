@@ -9,6 +9,7 @@ use Fei\Service\Connect\Common\Entity\ApplicationGroup;
 use Fei\Service\Connect\Common\Entity\Attribution;
 use Fei\Service\Connect\Common\Entity\DefaultRole;
 use Fei\Service\Connect\Common\Entity\ForeignServiceId;
+use Fei\Service\Connect\Common\Entity\ProfileAssociation;
 use Fei\Service\Connect\Common\Entity\Role;
 use Fei\Service\Connect\Common\Entity\User;
 use Fei\Service\Connect\Common\Entity\UserGroup;
@@ -148,6 +149,20 @@ class UserTest extends TestCase
 
         $this->assertEquals(User::STATUS_DELETED, $user->getStatus());
         $this->assertAttributeEquals($user->getStatus(), 'status', $user);
+    }
+
+    public function testProfileAssociations()
+    {
+        $user = new User();
+
+        $this->assertEquals(ArrayCollection::class, get_class($user->getProfileAssociations()));
+
+        $profileAssociation = new ProfileAssociation();
+        $userReturn = $user->addProfilAssociations($profileAssociation);
+
+        $this->assertTrue($user->getProfileAssociations()->contains($profileAssociation));
+        $this->assertTrue($user->getProfileAssociations()->count() === 1);
+        $this->assertEquals($user, $userReturn);
     }
 
     public function testForeignServiceId()
@@ -391,7 +406,8 @@ class UserTest extends TestCase
                 'role_id' => null,
                 'foreign_services_ids' => [],
                 'user_groups' => [],
-                'api_token' => null
+                'api_token' => null,
+                'profile_associations' => new ArrayCollection()
             ],
             $user->toArray()
         );
@@ -461,6 +477,17 @@ class UserTest extends TestCase
                 ])
             )
             ->setCurrentAttribution($currentAttribution);
+
+        $profilAssociation = (new ProfileAssociation())
+            ->setApplication(
+                (new Application())
+                    ->setId(1)
+                    ->setName('E4P')
+            )
+            ->setProfile('BGM44')
+            ->setRole('USER');
+
+        $user->addProfilAssociations($profilAssociation);
 
         $this->assertEquals(
             [
@@ -556,7 +583,8 @@ class UserTest extends TestCase
                         'user_created' => false,
                     ]
                 ],
-                'api_token' => null
+                'api_token' => null,
+                'profile_associations' => new ArrayCollection([$profilAssociation])
             ],
             $user->toArray()
         );
