@@ -174,7 +174,7 @@ class ProfileAssociation extends AbstractEntity
         return $this;
     }
 
-    public function toArray()
+    public function toArray($mapped = false)
     {
         return [
             'user' => $this->user->getId(),
