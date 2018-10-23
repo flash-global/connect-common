@@ -34,6 +34,4 @@ trait ProfileAssociationValidatorAware
         $this->profilAssociationValidator = $profilAssociationValidator;
         return $this;
     }
-
-
 }
