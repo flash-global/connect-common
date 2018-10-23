@@ -31,4 +31,3 @@ trait ProfileAssociationHydratorAware
         return $this;
     }
 }
-
