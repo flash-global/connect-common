@@ -2,6 +2,8 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
+use Fei\Entity\AbstractEntity;
+
 /**
  * Class ProfileAssociation
  *
@@ -18,7 +20,7 @@ namespace Fei\Service\Connect\Common\Entity;
  *
  * @package Fei\Service\Connect\Common\Entity
  */
-class ProfileAssociation
+class ProfileAssociation extends AbstractEntity
 {
     /**
      * @var int $id
@@ -170,5 +172,15 @@ class ProfileAssociation
         $this->role = $role;
 
         return $this;
+    }
+
+    public function toArray()
+    {
+        return [
+            'user' => $this->user->getId(),
+            'application' => $this->application->getId(),
+            'profile' => $this->profile,
+            'role' => $this->role
+        ];
     }
 }
