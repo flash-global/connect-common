@@ -2,21 +2,14 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Fei\Entity\AbstractEntity;
 
 /**
  * Class ProfileAssociation
  *
  * @Entity
- * @Table(
- *     name="profiles_association",
- *     uniqueConstraints={
- *        @UniqueConstraint(
- *                  name="profileAssociation_unique",
- *                  columns={"user_id", "application_id", "profile", "role"}
- *        )},
- *      indexes={@Index(name="profile_idx", columns={"profile"})}
- * )
+ * @Table(name="profiles_association")
  *
  * @package Fei\Service\Connect\Common\Entity
  */
@@ -48,18 +41,23 @@ class ProfileAssociation extends AbstractEntity
     protected $application;
 
     /**
-     * @var string $profile
-     *
-     * @Column(type="string", length=255)
-     */
-    protected $profile;
-
-    /**
      * @var string $role
      *
      * @Column(type="string", length=255)
      */
     protected $role;
+
+    /**
+     * @var Profile[] $profile
+     * @ManyToMany(targetEntity="Profile", inversedBy="profileAssociations")
+     * @JoinTable(name="profileAssociations_profiles")
+     */
+    protected $profiles;
+
+    public function __construct()
+    {
+        $this->profiles = new ArrayCollection();
+    }
 
     /**
      * GET Id
@@ -130,29 +128,6 @@ class ProfileAssociation extends AbstractEntity
     }
 
     /**
-     * Get Profile
-     *
-     * @return string
-     */
-    public function getProfile(): string
-    {
-        return $this->profile;
-    }
-
-    /**
-     * Set Profile
-     *
-     * @param string $profile
-     * @return ProfileAssociation
-     */
-    public function setProfile(string $profile): ProfileAssociation
-    {
-        $this->profile = $profile;
-
-        return $this;
-    }
-
-    /**
      * Get Role
      *
      * @return string
@@ -175,6 +150,54 @@ class ProfileAssociation extends AbstractEntity
     }
 
     /**
+     * GET Profiles
+     *
+     * @return Profile[]
+     */
+    public function getProfiles(): ArrayCollection
+    {
+        return $this->profiles;
+    }
+
+    /**
+     * SET Profiles
+     *
+     * @param Profile[] $profiles
+     * @return ProfileAssociation
+     */
+    public function setProfiles(ArrayCollection $profiles): ProfileAssociation
+    {
+        $this->profiles = $profiles;
+        return $this;
+    }
+
+    /**
+     * @param Profile ...$profiles
+     * @return ProfileAssociation
+     */
+    public function addProfiles(Profile ...$profiles): ProfileAssociation
+    {
+        foreach ($profiles as $profile) {
+            $this->profiles->add($profile);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Profile ...$profiles
+     * @return ProfileAssociation
+     */
+    public function removeProfiles(Profile ...$profiles): ProfileAssociation
+    {
+        foreach ($profiles as $profile) {
+            $this->profiles->removeElement($profile);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param bool $mapped
      * @return array
      */
@@ -189,7 +212,9 @@ class ProfileAssociation extends AbstractEntity
     }
 
     /**
-     *
+     * @param $data
+     * @return AbstractEntity
+     * @throws \Fei\Entity\Exception
      */
     public function hydrate($data)
     {
