@@ -37,4 +37,10 @@
     "jakub-onderka/php-parallel-lint": "^1.0",
     "phpro/grumphp": "^0.14.1"
   }
+  "repositories": [
+    {
+      "type": "git",
+      "url": "git@github.com:flash-global/entities.git"
+    }
+  ],
 }
