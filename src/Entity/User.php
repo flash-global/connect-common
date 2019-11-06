@@ -611,7 +611,7 @@ class User extends AbstractSource implements RoleInterface
      *
      * @return $this
      */
-    public function setUserGroups(Collection $userGroups)
+    public function setUserGroups($userGroups)
     {
         if (is_array($userGroups)) {
             $userGroups = new ArrayCollection($userGroups);
