@@ -2,8 +2,10 @@
 
 namespace Fei\Service\Connect\Common\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Exception;
 use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\DefaultRoleMinimalTransformer;
@@ -31,7 +33,7 @@ class User extends AbstractSource implements RoleInterface
     /**
      * @Column(type="datetime")
      *
-     * @var \DateTime
+     * @var DateTime
      */
     protected $createdAt;
 
@@ -154,6 +156,7 @@ class User extends AbstractSource implements RoleInterface
      * User constructor.
      *
      * @param array $data
+     * @throws Exception
      */
     public function __construct($data = null)
     {
@@ -161,7 +164,7 @@ class User extends AbstractSource implements RoleInterface
         $this->setUserGroups(new ArrayCollection());
         $this->setDefaultRoles(new ArrayCollection());
         $this->setProfileAssociations(new ArrayCollection());
-        $this->setCreatedAt(new \DateTime());
+        $this->setCreatedAt(new DateTime());
         $this->setLanguage('en');
 
         parent::__construct($data);
@@ -218,7 +221,7 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Get CreatedAt
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -228,13 +231,14 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Set CreatedAt
      *
-     * @param \DateTime|string $createdAt
+     * @param DateTime|string $createdAt
      *
      * @return $this
+     * @throws Exception
      */
     public function setCreatedAt($createdAt)
     {
-        $this->createdAt = $createdAt instanceof \DateTime ? $createdAt : new \DateTime($createdAt);
+        $this->createdAt = $createdAt instanceof DateTime ? $createdAt : new DateTime($createdAt);
 
         return $this;
     }
@@ -504,12 +508,16 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Set ForeignServicesIds
      *
-     * @param Collection $foreignServicesIds
+     * @param ForeignServiceId[]|Collection $foreignServicesIds
      *
      * @return User
      */
-    public function setForeignServicesIds(Collection $foreignServicesIds)
+    public function setForeignServicesIds($foreignServicesIds)
     {
+        if (is_array($foreignServicesIds)) {
+            $foreignServicesIds = new ArrayCollection($foreignServicesIds);
+        }
+
         $this->foreignServicesIds = $foreignServicesIds;
 
         return $this;
@@ -603,8 +611,12 @@ class User extends AbstractSource implements RoleInterface
      *
      * @return $this
      */
-    public function setUserGroups(Collection $userGroups)
+    public function setUserGroups($userGroups)
     {
+        if (is_array($userGroups)) {
+            $userGroups = new ArrayCollection($userGroups);
+        }
+
         $this->userGroups = $userGroups;
 
         return $this;
@@ -659,8 +671,12 @@ class User extends AbstractSource implements RoleInterface
      *
      * @return $this
      */
-    public function setDefaultRoles(Collection $defaultRoles)
+    public function setDefaultRoles($defaultRoles)
     {
+        if (is_array($defaultRoles)) {
+            $defaultRoles = new ArrayCollection();
+        }
+
         $this->defaultRoles = $defaultRoles;
 
         return $this;
@@ -720,7 +736,6 @@ class User extends AbstractSource implements RoleInterface
 
         $applicationTransformer = new ApplicationMinimalTransformer();
         $applicationGroupTransformer = new ApplicationGroupMinimalTransformer();
-        $defaultRoleMinimalTransformer = new DefaultRoleMinimalTransformer();
 
         $serializeAttribution =
             function (Attribution $attribution) use ($applicationTransformer, $applicationGroupTransformer) {
@@ -841,11 +856,15 @@ class User extends AbstractSource implements RoleInterface
     /**
      * Set ProfileAssociations
      *
-     * @param ArrayCollection $profileAssociations
+     * @param Collection|ProfileAssociation[] $profileAssociations
      * @return User
      */
-    public function setProfileAssociations(ArrayCollection $profileAssociations): User
+    public function setProfileAssociations($profileAssociations): User
     {
+        if (is_array($profileAssociations)) {
+            $profileAssociations = new ArrayCollection($profileAssociations);
+        }
+
         $this->profileAssociations = $profileAssociations;
 
         return $this;
