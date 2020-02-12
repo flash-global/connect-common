@@ -49,6 +49,7 @@ class UserGroup extends AbstractSource
     public function __construct($data = null)
     {
         $this->setUsers(new ArrayCollection());
+        $this->setDefaultRole(new Role());
 
         parent::__construct($data);
     }
