@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
-use Fei\Service\Connect\Common\Transformer\DefaultRoleMinimalTransformer;
 use Zend\Permissions\Acl\Role\RoleInterface;
 
 /**
@@ -146,13 +145,6 @@ class User extends AbstractSource implements RoleInterface
     protected $defaultRoles;
 
     /**
-     * @var Collection|ProfileAssociation[]
-     *
-     * @OneToMany(targetEntity="ProfileAssociation", mappedBy="user", orphanRemoval=true)
-     */
-    protected $profileAssociations;
-
-    /**
      * User constructor.
      *
      * @param array $data
@@ -163,7 +155,6 @@ class User extends AbstractSource implements RoleInterface
         $this->setForeignServicesIds(new ArrayCollection());
         $this->setUserGroups(new ArrayCollection());
         $this->setDefaultRoles(new ArrayCollection());
-        $this->setProfileAssociations(new ArrayCollection());
         $this->setCreatedAt(new DateTime());
         $this->setLanguage('en');
 
@@ -841,58 +832,5 @@ class User extends AbstractSource implements RoleInterface
         $data['default_roles'] = new ArrayCollection();
 
         return parent::hydrate($data);
-    }
-
-    /**
-     * Get Profi
-     *
-     * @return Collection|ProfileAssociation[]
-     */
-    public function getProfileAssociations()
-    {
-        return $this->profileAssociations;
-    }
-
-    /**
-     * Set ProfileAssociations
-     *
-     * @param Collection|ProfileAssociation[] $profileAssociations
-     * @return User
-     */
-    public function setProfileAssociations($profileAssociations): User
-    {
-        if (is_array($profileAssociations)) {
-            $profileAssociations = new ArrayCollection($profileAssociations);
-        }
-
-        $this->profileAssociations = $profileAssociations;
-
-        return $this;
-    }
-
-    /**
-     * @param ProfileAssociation ...$profileAssociations
-     * @return User
-     */
-    public function addProfilAssociations(ProfileAssociation ...$profileAssociations): User
-    {
-        foreach ($profileAssociations as $profileAssociation) {
-            $this->profileAssociations->add($profileAssociation);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param ProfileAssociation ...$profileAssociations
-     * @return User
-     */
-    public function removeProfileAssocations(ProfileAssociation ...$profileAssociations): User
-    {
-        foreach ($profileAssociations as $profileAssociation) {
-            $this->profileAssociations->removeElement($profileAssociation);
-        }
-
-        return $this;
     }
 }
