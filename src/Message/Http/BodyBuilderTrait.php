@@ -5,7 +5,7 @@ namespace Fei\Service\Connect\Common\Message\Http;
 use Fei\Service\Connect\Common\Cryptography\Cryptography;
 use Fei\Service\Connect\Common\Message\MessageAwareTrait;
 use Fei\Service\Connect\Common\Message\MessageDecorator;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Stream;
 use Psr\Http\Message\MessageInterface;
 
 /**

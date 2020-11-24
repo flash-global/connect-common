@@ -3,7 +3,7 @@
 namespace Fei\Service\Connect\Common\Message\Http;
 
 use Fei\Service\Connect\Common\Message\MessageInterface;
-use Zend\Diactoros\Request;
+use Laminas\Diactoros\Request;
 
 /**
  * Class ProfileAssociationRequest

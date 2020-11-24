@@ -4,7 +4,7 @@ namespace Fei\Service\Connect\Common\Message\Http;
 
 use Fei\Service\Connect\Common\Message\Extractor\EncryptedMessageExtractor;
 use Fei\Service\Connect\Common\Message\MessageInterface;
-use Zend\Diactoros\ServerRequest;
+use Laminas\Diactoros\ServerRequest;
 
 /**
  * Class ProfileAssociationServerRequest

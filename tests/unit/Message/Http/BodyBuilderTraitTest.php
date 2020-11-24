@@ -8,7 +8,7 @@ use Fei\Service\Connect\Common\Cryptography\X509CertificateGen;
 use Fei\Service\Connect\Common\Message\Http\BodyBuilderTrait;
 use PHPUnit\Framework\TestCase;
 use Fei\Service\Connect\Common\Message\MessageInterface;
-use Zend\Diactoros\Response;
+use Laminas\Diactoros\Response;
 
 /**
  * Class BodyBuilderTraitTest

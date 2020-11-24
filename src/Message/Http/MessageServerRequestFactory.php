@@ -3,7 +3,7 @@
 namespace Fei\Service\Connect\Common\Message\Http;
 
 use UnexpectedValueException;
-use Zend\Diactoros\ServerRequestFactory as Base;
+use Laminas\Diactoros\ServerRequestFactory as Base;
 
 /**
  * Class ProfileAssociationRequestFactory

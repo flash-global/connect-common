@@ -11,7 +11,7 @@ use Fei\Service\Connect\Common\Message\Hydrator\MessageHydrator;
 use Fei\Service\Connect\Common\ProfileAssociation\Message\ResponseMessage;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
-use Zend\Diactoros\Stream;
+use Laminas\Diactoros\Stream;
 
 /**
  * Class ProfileAssociationMessageExtractorTest

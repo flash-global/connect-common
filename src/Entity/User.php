@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use Fei\Service\Connect\Common\Transformer\ApplicationGroupMinimalTransformer;
 use Fei\Service\Connect\Common\Transformer\ApplicationMinimalTransformer;
-use Zend\Permissions\Acl\Role\RoleInterface;
+use Laminas\Permissions\Acl\Role\RoleInterface;
 
 /**
  * Class User
